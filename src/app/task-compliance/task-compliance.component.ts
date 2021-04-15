@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormGroup,FormBuilder,FormArray,Validator} from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
-import { TaskLevelComplianceService } from '../services/task-level-compliance.service';
+// import { TaskLevelComplianceService } from '../services/task-level-compliance.service';
 
 @Component({
   selector: 'app-task-compliance',
@@ -33,10 +33,10 @@ export class TaskComplianceComponent implements OnInit {
     private activatedRoute:ActivatedRoute,
     private fb:FormBuilder,
     private toastr: ToastrService,
-    private tasklevelcomplianceservice : TaskLevelComplianceService) {
+   ) {
       
      }
-
+//  private tasklevelcomplianceservice : TaskLevelComplianceService
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param =>{
       console.log('param+++++++++',param)
@@ -44,7 +44,7 @@ export class TaskComplianceComponent implements OnInit {
     this.taskComplianceFrom =this.fb.group({
       AddTechnician : this.fb.array([this.addProductFormGroup()])
     })
-    this.gettechnicianId()
+    // this.gettechnicianId()
     this.taskComplianceFrom.setControl('AddTechnician',this.demoTaskTech(this.alreadyAssignTech))
     // this.demoTaskTech(this.alreadyAssignTech)
   }
@@ -71,29 +71,29 @@ export class TaskComplianceComponent implements OnInit {
     });
     return formArray
   }
-  gettechnicianId(){
-    // return [
-    //   { id : '1',name : '1'},
-    //   { id : '2',name : '2'},
-    //   { id : '3',name : '4'},
-    //   { id : '5',name : '5'}
-    // ]
-    this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
-      let count = 0
-      var sampleData= []
+  // gettechnicianId(){
+  //   // return [
+  //   //   { id : '1',name : '1'},
+  //   //   { id : '2',name : '2'},
+  //   //   { id : '3',name : '4'},
+  //   //   { id : '5',name : '5'}
+  //   // ]
+  //   this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
+  //     let count = 0
+  //     var sampleData= []
       
-      element.map(el =>{
-        sampleData.push({
-          "personId":el.personId ? el.personId : 'N/A',
-          "name": el.name ? el.name : 'N/A',
-          "servicenum": el.servicenum ? el.servicenum : 'N/A',
-          "indexCount":count++
-        })
-      })
-      this.technicianIds = sampleData
-      console.log('element+++',element)
-    })
-  }
+  //     element.map(el =>{
+  //       sampleData.push({
+  //         "personId":el.personId ? el.personId : 'N/A',
+  //         "name": el.name ? el.name : 'N/A',
+  //         "servicenum": el.servicenum ? el.servicenum : 'N/A',
+  //         "indexCount":count++
+  //       })
+  //     })
+  //     this.technicianIds = sampleData
+  //     console.log('element+++',element)
+  //   })
+  // }
   addProductButtonClick(){
     (<FormArray>this.taskComplianceFrom.get("AddTechnician")).push(
       this.addProductFormGroup()
