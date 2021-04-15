@@ -1,0 +1,19 @@
+.button-grp{
+	width: 50%;
+	margin: 0 auto;
+	text-align: center;
+}
+.button-grp button{
+	padding: 5px 10px;
+	margin-right: 10px;
+	background-color: transparent;
+}
+.button-grp button i{
+	font-weight: bold;
+}
+.button-grp button p{
+	margin-bottom: 0;
+}
+.model-title{
+	text-transform: capitalize;
+}

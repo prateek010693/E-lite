@@ -1,0 +1,39 @@
+.bg-primary{
+	background-color: #e9f2f9 !important;
+	padding:0 !important;
+	margin: 0 !important;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1
+}
+.header-wrap{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+.header-logo{
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	padding: 10px
+}
+.header-logo .right{
+	padding-right: 20px;
+}
+.blank{
+	background-color: #57A3D8;
+	padding: 8px;
+	width: 100%;
+}
+.user-info{
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+	padding: 5px 10px;
+}
+.logout button{
+	color: #57A3D8;
+	background-color: transparent;
+	padding:0;
+}

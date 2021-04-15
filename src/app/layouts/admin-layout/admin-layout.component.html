@@ -1,0 +1,22 @@
+<div class="wrapper">
+	<div class="header">
+		<app-navbar></app-navbar>
+	</div>
+    <div class="body">
+    	<div class="sidebar-container">
+			<div class="sidebar" data-color="yellow" *ngIf="sidebarDrag">
+				<app-sidebar></app-sidebar>	
+			</div>
+			<button class="drag" (click)="dragSidebar()"  [ngClass]="sidebarDrag == false ? 'left': ''">
+				<i class="now-ui-icons arrows-1_minimal-left"  *ngIf="sidebarDrag"></i>
+				<i class="now-ui-icons arrows-1_minimal-right" *ngIf="!sidebarDrag"></i>
+			</button>
+		</div>
+	    <div class="main-panel" [ngClass]="sidebarDrag == false ? 'fullwidth': ''">
+	        <router-outlet></router-outlet>      
+	    </div>
+	    <div class="footer" [ngClass]="sidebarDrag == false ? 'fullwidth': ''">
+	    	<app-footer></app-footer>
+		</div>
+    </div>
+</div>

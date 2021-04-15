@@ -1,0 +1,52 @@
+.sidebar-container{
+	position: relative;
+	width: 200px;
+	
+}
+.sidebar-container .drag{
+	color: #FFF;
+	position: fixed;
+	top: 165px;
+	left: 0;
+	background-color: #FFB236;
+	font-weight: bold;
+	padding: 5px;
+	border-radius: 0;
+	outline: none;
+	z-index: 999999;
+	transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+	
+}
+.arrows-1_minimal-left,.arrows-1_minimal-right{
+	font-weight: bold;
+}
+.sidebar{
+	position: fixed !important;
+	top:165px !important;
+	width: 200px;
+	transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+	
+}
+.sidebar::after{
+	background: #57A3D8 !important;
+}
+
+
+.main-panel{
+	margin-top: 165px;
+	z-index: 0;
+	background-color: #fff;
+}
+.footer{
+	position: fixed;
+	width: calc(100% - 200px);
+	bottom: 0;
+	left: 200px;
+	padding: 0;
+	transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1)
+}
+.fullwidth{
+	width: 100%;
+	left: 0;
+}
+

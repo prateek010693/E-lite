@@ -1,0 +1,9 @@
+.table-responsive .table-scroll{
+    overflow: auto;
+    margin-bottom: 10px;
+}
+.table-responsive .table{
+    margin-bottom: 0 !important;
+    display: block;
+    white-space: nowrap;
+}

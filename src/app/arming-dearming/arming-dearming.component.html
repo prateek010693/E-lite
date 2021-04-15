@@ -1,0 +1,136 @@
+<div class="main-content">
+  <form [formGroup]="armingDearmingForm">
+    {{armingDearmingForm.value | json}}
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="row">
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>WorkOrder No.</label>
+              <input type="text" class="form-control" placeholder="WorkOrder No." value=""
+                formControlName="workorderNo">
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description">
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Worktype</label>
+              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype">
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>WO Status</label>
+              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus">
+            </div>
+          </div>
+          <div class="col-md-12 px-1">
+            <div class="form-group btn-normal">
+              <!-- <label style="visibility:hidden">Create Snag</label> -->
+              <button type="button" (click)="addArmament()">Add Armament</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-12">
+        <div class="table-responsive">
+          <p class="table-heading">Arming/De-Arming</p>
+          <div class="table-scroll">
+            <table class="table ">
+              <thead class=" text-primary">
+                <th>Hard Point Build Item</th>
+                <th>Station No.</th>
+                <th>Armamenr Position</th>
+                <th>Armament Item/GIG nO.</th>
+                <th>Description</th>
+                <th>Part No.</th>
+                <th>Serial#</th>
+                <th>Lot No.</th>
+                <th>Current Quantity</th>
+                <th>Load Quantity</th>
+                <th>Unload Quantity</th>
+                <th>Evaluated Quantity</th>
+                <th>Remarks</th>
+                <th>Status</th>
+
+              </thead>
+              <tbody>
+                <ng-container formArrayName="armamentdetails">
+                  <tr *ngFor="let armamentdetail of ArmingDearminForm.controls;let i = index" [formGroupName]="i">
+
+
+                    <td>
+                      <input type="text" class="form-control" [id]="'hardPointBuildItem' + i"
+                        placeholder="hardPointBuildItem" formControlName="hardPointBuildItem">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'stationNo' + i" placeholder="description"
+                        formControlName="stationNo">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'armamentPosition' + i" placeholder="partNo"
+                        formControlName="armamentPosition">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'armamentItem' + i" placeholder="serial"
+                        formControlName="armamentItem">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'description' + i" placeholder="buildItem"
+                        formControlName="description">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="meter"
+                        formControlName="partNo">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="meterDescription"
+                        formControlName="serial">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'lotNo' + i" placeholder="initialValue"
+                        formControlName="lotNo">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'currentQuantity' + i" placeholder="finalValue"
+                        formControlName="currentQuantity">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'loadQuantity' + i" placeholder="readingDate"
+                        formControlName="loadQuantity">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'unloadQuantity' + i" placeholder="updatedBy"
+                        formControlName="unloadQuantity">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'evaluatedQuantity' + i" placeholder="updatedDate"
+                        formControlName="evaluatedQuantity">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'remarks' + i" placeholder="updatedDate"
+                        formControlName="remarks">
+                    </td>
+                    <td>
+                      <input type="text" class="form-control" [id]="'status' + i" placeholder="updatedDate"
+                        formControlName="status">
+                    </td>
+
+
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

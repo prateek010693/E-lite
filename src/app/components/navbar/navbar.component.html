@@ -1,0 +1,23 @@
+
+<nav class="navbar navbar-expand-lg navbar-absolute bg-primary fixed-top">
+    <div class="header-wrap">
+        <div class="header-logo">
+          <div class="left">
+            <img src="./assets/img/logo.jpg" alt="IAF Logo">
+          </div>
+          <div class="right">
+           <img src="./assets/img/emms-logo.png" alt="eMMS Logo">
+          </div>
+        </div>
+        <div class="blank"></div>
+        <div class="user-info" *ngIf="!isShow">
+          <div class="welcome-user">
+            <label><b>Welcome: </b></label>
+            <span> {{userName}} </span>
+          </div>
+          <div class="logout">
+            <button (click)="logout()">Logout</button>
+          </div>
+        </div>
+    </div>
+</nav>

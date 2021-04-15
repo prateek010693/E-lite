@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="sidebar-wrapper">
+      <ul class="nav nav-tabs nav-justified work-order">
+        <li routerLinkActive="active" *ngFor="let workorderItem of workorderItems"
+          class="{{workorderItem.class}} nav-item">
+          <a [routerLink]="[workorderItem.path]">
+            <p>{{workorderItem.title}}</p>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+  <div class="col-sm-12">
+    <router-outlet></router-outlet>
+  </div>
+</div>

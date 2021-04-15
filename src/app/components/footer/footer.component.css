@@ -1,0 +1,15 @@
+.footer{
+	background-color: #4E738D;
+	color: #C3E1F8;
+	padding: 0px;
+
+}
+.footer-wrapper{
+	width: 100%;
+}
+.copyright{
+	float: none;
+	
+	text-align: center;
+	padding: 10px
+}
