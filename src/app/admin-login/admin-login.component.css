@@ -1,0 +1,29 @@
+.card{
+    width: 100%;
+    margin-top: 126px;
+    box-shadow: none;
+    height: 500px;
+    /* background: url('/assets/img/bg-login.jpg') center center no-repeat; */
+    background-size: 100%;
+   
+
+}
+.card-body{
+    width: 30%;
+    margin: 110px auto 110px auto;
+    z-index: 9999999;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 4px;
+}
+.footer{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 0;
+}
+.card-body h4{
+    margin:0;
+    margin-bottom: 10px;
+}
+

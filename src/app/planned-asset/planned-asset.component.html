@@ -1,0 +1,138 @@
+<div class="main-content">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="button-grp">
+        <button type="submit" (click)="exportData()">
+          <i class="now-ui-icons arrows-1_minimal-right"></i>
+          <p>Export Data</p>
+        </button>
+        <button type="submit" (click)="open(importXml)">
+          <i class="now-ui-icons arrows-1_minimal-left"></i>
+          <p>Import Data</p>
+        </button>
+        <button type="submit" (click)="cancelRecord()">
+          <i class="now-ui-icons ui-1_simple-remove"></i>
+          <p>Record Cancel</p>
+        </button>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <form [formGroup]="workorder_form">
+        <!-- {{workorder_form.value | json}} -->
+        <div class="row">
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Record No.</label>
+              <input type="text" class="form-control" placeholder="Record No" value="" formControlName="recordNumber">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Aircraft No.</label>
+              <input type="text" class="form-control" placeholder="Aircraft No" value=""
+                formControlName="aircraftNumber">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Model</label>
+              <input type="text" class="form-control" placeholder="Model" value="" formControlName="model">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Variation</label>
+              <input type="text" class="form-control" placeholder="Variation" value="" formControlName="variation">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Location Of Aircraft</label>
+              <input type="text" class="form-control" placeholder="Location Of Aircraft" value=""
+                formControlName="locationOfAircraft">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Date Of Transfer</label>
+              <input type="date" class="form-control" placeholder="Date Of Transfer" value=""
+                formControlName="dateOfTransfer">
+            </div>
+          </div>
+          <!-- <div class="col-md-4 px-1">
+                <div class="form-group">
+                  <label>Date Of Return</label>
+                  <input type="date" class="form-control" placeholder="Date Of Return" value="" formControlName="recordNumber">
+                </div>
+              </div> -->
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Dett Location</label>
+              <input type="text" class="form-control" placeholder="Dett Location" value=""
+                formControlName="dettLocation">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Dett Location Base</label>
+              <input type="text" class="form-control" placeholder="Dett Location Base" value=""
+                formControlName="dettLocationBase">
+            </div>
+          </div>
+          <div class="col-md-4 px-1">
+            <div class="form-group">
+              <label>Status</label>
+              <input type="text" class="form-control" placeholder="Status" value="" formControlName="status">
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-lg-12">
+      <div class="table-responsive">
+        <p class="table-heading">Planned Asset</p>
+        <div class="table-scroll">
+          <table class="table">
+            <thead class=" text-primary">
+              <th>Asset</th>
+              <th>Description</th>
+              <th>Serial #</th>
+              <th>CM Item</th>
+              <th>Item</th>
+              <!-- <th>Current Value</th>
+              <th>Remaining Value</th> -->
+            </thead>
+            <tbody>
+              <tr *ngFor="let finalData of viewPlannedAsset;">
+                <td>{{finalData.asset}}</td>
+                <td>{{finalData.description}}</td>
+                <td>{{finalData.serial}}</td>
+                <td>{{finalData.cmItem}}</td>
+                <td>{{finalData.currentValue}}</td>
+                <td>{{finalData.remainingValue}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <ng-template #importXml let-model>
+        <div class="model-header">
+          <h6 class="model-title" id="model-basic-title">Choose XML File</h6>
+          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+            <i class="now-ui-icons ui-1_simple-remove"></i>
+          </button>
+        </div>
+        <div class="model-body">
+          <input type="file" id="file" (change)="uploadFiles($event)" value="file">
+        </div>
+
+        <div class="model-footer">
+          <button type="button" (click)="model.close('Save click')">Save</button>
+        </div>
+
+      </ng-template>
+    </div>
+  </div>
+</div>

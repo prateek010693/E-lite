@@ -1,0 +1,8 @@
+.main-content h3{
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	height: 100%;
+	padding: 20px;
+	color: #57A3D8
+}

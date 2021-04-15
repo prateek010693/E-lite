@@ -1,0 +1,26 @@
+<div>
+    <div class="header">
+        <app-navbar></app-navbar>
+    </div>
+    <div class="card">
+        <div class="card-body">   
+            <form [formGroup]="adminForm">
+                <h4><span>{{userName}}</span> Login</h4>
+               
+                <div class="form-group required">
+                    <label class="control-label">Blocked Service No.</label>
+                    <input type="text" class="form-control" placeholder="Service No." value=""
+                    formControlName="serviceNumber"  required>
+                    <p class="errors" *ngIf="adminForm.controls['serviceNumber'].errors?.required && isSubmitted ">Please enter Service No.</p>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" (click)="loginButton(userid)">reset</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div class="footer">
+        <app-footer></app-footer>
+    </div>
+</div>

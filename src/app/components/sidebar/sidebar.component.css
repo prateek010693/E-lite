@@ -1,0 +1,23 @@
+.sidebar-wrapper{
+	padding-bottom: 0;
+	width: 200px;
+	max-height: calc(100% - 165px);
+}
+.sidebar-wrapper .nav li > a{
+	border-radius: 30px;
+}
+.logo{
+	padding-left: 20px;
+	cursor: pointer;
+}
+
+
+.simple-text{
+	text-transform: initial;
+}
+.logo.emmms-text .simple-text{
+	text-transform: initial;
+	font-weight: bold;
+	color: #FFB236;
+	font-size: 18px;
+}

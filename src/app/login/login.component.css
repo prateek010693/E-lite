@@ -1,0 +1,82 @@
+.card{
+    width: 100%;
+    margin-top: 126px;
+    box-shadow: none;
+    height: 500px;
+    background: url('/assets/img/bg-login.jpg') center center no-repeat;
+    background-size: 100%;
+   
+
+}
+.card-body{
+    width: 30%;
+    margin: 110px auto 110px auto;
+    z-index: 9999999;
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 4px;
+}
+.footer{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: 0;
+}
+.card-body h4{
+    margin:0;
+    margin-bottom: 10px;
+}
+
+.buttons{
+           
+}
+.check-grp .check .control-label{
+    display: initial;
+    vertical-align: text-bottom;
+    font-size: 14px;
+    padding-left: 5px;
+}
+.check-grp .form-group{
+    padding: 0 5px;
+}
+.check-grp .button .buttons{
+    margin: 0;
+    font-size: 12px;
+    background: none;
+    border: none;
+    outline: none;
+    padding:0;   
+    float: right;
+    color: #000;
+}
+.check-grp .button .buttons.left{
+    float: left;
+}
+.btn-savecancel .buttons{
+    color: #fff;    
+}
+.btn-savecancel .buttons:last-child{
+    float: right;
+}
+.visibility{
+    position: absolute;
+    right: 1%;
+    top: 55%;
+    font-size: 16px;
+    background-color: transparent;
+    padding: 0;
+    border-radius:0 ;
+}
+.visibility .business_bulb-63{
+    padding: 3px;
+}
+.visibility .business_bulb-63.active{
+    background-color:darkgreen;
+}
+
+.errors{
+    color: red;
+    margin: 0;
+    font-size: 12px;
+    padding: 0 10px;
+}

@@ -1,0 +1,13 @@
+<ul class="nav nav-tabs nav-justified" >
+    <li *ngFor="let ordertab of workorderTabs;let i=index;" class="nav-item" [ngClass]="{'active' : selectedItem == ordertab}" (click)="selectedworkorder($event,ordertab)">
+      <a  aria-controls="one" role="tab" data-toggle="tab" class="nav-link" >{{ordertab}}</a>
+    </li>
+
+    <!-- <li  class="nav-item" >
+        <a (click)="selectedworkorder('workorder')"  role="tab" data-toggle="tab" class="nav-link" [class.active]="true">1</a>
+      </li>
+      <li  class="nav-item" >
+        <a (click)="selectedworkorder('workorder')"  role="tab" data-toggle="tab" class="nav-link">2</a>
+      </li> -->
+  </ul>
+  

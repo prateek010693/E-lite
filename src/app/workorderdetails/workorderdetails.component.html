@@ -1,0 +1,272 @@
+<div class="main-content">
+    <div class="row">
+        <div class="col-lg-12">
+            <form [formGroup]="workOrderDetailForm">
+                <!-- {{workOrderDetailForm.value |json}} -->
+                <div class="row">
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>WO No.</label>
+                            <input type="text" class="form-control" placeholder="WO No." value=""
+                                formControlName="woNumber" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control" placeholder="Description" value=""
+                                formControlName="description" [readonly]="!isEditable">
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Worktype</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="workType(worktype)"></i>
+                            <input type="text" class="form-control" placeholder="Worktype" value=""
+                                formControlName="worktype" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>WO Status</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="!isEditable && statusChangeIndex"  (click)="woStatus(wostatus)"></i>
+                            <input type="text" class="form-control" placeholder="WO Status" value=""
+                                formControlName="woStatus" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Asset</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="open(asset)"></i>
+                            <input type="text" class="form-control" placeholder="Asset" value=""
+                                formControlName="asset" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Serial#</label>
+                            <input type="text" class="form-control" placeholder="Serial#" value=""
+                                formControlName="serial" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Status Date</label>
+                            <input type="text" class="form-control" placeholder="Status Date" value=""
+                                formControlName="statusDate" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Closed By</label>
+                            <input type="text" class="form-control" placeholder="Closed By" value=""
+                                formControlName="closedBy" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>CM Item</label>
+                            <input type="text" class="form-control" placeholder="CM Item" value=""
+                                formControlName="cmItem" readonly>
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" class="form-control" placeholder="Description" value="">
+                        </div>
+                    </div> -->
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>PM Item</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="pmItem(pmitem)"></i>
+                            <input type="text" class="form-control" placeholder="PM Item" value=""
+                                formControlName="pmNumber" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>PM Description</label>
+                            <input type="text" class="form-control" placeholder="PM Description" value=""
+                                formControlName="pmDescription" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-12 px-1" *ngIf="isEditable">
+                        <div class="form-group btn-normal btn-savecancel">
+                            <button type="button" class="cancel" (click)="cancelworkorder()">Cancel</button>
+                            <button type="button" class="save" (click)="saveworkorder(id)">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="col-lg-12">
+                <ng-template #asset let-model class="assest">
+                    <div class="model-header">
+                        <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+                        <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                        </button>
+                    </div>
+                    <div class="model-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+                        </div>
+                        <div class="table-responsive">
+                            <div class="table-scroll">
+                                <table class="table">
+                                    <thead class="text-primary">
+                                        <th>Selection</th>
+                                        <th>Assest</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Serial#</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let assetArray of assetArray | search : searchvalue ;let i = index">
+                                            <td>
+                                                <input type="radio" (click)="assetSave(assetArray.indexCount)" name="radio" value="{{assetArray.indexCount}}">
+                                            </td>
+                                            <td>{{assetArray.assetnum}}</td>
+                                            <td>{{assetArray.description}}</td>
+                                            <td>{{assetArray.status}}</td>
+                                            <td>{{assetArray.serialnumber}}</td>
+                                            <td style="display: none;">{{assetArray.indexCount}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="model-footer">
+                        <button type="button" (click)="model.close('Save click')">Save</button>
+                    </div>
+
+                </ng-template>
+            </div>
+            <div class="col-lg-12">
+                <ng-template #wostatus let-model class="assest">
+                    <div class="model-header">
+                        <h6 class="model-title" id="model-basic-title">Work Order Status</h6>
+                        <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                        </button>
+                    </div>
+                    <div class="model-body">
+                        <div class="table-responsive">
+                            <div class="table-scroll">
+                                <table class="table">
+                                    <thead class="text-primary">
+                                        <th>Selection</th>
+                                        <th>Work Order Status</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let status of statusArray;let i = index">
+                                            <td>
+                                                <input type="radio" (click)="statusSave(status.indexCount)" name="radio" value="{{status.indexCount}}">
+                                            </td>
+                                            <td>{{status.status}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="model-footer">
+                        <button type="button" (click)="model.close('Save click')">Save</button>
+                    </div>
+
+                </ng-template>
+            </div>
+            <div class="col-lg-12">
+                <ng-template #worktype let-model class="assest">
+                    <div class="model-header">
+                        <h6 class="model-title" id="model-basic-title">Work Type</h6>
+                        <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                        </button>
+                    </div>
+                    <div class="model-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+                        </div>
+                        <div class="table-responsive">
+                            <div class="table-scroll">
+                                <table class="table">
+                                    <thead class="text-primary">
+                                        <th>Selection</th>
+                                        <th>Work Type</th>
+                                        <th>Description</th>
+                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let workTypeArray of workTypeArray | search : searchvalue ;let i = index">
+                                            <td>
+                                                <input type="radio" (click)="worktypeSave(workTypeArray.indexCount)" name="radio" value="{{workTypeArray.indexCount}}">
+                                            </td>
+                                            <td>{{workTypeArray.workType}}</td>
+                                            <td>{{workTypeArray.description}}</td>
+                                            <td style="display: none;">{{workTypeArray.indexCount}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="model-footer">
+                        <button type="button" (click)="model.close('Save click')">Save</button>
+                    </div>
+
+                </ng-template>
+            </div>
+            <div class="col-lg-12">
+                <ng-template #pmitem let-model class="assest">
+                    <div class="model-header">
+                        <h6 class="model-title" id="model-basic-title">PM Item</h6>
+                        <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                            <i class="now-ui-icons ui-1_simple-remove"></i>
+                        </button>
+                    </div>
+                    <div class="model-body">
+                        <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+                        </div>
+                        <div class="table-responsive">
+                            <div class="table-scroll">
+                                <table class="table">
+                                    <thead class="text-primary">
+                                        <th>Selection</th>
+                                        <th>PM Item</th>
+                                        <th>Description</th>
+                                        
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let pmArray of pmArray | search : searchvalue ;let i = index">
+                                            <td>
+                                                <input type="radio" (click)="pmSave(pmArray.indexCount)" name="radio" value="{{pmArray.indexCount}}">
+                                            </td>
+                                            <td>{{pmArray.pm}}</td>
+                                            <td>{{pmArray.description}}</td>
+                                            <td style="display: none;">{{pmArray.indexCount}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="model-footer">
+                        <button type="button" (click)="model.close('Save click')">Save</button>
+                    </div>
+
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>
