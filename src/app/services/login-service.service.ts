@@ -10,7 +10,7 @@ export class LoginServiceService {
   constructor(private http:HttpClient) { }
 
   //------------- global URL for Access Backend API----------------------//
-  baseURL ="http://192.168.10.224:8080/emmsLite/"
+  baseURL ="http://localhost:8080/emmsLite/"
   loginData : object ={
     userid:"",
     password : ""

@@ -44,7 +44,8 @@ export class TaskComplianceComponent implements OnInit {
     this.taskComplianceFrom =this.fb.group({
       AddTechnician : this.fb.array([this.addProductFormGroup()])
     })
-    // this.gettechnicianId()
+    this.technicianIds= this.gettechnicianId()
+    console.log("ids",this.technicianIds)
     this.taskComplianceFrom.setControl('AddTechnician',this.demoTaskTech(this.alreadyAssignTech))
     // this.demoTaskTech(this.alreadyAssignTech)
   }
@@ -71,13 +72,13 @@ export class TaskComplianceComponent implements OnInit {
     });
     return formArray
   }
-  // gettechnicianId(){
-  //   // return [
-  //   //   { id : '1',name : '1'},
-  //   //   { id : '2',name : '2'},
-  //   //   { id : '3',name : '4'},
-  //   //   { id : '5',name : '5'}
-  //   // ]
+   gettechnicianId(){
+   return [
+     { id : '1',name : '1'},
+     { id : '2',name : '2'},
+    { id : '3',name : '4'},
+   { id : '5',name : '5'}
+   ]
   //   this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
   //     let count = 0
   //     var sampleData= []
@@ -93,7 +94,7 @@ export class TaskComplianceComponent implements OnInit {
   //     this.technicianIds = sampleData
   //     console.log('element+++',element)
   //   })
-  // }
+   }
   addProductButtonClick(){
     (<FormArray>this.taskComplianceFrom.get("AddTechnician")).push(
       this.addProductFormGroup()
