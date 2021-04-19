@@ -25,7 +25,7 @@
                 </div>
                 <div class="row check-grp" *ngIf="!adminCheck">
                     <div class="form-group col-sm-8 check">
-                        <input type="checkbox" id="check" value="" formControlName="check" (change)="onChecked($event)">
+                        <input type="checkbox" id="check" value="" (change)="onChecked($event)">
                         <label class="control-label" *ngIf="!isShow && !isShow1">Check Service Number
                             availability</label>
                         <label class="control-label" *ngIf="isShow || isShow1">Service Number is available </label>

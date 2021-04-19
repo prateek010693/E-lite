@@ -8,31 +8,31 @@
             <div class="col-md-3 px-1">
               <div class="form-group">
                 <label>WorkOrder No.</label>
-                <input type="text" class="form-control" placeholder="WorkOrder No" value="">
+                <input type="text" class="form-control" placeholder="WorkOrder No" value="" readonly>
               </div>
             </div>
             <div class="col-md-3 px-1">
               <div class="form-group">
                 <label>Description</label>
-                <input type="text" class="form-control" placeholder="Description" value="">
+                <input type="text" class="form-control" placeholder="Description" value="" readonly>
               </div>
             </div>
             <div class="col-md-3 px-1">
               <div class="form-group">
                 <label>Worktype</label>
-                <input type="text" class="form-control" placeholder="Worktype" value="">
+                <input type="text" class="form-control" placeholder="Worktype" value="" readonly>
               </div>
             </div>
             <div class="col-md-3 px-1">
               <div class="form-group">
                 <label>WO Status</label>
-                <input type="text" class="form-control" placeholder="WO Status" value="">
+                <input type="text" class="form-control" placeholder="WO Status" value="" readonly>
               </div>
             </div>
             <div class="col-md-12 px-1" >
               <div class="form-group btn-normal">
                 <!-- <label style="visibility:hidden">Create Snag</label> -->
-               <button type="submit" >Add Line</button>
+               <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Add Line</button>
               </div>
             </div>
           </div>

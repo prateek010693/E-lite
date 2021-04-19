@@ -7,25 +7,25 @@
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WorkOrder No.</label>
-              <input type="text" class="form-control" placeholder="WorkOrder No." value="">
+              <input type="text" class="form-control" placeholder="WorkOrder No." value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Description</label>
-              <input type="text" class="form-control" placeholder="Description" value="">
+              <input type="text" class="form-control" placeholder="Description" value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Worktype</label>
-              <input type="text" class="form-control" placeholder="Worktype" value="">
+              <input type="text" class="form-control" placeholder="Worktype" value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WO Status</label>
-              <input type="text" class="form-control" placeholder="WO Status" value="">
+              <input type="text" class="form-control" placeholder="WO Status" value="" readonly>
             </div>
           </div>
           <div class="col-md-12 px-1">
@@ -36,7 +36,7 @@
           </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal btn-savecancel">
-              <button type="button" (click)="addProductButtonClick()">Assign Technician</button>
+              <button type="button" (click)="addProductButtonClick()" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Assign Technician</button>
             </div>
           </div>
         </div>
