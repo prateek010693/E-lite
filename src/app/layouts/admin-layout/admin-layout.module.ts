@@ -16,7 +16,7 @@ import { FscComponent } from '../../fsc/fsc.component';
 import { SnagreportingdetailsComponent } from '../../snagreportingdetails/snagreportingdetails.component';
 import { CreateWorkorderComponent } from '../../create-workorder/create-workorder.component';
 import { WorkorderComponent } from '../../workorder/workorder.component';
-import {Ng2SearchPipeModule} from 'ng2-search-filter'
+// import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 
 @NgModule({
@@ -27,7 +27,7 @@ import {Ng2SearchPipeModule} from 'ng2-search-filter'
     ChartsModule,
     NgbModule,
     NgxPaginationModule,
-    Ng2SearchPipeModule,
+    // Ng2SearchPipeModule,
     ReactiveFormsModule,
     ToastrModule.forRoot({
       timeOut: 2000,
