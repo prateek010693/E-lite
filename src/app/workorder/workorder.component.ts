@@ -2,13 +2,14 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { WorkorderService } from '../services/workorder.service';
 import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 import { LoaderService } from '../services/loader.service';
 import { PlanedAssestService } from '../services/planed-assest.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-workorder',
@@ -18,15 +19,20 @@ import { PlanedAssestService } from '../services/planed-assest.service';
 @Pipe({
   name: 'search'
 })
-export class WorkorderComponent implements OnInit {
+
+export class WorkorderComponent implements OnInit,PipeTransform {
   workorder_form: FormGroup
   //id: any;
+  isShow: boolean;
   index: any=[];
   assetArray : any = []
-  searchvalue: any;
+  searchvalue: any = "";
+  totalrecs: any;
+  page = 1;
   editdata: any 
   id: string = "";
   finaldatas : [];
+  
   viewWorkorder : any = []
   constructor(private router:Router,
     
@@ -38,6 +44,29 @@ export class WorkorderComponent implements OnInit {
     private workorderService:WorkorderService,
     public _loderservice:LoaderService,
     private planedAssestService:PlanedAssestService) { }
+  transform(value: any, searchvalue: any): any {
+    // console.log("se",searchvalue)
+    // console.log("se",value)
+    var count =0
+    if (!value || !searchvalue) {
+      console.log("here")
+      return value;
+    }
+    return value.filter(item => {
+      var a=item.wo.toLowerCase().includes(searchvalue.toLowerCase())
+      
+      if(a){
+        count++
+      }
+      if(count <= 6){
+        this.isShow = false
+      }else{
+        this.isShow=true
+      }
+      console.log("a-------",count,this.isShow)
+      return a;
+    })
+  }
 
   
   ngOnInit(): void {
@@ -65,8 +94,10 @@ export class WorkorderComponent implements OnInit {
   } 
   getWorkorder(){
     this.workOrderService.getWorkOrder().subscribe(element =>{
+      var count = 0
       var sampleData= []
       element.map(el =>{
+        count++
         sampleData.push({
           "wo_id": el.workorder_id ? el.workorder_id : "N/A",
           "wo":el.wo_num ? el.wo_num : 'N/A',
@@ -77,6 +108,14 @@ export class WorkorderComponent implements OnInit {
         })
       })
       this.viewWorkorder = sampleData
+      this.totalrecs = count
+      if(count <= 6){
+        this.isShow = false
+      }else{
+        this.isShow=true
+      }
+
+      console.log('count is:',count)
       console.log('element+++',element)
     })
   } 
@@ -85,4 +124,16 @@ export class WorkorderComponent implements OnInit {
     this.router.navigate(['workorder/createworkorder/'+id+'/workorderdetails'])
 
   }
+  Search(){
+    console.log("here",this.searchvalue)
+    if(this.searchvalue = ""){
+      console.log("here1")
+      this.getWorkorder
+    }
+    else{
+      console.log("here3")
+    this.viewWorkorder = this.viewWorkorder.filter(value =>{
+      return value.wo.toLowerCase().includes(this.searchvalue.toLowerCase());
+    })
+  } }
 }

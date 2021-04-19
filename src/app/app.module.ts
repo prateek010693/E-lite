@@ -13,22 +13,27 @@ import {DatePipe} from '@angular/common'
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { PlanedAssestService } from './services/planed-assest.service';
 import { WorkorderService } from './services/workorder.service';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 // import { TaskLevelComplianceService } from './services/task-level-compliance.service';
 import { LoaderService } from './services/loader.service';
 import { InterceptorService } from './services/interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guard/auth.guard';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
+import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
+    Ng2SearchPipeModule,
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
     NgbModule,
+    NgxPaginationModule,
     ReactiveFormsModule, 
     CommonModule,
     ToastrModule.forRoot({

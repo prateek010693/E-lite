@@ -8,7 +8,7 @@ export class PlanedAssestService {
 
 
  //------------- global URL for Access Backend API----------------------//
-  baseURL ="http://192.168.10.224:8080/emmsLite/"
+  baseURL ="http://localhost:8080/emmsLite/"
   constructor(private http:HttpClient) { }
   
   
