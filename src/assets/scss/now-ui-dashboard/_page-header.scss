@@ -175,6 +175,12 @@ button{
           padding: 7px 20px;
           margin: 0 5px;
       }
+
+    }
+    button.isDisabled{
+        background-color: #E3E3E3;
+        color: #57A3D8;
+        cursor: not-allowed;
     }
 }
 .work-order {

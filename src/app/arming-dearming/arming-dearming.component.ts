@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-arming-dearming',
@@ -8,10 +9,22 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 })
 export class ArmingDearmingComponent implements OnInit {
   armingDearmingForm : FormGroup
+  id : any;
+  isDisabled : boolean = false
 
-  constructor(private fb : FormBuilder) { }
+  constructor(private fb : FormBuilder,
+    private activatedRoute:ActivatedRoute,
+    ) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(param =>{
+      this.id = param.id
+      console.log('this.id',this.id)
+    })
+    if(this.id == "null"){
+      this.isDisabled=true
+
+    }
     this.armingDearmingForm = this.fb.group({
       workorderNo: '',
       description: '',
