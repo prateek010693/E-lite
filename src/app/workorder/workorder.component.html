@@ -84,6 +84,9 @@
         <div class="table-responsive">
           <p class="table-heading">Work Order List</p>
           <div class="table-scroll">
+            <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue'   placeholder="search">
+             </div>
             <table class="table">
               <thead class=" text-primary">
                 <th>WO Number</th>
@@ -93,15 +96,26 @@
                 <th>Status</th>
               </thead>
               <tbody>
-                <tr *ngFor="let finalData of viewWorkorder;">
+                <tr *ngFor="let finalData of viewWorkorder |  search: searchvalue|paginate : {id: 'listing_pagination',
+                itemsPerPage: 5,
+                currentPage:page,
+                totalItems: totalrecs }">
                   <td><button class="btn-click" (click)="editWorkorder(finalData.wo_id)">{{finalData.wo}}</button></td>
                   <td>{{finalData.description}}</td>
                   <td>{{finalData.workType}}</td>
                   <td>{{finalData.asset}}</td>
                   <td>{{finalData.status}}</td>
                 </tr>
+                <!-- <tr>
+                <pagination-controls id='listing_pagination' maxSize="5" directionLinks="true" (pageChange)="page=$event"></pagination-controls>
+                </tr> -->
               </tbody>
             </table>
+            <div class="container" *ngIf="isShow">
+              
+                <pagination-controls id='listing_pagination' maxSize="5" directionLinks="true" (pageChange)="page=$event"></pagination-controls>
+                
+            </div>
           </div>
         </div>
       </div>
