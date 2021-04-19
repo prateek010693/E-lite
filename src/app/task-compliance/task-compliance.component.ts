@@ -13,7 +13,8 @@ export class TaskComplianceComponent implements OnInit {
   id:any;
   searchvalue1:any;
   taskComplianceFrom :FormGroup;
-  technicianIds =[]
+  technicianIds =[];
+  isDisabled = false
   alreadyAssignTech = [
     {
       technicianId : "1",
@@ -39,8 +40,13 @@ export class TaskComplianceComponent implements OnInit {
 //  private tasklevelcomplianceservice : TaskLevelComplianceService
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param =>{
-      console.log('param+++++++++',param)
+      this.id = param.id
+      console.log('this.id',this.id)
     })
+    if(this.id == "null"){
+      this.isDisabled=true
+
+    }
     this.taskComplianceFrom =this.fb.group({
       AddTechnician : this.fb.array([this.addProductFormGroup()])
     })

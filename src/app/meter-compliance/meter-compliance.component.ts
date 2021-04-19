@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-meter-compliance',
@@ -7,11 +8,22 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
   styleUrls: ['./meter-compliance.component.css']
 })
 export class MeterComplianceComponent implements OnInit {
-
   meterComplianceForm : FormGroup
-  constructor(private fb : FormBuilder) { }
+  id : any 
+  isDisabled : boolean = false
+  constructor(private fb : FormBuilder,
+    private activatedRoute:ActivatedRoute,
+    ) { }
 
   ngOnInit(): void {
+    this.activatedRoute.params.subscribe(param =>{
+      this.id = param.id
+      console.log('this.id',this.id)
+    })
+    if(this.id == "null"){
+      this.isDisabled=true
+
+    }
     this.meterComplianceForm = this.fb.group({
       workorderNo: '',
       description: '',

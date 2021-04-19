@@ -10,31 +10,31 @@
             <div class="form-group">
               <label>WorkOrder No.</label>
               <input type="text" class="form-control" placeholder="WorkOrder No." value=""
-                formControlName="workorderNo">
+                formControlName="workorderNo" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Description</label>
-              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description">
+              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Worktype</label>
-              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype">
+              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WO Status</label>
-              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus">
+              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus" readonly>
             </div>
           </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
-              <button type="button" (click)="addMeter()">Add Meter</button>
+              <button type="button" (click)="addMeter()" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Add Meter</button>
             </div>
           </div>
         </div>
