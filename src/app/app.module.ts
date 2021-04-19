@@ -21,14 +21,14 @@ import { InterceptorService } from './services/interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './guard/auth.guard';
 import { AdminLoginComponent } from './admin-login/admin-login.component';
-import {Ng2SearchPipeModule} from 'ng2-search-filter'
+// import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
-    Ng2SearchPipeModule,
+    // Ng2SearchPipeModule,
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
