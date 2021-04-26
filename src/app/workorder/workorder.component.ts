@@ -9,7 +9,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { LoaderService } from '../services/loader.service';
 import { PlanedAssestService } from '../services/planed-assest.service';
-
 @Component({
   selector: 'app-workorder',
   templateUrl: './workorder.component.html',
@@ -91,6 +90,7 @@ export class WorkorderComponent implements OnInit,PipeTransform {
       this.router.navigate(['workorder/createworkorder/'+id+'/workorderdetails'])
     }
   } 
+  
   getWorkorder(){
     this.workOrderService.getWorkOrder().subscribe(element =>{
       var count = 0
