@@ -60,7 +60,7 @@
                     <td>
                       <select class="form-control" [id]="'technicianId' + i" placeholder="Technician Id"  (change)="abc(i)" formControlName="technicianId">
                         <option value="" disabled selected hidden>Select Technician Id</option>
-                        <option *ngFor="let technicianId of technicianIds" [value]="technicianId.id">{{technicianId.name}}</option>
+                        <option *ngFor="let technicianId of technicianIds" [value]="technicianId.servicenum">{{technicianId.servicenum}}</option>
                       </select>
                     </td>
                     <td>
@@ -70,7 +70,7 @@
                       <input type="text" class="form-control" [id]="'teskDiscription' + i" placeholder="Technician Discription" formControlName="teskDiscription">
                     </td>
                     <td>
-                      <input type="date" class="form-control" [id]="'complianceDate' + i" placeholder="Compliance Date " formControlName="complianceDate">
+                      <input type="datetime-local" class="form-control" [id]="'complianceDate' + i" placeholder="Compliance Date " formControlName="complianceDate">
                     </td>
                     <td>
                       <button type="submit" (click)="onCompliance(i)">Compliance</button>

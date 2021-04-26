@@ -9,7 +9,7 @@ import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 import { LoaderService } from '../services/loader.service';
 import { PlanedAssestService } from '../services/planed-assest.service';
-import { Console } from 'console';
+
 
 @Component({
   selector: 'app-workorder',
@@ -92,6 +92,7 @@ export class WorkorderComponent implements OnInit,PipeTransform {
       this.router.navigate(['workorder/createworkorder/'+id+'/workorderdetails'])
     }
   } 
+  
   getWorkorder(){
     this.workOrderService.getWorkOrder().subscribe(element =>{
       var count = 0

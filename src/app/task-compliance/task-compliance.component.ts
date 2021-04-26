@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormGroup,FormBuilder,FormArray,Validator} from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
-// import { TaskLevelComplianceService } from '../services/task-level-compliance.service';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
+ import { TaskLevelComplianceService } from '../services/task-level-compliance.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-task-compliance',
@@ -12,37 +14,42 @@ import { ToastrService } from 'ngx-toastr';
 export class TaskComplianceComponent implements OnInit {
   id:any;
   searchvalue1:any;
+  userid:string = localStorage.getItem("userName")
+  
   taskComplianceFrom :FormGroup;
   technicianIds =[];
   isDisabled = false
-  alreadyAssignTech = [
-    {
-      technicianId : "1",
-      technicianName :"abc",
-      teskDiscription : "xyqwqwz",
-      complianceDate : "sdsdsdsd"
-    },
-    {
-      technicianId : "2",
-      technicianName :"absdfhdgsfc",
-      teskDiscription : "xyzldfjfkdfj",
-      complianceDate : "sdsdsdsd"
-    }
-  ]
+  alreadyAssignTech: any =[];
+  // alreadyAssignTech = [
+  //   {
+  //     technicianId : "00005",
+  //     technicianName :"abc",
+  //     teskDiscription : "xyqwqwz",
+  //     complianceDate : "sdsdsdsd"
+  //   },
+  //   {
+  //     technicianId : "00004",
+  //     technicianName :"absdfhdgsfc",
+  //     teskDiscription : "xyzldfjfkdfj",
+  //     complianceDate : "sdsdsdsd"
+  //   }
+  // ]
   constructor(
     private router:Router,
     private activatedRoute:ActivatedRoute,
     private fb:FormBuilder,
     private toastr: ToastrService,
+    private tasklevelcomplianceservice : TaskLevelComplianceService
    ) {
       
      }
-//  private tasklevelcomplianceservice : TaskLevelComplianceService
+//  
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param =>{
       this.id = param.id
       console.log('this.id',this.id)
     })
+    console.log("abc",this.userid)
     if(this.id == "null"){
       this.isDisabled=true
 
@@ -50,12 +57,37 @@ export class TaskComplianceComponent implements OnInit {
     this.taskComplianceFrom =this.fb.group({
       AddTechnician : this.fb.array([this.addProductFormGroup()])
     })
-    this.technicianIds= this.gettechnicianId()
-    console.log("ids",this.technicianIds)
-    this.taskComplianceFrom.setControl('AddTechnician',this.demoTaskTech(this.alreadyAssignTech))
+     this.gettechnicianId()
+    //console.log("ids",this.technicianIds)
+    this.fetchTLC();
+    //console.log("tlc",this.alreadyAssignTech)
+    
     // this.demoTaskTech(this.alreadyAssignTech)
   }
-  
+  fetchTLC(){
+    const formArray = new FormArray([]);
+    this.alreadyAssignTech = this.tasklevelcomplianceservice.fetchTaskLevelCompliance(this.id,this.userid).subscribe(element => {
+      var sampledata = []
+      
+      element.map(el =>{
+        formArray.push(
+          this.fb.group({
+          tlcId:el.tlcId,
+          complianceDate:el.complianceDte, 
+          teskDiscription:el.taskDesc, 
+          technicianName:el.technicianName, 
+          technicianId:el.technicianServicenum, 
+        }))
+        
+      })
+      console.log("el",element)
+      console.log("ell",formArray)
+      this.alreadyAssignTech = formArray
+      this.taskComplianceFrom.setControl('AddTechnician',this.alreadyAssignTech)
+      console.log("elll",this.alreadyAssignTech)
+    })
+    
+  }
   addProductFormGroup(): FormGroup {
     return this.fb.group({
       technicianId : [""],
@@ -78,28 +110,32 @@ export class TaskComplianceComponent implements OnInit {
     });
     return formArray
   }
+  get technicians(): FormArray {
+    return this.taskComplianceFrom.get('AddTechnician') as FormArray;
+ } 
    gettechnicianId(){
-   return [
-     { id : '1',name : '1'},
-     { id : '2',name : '2'},
-    { id : '3',name : '4'},
-   { id : '5',name : '5'}
-   ]
-  //   this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
-  //     let count = 0
-  //     var sampleData= []
+  //  return [
+  //    { id : '1',name : 'bhanu'},
+  //    { id : '2',name : 'prateek'},
+  //   { id : '3',name : 'ashu'},
+  //  { id : '5',name : 'sarab'}
+  //  ]
+    this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
+      let count = 0
+      var sampleData= []
       
-  //     element.map(el =>{
-  //       sampleData.push({
-  //         "personId":el.personId ? el.personId : 'N/A',
-  //         "name": el.name ? el.name : 'N/A',
-  //         "servicenum": el.servicenum ? el.servicenum : 'N/A',
-  //         "indexCount":count++
-  //       })
-  //     })
-  //     this.technicianIds = sampleData
-  //     console.log('element+++',element)
-  //   })
+      element.map(el =>{
+        sampleData.push({
+          "personId":el.personId ? el.personId : 'N/A',
+          "name": el.name ? el.name : 'N/A',
+          "servicenum": el.servicenum ? el.servicenum : 'N/A',
+          "indexCount":count++
+        })
+      })
+      this.technicianIds = sampleData
+      console.log('element+++',element)
+    //  this.taskComplianceFrom.setControl('AddTechnician',this.demoTaskTech(this.alreadyAssignTech))
+    })
    }
   addProductButtonClick(){
     (<FormArray>this.taskComplianceFrom.get("AddTechnician")).push(
@@ -122,9 +158,23 @@ export class TaskComplianceComponent implements OnInit {
     console.log(event)
     
     console.log((this.taskComplianceFrom.value["AddTechnician"][event]))
-    var arrayControl = this.taskComplianceFrom.get('AddTechnician') as FormArray
-    var item = arrayControl.at(event)
-    console.log("array=="+ item)
+    const qwe =   (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(event) as FormGroup
+    console.log("qweqerqrq",qwe.get('technicianId').value)
+    const selectedvalue = (qwe.get('technicianId').value)
+    var name:any;
+    this.technicianIds.forEach(element => {
+      if(selectedvalue === element.servicenum){
+        name = element.name
+      }
+    })
+    console.log("name",name)
+    
+    qwe.get('technicianName').patchValue(name);
+    
+    // [
+      
+    //   {technicianId : "1",technicianName :"abcd"}
+    // ]
     //this.taskComplianceFrom.setControl('AddTechnician[event]',this.demoTaskTech(this.alreadyAssignTech))
   }
 }

@@ -262,7 +262,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
         if(data.wo_status =="CAN" || data.wo_status =="CLOSE"){
           this.statusChangeIndex = false
         }
-        this.date = (this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') != null) ?  this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') : "N/A"
+        //this.date = (this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') != null) ?  this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') : "N/A"
         this.workOrderDetailForm.controls['woNumber'].setValue(data.wo_num ? data.wo_num : "N/A") 
         this.workOrderDetailForm.controls['woStatus'].setValue(data.wo_status ? data.wo_status : "N/A")
         this.workOrderDetailForm.controls['description'].setValue(data.wo_desc ? data.wo_desc : "N/A")  
