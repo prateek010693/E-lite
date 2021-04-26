@@ -5,12 +5,10 @@ import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {Ng2SearchPipeModule} from 'ng2-search-filter'
+// import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 import { LoaderService } from '../services/loader.service';
 import { PlanedAssestService } from '../services/planed-assest.service';
-
-
 @Component({
   selector: 'app-workorder',
   templateUrl: './workorder.component.html',

@@ -19,21 +19,6 @@ export class TaskComplianceComponent implements OnInit {
   taskComplianceFrom :FormGroup;
   technicianIds =[];
   isDisabled = false
-  alreadyAssignTech: any =[];
-  // alreadyAssignTech = [
-  //   {
-  //     technicianId : "00005",
-  //     technicianName :"abc",
-  //     teskDiscription : "xyqwqwz",
-  //     complianceDate : "sdsdsdsd"
-  //   },
-  //   {
-  //     technicianId : "00004",
-  //     technicianName :"absdfhdgsfc",
-  //     teskDiscription : "xyzldfjfkdfj",
-  //     complianceDate : "sdsdsdsd"
-  //   }
-  // ]
   constructor(
     private router:Router,
     private activatedRoute:ActivatedRoute,
@@ -43,13 +28,11 @@ export class TaskComplianceComponent implements OnInit {
    ) {
       
      }
-//  
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param =>{
       this.id = param.id
       console.log('this.id',this.id)
     })
-    console.log("abc",this.userid)
     if(this.id == "null"){
       this.isDisabled=true
 
