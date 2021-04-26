@@ -18,7 +18,8 @@ export class TaskComplianceComponent implements OnInit {
   
   taskComplianceFrom :FormGroup;
   technicianIds =[];
-  isDisabled = false
+  isDisabled = false;
+  alreadyAssignTech : any = []
   constructor(
     private router:Router,
     private activatedRoute:ActivatedRoute,
