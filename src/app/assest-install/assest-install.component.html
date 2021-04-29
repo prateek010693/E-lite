@@ -1,77 +1,287 @@
-
-  
-  <div class="main-content">
+<div class="main-content">
+  <form [formGroup]="assetInstallRemoveForm">
     <div class="row">
       <div class="col-lg-12">
-        <form>
+        {{assetInstallRemoveForm.value | json}}
+        <div class="row">
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>WorkOrder No.</label>
+              <input type="text" class="form-control" placeholder="WorkOrder No" value="" formControlName="workorderNo"
+                readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description"
+                readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Worktype</label>
+              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype"
+                readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>WO Status</label>
+              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus"
+                readonly>
+            </div>
+          </div>
+          <div class="col-md-12 px-1">
+            <div class="form-group btn-normal">
+              <!-- <label style="visibility:hidden">Create Snag</label> -->
+              <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" (click)="addNewRow()"
+                [disabled]="isDisabled">Add
+                Line</button>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col-lg-12">
+          <div class="table-responsive">
+            <p class="table-heading">Asset Install/Remove</p>
+            <div class="table-scroll">
+              <table class="table ">
+                <thead class=" text-primary">
+                  <th>Job Type</th>
+                  <th>Item</th>
+                  <th>Build Item</th>
+                  <th>Position</th>
+
+                  <th>Part No.</th>
+                  <th>Action</th>
+
+
+                </thead>
+                <tbody>
+                  <ng-container formArrayName="assetdetails">
+                    <tr *ngFor="let assetdetail of assetDetailFunction.controls;let i = index" [formGroupName]="i">
+
+
+                      <td>
+                        <input type="text" class="form-control" [id]="'asset' + i" placeholder="JobType"
+                          formControlName="JobType">
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'description' + i" placeholder="Item"
+                          formControlName="Item">
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'partNo' + i" placeholder="BuildItem"
+                          formControlName="BuildItem">
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'serial' + i" placeholder="Position"
+                          formControlName="Position">
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="PartNo"
+                          formControlName="PartNo">
+                      </td>
+
+
+                      <td>
+                        <button type="submit">Install/Remove</button>
+                        <button type="submit">Delete</button>
+                      </td>
+
+                    </tr>
+                  </ng-container>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div>
           <div class="row">
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>WorkOrder No.</label>
-                <input type="text" class="form-control" placeholder="WorkOrder No" value="" readonly>
+            <div class="col-md-6">
+              <div class="card">
+                <div class="card-body">
+                  <input type="checkbox" id="check" value="" (change)="onChecked($event)">
+                  <label class="control-label" *ngIf="!isShow && !isShow1">Installed</label>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <form>
+                        <div class="row">
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>JobType</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removed Part</label>
+                              <input type="text" class="form-control" placeholder="Description" readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removal Reason</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Build Item</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Serial Number</label>
+                              <input type="text" class="form-control" readonly="true" placeholder="Serial Number" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removal Condition</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>LCN</label>
+                              <input type="text" class="form-control" placeholder="LCN" readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Asset No.</label>
+                              <input type="text" class="form-control" placeholder="Asset No." readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removal Type</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Position</label>
+                              <input type="text" class="form-control" placeholder="Position" readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removed By</label>
+                              <input type="text" class="form-control" placeholder="Removed By" readonly = "true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Remarks</label>
+                              <input type="text" class="form-control" placeholder="Remarks" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Part #</label>
+                              <input type="text" class="form-control" placeholder="Part No" readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removal Date</label>
+                              <input type="text" class="form-control" placeholder="Removal Date" readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Item</label>
+                              <input type="text" class="form-control" placeholder="Item" readonly="true"value="">
+                            </div>
+                          </div>
+                          
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>Description</label>
-                <input type="text" class="form-control" placeholder="Description" value="" readonly>
-              </div>
-            </div>
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>Worktype</label>
-                <input type="text" class="form-control" placeholder="Worktype" value="" readonly>
-              </div>
-            </div>
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>WO Status</label>
-                <input type="text" class="form-control" placeholder="WO Status" value="" readonly>
-              </div>
-            </div>
-            <div class="col-md-12 px-1" >
-              <div class="form-group btn-normal">
-                <!-- <label style="visibility:hidden">Create Snag</label> -->
-               <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Add Line</button>
+            <div class="col-md-6">
+
+              <div class="card">
+                <div class="card-body">
+                  <input type="checkbox" id="check" value="" (change)="onChecked($event)">
+                  <label class="control-label" *ngIf="!isShow && !isShow1">Removed</label>
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <form>
+                        <div class="row">
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>JobType</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removed Part</label>
+                              <input type="text" class="form-control" placeholder="Description" readonly="true" value="">
+                            </div>
+                          </div>
+                          <div class="col-md-4 px-1">
+                            <div class="form-group">
+                              <label>Removal Reason</label>
+                              <select class="form-control" name="snags" size="1" id="snags">
+                                <option value="">Select Value</option>
+                                <option value="">1</option>
+                                <option value="">2</option>
+                                <option value="">3</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                </div>
               </div>
             </div>
           </div>
-        </form>
-      
-    </div>
-    <div class="col-lg-12">
-      <div class="table-responsive">
-        <p class="table-heading">Asset Install/Remove</p>
-        <div class="table-scroll">
-          <table class="table ">
-            <thead class=" text-primary">
-              <th>Job Type</th>
-              <th>Item</th>
-              <th>Build Item</th>
-              <th>Position</th>
-              
-              <th>Part No.</th>
-              <th>Action</th>
-              
-              
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                
-                <td>
-                  <button type="submit" >Install/Remove</button>
-                  <button type="submit" >Delete</button>
-                </td>
-              </tr>
-              
-            </tbody>
-          </table>
         </div>
+
       </div>
     </div>
-  </div>
+  </form>
+</div>

@@ -56,7 +56,7 @@
               <tbody>
                 
                   <ng-container formArrayName="AddTechnician">
-                <tr  *ngFor="let product of taskComplianceFrom.get('AddTechnician').controls;let i = index" [formGroupName]="i">
+                <tr  *ngFor="let product of technicians.controls;let i = index" [formGroupName]="i">
                     <td>
                       <select class="form-control" [id]="'technicianId' + i" placeholder="Technician Id"  (change)="abc(i)" formControlName="technicianId">
                         <option value="" disabled selected hidden>Select Technician Id</option>
@@ -70,12 +70,14 @@
                       <input type="text" class="form-control" [id]="'teskDiscription' + i" placeholder="Technician Discription" formControlName="teskDiscription">
                     </td>
                     <td>
-                      <input type="datetime-local" class="form-control" [id]="'complianceDate' + i" placeholder="Compliance Date " formControlName="complianceDate">
+                      <input type="datetime-local" class="form-control" [id]="'complianceDate' + i" [readonly]="disableSaveButton[i]" placeholder="Compliance Date " formControlName="complianceDate">
                     </td>
                     <td>
-                      <button type="submit" (click)="onCompliance(i)">Compliance</button>
-                      <button type="submit"  (click)="onDelete(i)">Delete</button>
+                      <button type="submit" *ngIf="!disableSaveButton[i]" (click)="onCompliance(i)">Compliance</button>
+                      <button type="submit" *ngIf="!disableSaveButton[i]" (click)="onDelete(i)">Delete</button>
+                      <button type="submit"  *ngIf="disableSaveButton[i]" (click)="saveTLC(i)">Save</button> 
                     </td>
+
                   
                 </tr>
               </ng-container>
