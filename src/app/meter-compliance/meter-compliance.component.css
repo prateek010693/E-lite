@@ -4,6 +4,15 @@
 }
 .table-responsive .table{
     margin-bottom: 0 !important;
-    display: block;
     white-space: nowrap;
+}
+.table .table-position{
+    position: relative;
+}
+.table .table-position .lookup{
+    position: absolute;
+    margin-top: 0;
+    margin-right: 0;
+    right: 6%;
+    top: 35%;
 }
