@@ -1,7 +1,8 @@
 <div class="main-content">
-  <form [formGroup]="assetInstallRemoveForm">
-    <div class="row">
-      <div class="col-lg-12">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <form [formGroup]="assetInstallRemoveForm">
         {{assetInstallRemoveForm.value | json}}
         <div class="row">
           <div class="col-md-3 px-1">
@@ -35,12 +36,13 @@
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
-              <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" (click)="addNewRow()"
+              <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" (click)="addNewLine()"
                 [disabled]="isDisabled">Add
                 Line</button>
             </div>
           </div>
         </div>
+
 
 
 
@@ -100,181 +102,222 @@
             </div>
           </div>
         </div>
-        <div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="card">
-                <div class="card-body">
-                  <input type="checkbox" id="check" value="" (change)="onChecked($event)">
-                  <label class="control-label" *ngIf="!isShow && !isShow1">Installed</label>
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <form>
-                        <div class="row">
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>JobType</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
+      </form>
+      <div>
+        <div class="row">
+          <div [ngClass]="isShow2 == false ? 'fullwidth': 'halfr'" *ngIf="isShow ">
+            <div class="card" *ngIf="isShow1 ">
+              <div class="card-body">
+                <input type="checkbox" id="check" value="" (change)="onCheckedRemoved($event)">
+                <label class="control-label">Removed</label>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form [formGroup]="removeForm">
+                      <!-- {{removeForm.value | json}} -->
+                      <div class="row">
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>JobType</label>
+                            <select class="form-control"  placeholder="jobType" (change)="abc(i)"
+                              formControlName="jobType">
+                              <option value="" disabled selected hidden>Select JobType</option>
+                              <option *ngFor="let jobtype of JobType" [value]="jobtype.value">{{jobtype.id}}</option>
+                            </select>
                           </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removed Part</label>
-                              <input type="text" class="form-control" placeholder="Description" readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removal Reason</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Build Item</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Serial Number</label>
-                              <input type="text" class="form-control" readonly="true" placeholder="Serial Number" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removal Condition</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>LCN</label>
-                              <input type="text" class="form-control" placeholder="LCN" readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Asset No.</label>
-                              <input type="text" class="form-control" placeholder="Asset No." readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removal Type</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Position</label>
-                              <input type="text" class="form-control" placeholder="Position" readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removed By</label>
-                              <input type="text" class="form-control" placeholder="Removed By" readonly = "true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Remarks</label>
-                              <input type="text" class="form-control" placeholder="Remarks" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Part #</label>
-                              <input type="text" class="form-control" placeholder="Part No" readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removal Date</label>
-                              <input type="text" class="form-control" placeholder="Removal Date" readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Item</label>
-                              <input type="text" class="form-control" placeholder="Item" readonly="true"value="">
-                            </div>
-                          </div>
-                          
                         </div>
-                      </form>
-                    </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removed Part</label>
+                            <input type="text" class="form-control" formControlName="removePartNo"
+                              placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Reason</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="rReason(rreason)"></i>
+  
+                              <input type="text" class="form-control" placeholder="RemovalReason" value=""
+                                formControlName="removalReason" readonly>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Build Item</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" 
+                            (click)="open(buildItem)"></i>
+
+                            <input type="text" class="form-control" placeholder="Asset" value=""
+                              formControlName="buildItem" readonly>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Serial Number</label>
+                            <input type="text" class="form-control" readonly="true" placeholder="Serial Number" value=""
+                              formControlName="serialNo">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Condition</label>
+
+                            <select class="form-control"  placeholder="removalCondition"
+                              (change)="abc(i)" formControlName="removalCond">
+                              <option value="" disabled selected hidden>Select Build Item</option>
+                              <option *ngFor="let removalCondition of removalCondition"
+                                [value]="removalCondition.value">{{removalCondition.id}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>LCN</label>
+                            <input type="text" class="form-control" placeholder="LCN" readonly="true" value=""
+                              formControlName="lcn">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Asset No.</label>
+                            <input type="text" class="form-control" placeholder="Asset No." formControlName="assetNo"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Type</label>
+
+                            <select class="form-control"  placeholder="removalType"
+                              (change)="abc(i)" formControlName="removalType">
+                              <option value="" disabled selected hidden>Select removalType</option>
+                              <option *ngFor="let removalType of removalType" [value]="removalType.value">
+                                {{removalType.id}}</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Position</label>
+                            <input type="text" class="form-control" placeholder="Position" formControlName="position"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removed By</label>
+                            <input type="text" class="form-control" placeholder="Removed By" formControlName="removedBy"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" placeholder="Remarks" formControlName="remarks"
+                              value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Part #</label>
+                            <input type="text" class="form-control" placeholder="Part No" formControlName="partNo"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Date</label>
+                            <input type="text" class="form-control" placeholder="Removal Date"
+                              formControlName="removalDate" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Item</label>
+                            <input type="text" class="form-control" placeholder="Item" formControlName="item"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group btn-normal">
+                            <!-- <label style="visibility:hidden">Create Snag</label> -->
+                            <button type="button"(click)="removedSave()">Save</button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="col-md-6">
+          </div>
+          <div [ngClass]="isShow1 == false ? 'fullwidth': 'halfi'" *ngIf="isShow ">
 
-              <div class="card">
-                <div class="card-body">
-                  <input type="checkbox" id="check" value="" (change)="onChecked($event)">
-                  <label class="control-label" *ngIf="!isShow && !isShow1">Removed</label>
-                  <div class="row">
-                    <div class="col-lg-12">
-                      <form>
-                        <div class="row">
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>JobType</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removed Part</label>
-                              <input type="text" class="form-control" placeholder="Description" readonly="true" value="">
-                            </div>
-                          </div>
-                          <div class="col-md-4 px-1">
-                            <div class="form-group">
-                              <label>Removal Reason</label>
-                              <select class="form-control" name="snags" size="1" id="snags">
-                                <option value="">Select Value</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                                <option value="">3</option>
-                              </select>
-                            </div>
+            <div class="card" *ngIf="isShow2 ">
+              <div class="card-body">
+                <input type="checkbox" id="check" value="" (change)="onCheckedInstalled($event)">
+                <label class="control-label">Installed</label>
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form [formGroup]="installForm">
+                      <!-- {{installForm.value | json}} -->
+                      <div class="row">
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Asset</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" 
+                            (click)="open(asset)"></i>
+
+                            <input type="text" class="form-control" placeholder="Asset" value=""
+                              formControlName="asset" readonly>
                           </div>
                         </div>
-                      </form>
-                    </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Date</label>
+                            <input type="text" class="form-control" formControlName="asset" placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Part Number</label>
+                            <input type="text" class="form-control" formControlName="installedDate" placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" formControlName="installedPartNo" placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Serial Number</label>
+                            <input type="text" class="form-control" formControlName="installedserialNo" placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed By</label>
+                            <input type="text" class="form-control" formControlName="installedBy" placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Asset Condition</label>
+                            <input type="text" class="form-control" formControlName="installedAssetCond" placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group btn-normal">
+                            <!-- <label style="visibility:hidden">Create Snag</label> -->
+                            <button type="button">Save</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
@@ -282,6 +325,148 @@
         </div>
 
       </div>
+      <div class="col-lg-12">
+        <ng-template #buildItem let-model class="assest">
+          <div class="model-header">
+            <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+            <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                <i class="now-ui-icons ui-1_simple-remove"></i>
+            </button>
+        </div>
+        <div class="model-body">
+            <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+            </div>
+            <div class="table-responsive">
+                <div class="table-scroll">
+                    <table class="table">
+                        <thead class="text-primary">
+                            <th>Selection</th>
+                            <th>Assest</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Serial#</th>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                              <td>
+                                  <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio" value="{{buildItemArray.indexCount}}">
+                              </td>
+                              <td>{{buildItemArray.assetnum}}</td>
+                              <td>{{buildItemArray.description}}</td>
+                              <td>{{buildItemArray.status}}</td>
+                              <td>{{buildItemArray.serialnumber}}</td>
+                              <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="model-footer">
+            <button type="button" (click)="model.close('Save click')">Save</button>
+        </div>
+
+    </ng-template>
+    <div class="col-lg-12">
+      <ng-template #rreason let-model class="assest">
+        <div class="model-header">
+          <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+              <i class="now-ui-icons ui-1_simple-remove"></i>
+          </button>
+      </div>
+      <div class="model-body">
+          <div class="form-group">
+              <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+          </div>
+          <div class="table-responsive">
+              <div class="table-scroll">
+                  <table class="table">
+                      <thead class="text-primary">
+                          <th>Selection</th>
+                          <th>Assest</th>
+                          <th>Description</th>
+                          <th>Status</th>
+                          <th>Serial#</th>
+                      </thead>
+                      <tbody>
+                          <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                              <td>
+                                  <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio" value="{{buildItemArray.indexCount}}">
+                              </td>
+                              <td>{{buildItemArray.assetnum}}</td>
+                              <td>{{buildItemArray.description}}</td>
+                              <td>{{buildItemArray.status}}</td>
+                              <td>{{buildItemArray.serialnumber}}</td>
+                              <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+
+      </div>
+
+      <div class="model-footer">
+          <button type="button" (click)="model.close('Save click')">Save</button>
+      </div>
+
+  </ng-template>
+
     </div>
-  </form>
+    <div class="col-lg-12">
+      <ng-template #asset let-model class="assest">
+        <div class="model-header">
+          <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+            <i class="now-ui-icons ui-1_simple-remove"></i>
+          </button>
+        </div>
+        <div class="model-body">
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+          </div>
+          <div class="table-responsive">
+            <div class="table-scroll">
+              <table class="table">
+                <thead class="text-primary">
+                  <th>Selection</th>
+                  <th>Assest</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Serial#</th>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                    <td>
+                      <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
+                        value="{{buildItemArray.indexCount}}">
+                    </td>
+                    <td>{{buildItemArray.assetnum}}</td>
+                    <td>{{buildItemArray.description}}</td>
+                    <td>{{buildItemArray.status}}</td>
+                    <td>{{buildItemArray.serialnumber}}</td>
+                    <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="model-footer">
+          <button type="button" (click)="model.close('Save click')">Save</button>
+        </div>
+
+      </ng-template>
+
+    </div>
+      </div>
+    </div>
+  </div>
+
 </div>
