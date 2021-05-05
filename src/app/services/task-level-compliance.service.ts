@@ -20,13 +20,16 @@ export class TaskLevelComplianceService {
   createTaskLevelCompliance(wo_id:any, object:any):Observable<any>{
     console.log("inside createTaskLevelCompliance")
     const url = this.baseURL+'createTaskLevelCompliance/'+wo_id
-    return this.http.post(url,object,{ observe: 'response' })
+    return this.http.post(url,object)
   }
   deleteTaskLevelCompliance(tlcid:string):Observable<any>{
     console.log("inside deleteTaskLevelCompliance")
     const url = this.baseURL+'deleteTaskLevelCompliance/'+tlcid
     return this.http.get(url,{observe:'response'})
-    
-    
+  }
+  complyTaskLevelCompliance(tlcid:string):Observable<any>{
+    console.log("inside complyTaskLevelCompliance")
+    const url = this.baseURL+'complyTaskLevelCompliance/'+tlcid
+    return this.http.put(url,{observe:'response'})
   }
 }

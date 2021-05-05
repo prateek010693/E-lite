@@ -89,7 +89,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     let count = 0
     var assetData = []
     this.planedAssestService.getPlannedAsset().subscribe(data =>{
-      console.log('data',data)
+      console.log('dataasset',data)
       data.map(el =>{
         assetData.push({
           "assetnum":el.assetnum ? el.assetnum : "N/A",
@@ -107,7 +107,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     var count = 0
     var workTypeData = []
     this.workorderService.getWorkType().subscribe(data =>{
-      console.log('data',data)
+      console.log('workTypeData',data)
       data.map(el =>{
         workTypeData.push({
           "workType":el.wrkTyp ? el.wrkTyp : "N/A",
@@ -122,7 +122,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     var count = 0
     var pmData = []
     this.workorderService.getPM().subscribe(data =>{
-      console.log('data',data)
+      console.log('pmData',data)
       data.map(el =>{
         pmData.push({
           "pm":el.pmNum ? el.pmNum : "N/A",

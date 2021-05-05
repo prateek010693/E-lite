@@ -2,3 +2,16 @@
     overflow: auto;
     margin-bottom: 10px;
 }
+.fullwidth{
+	width: 100%;
+	left: 0;
+}
+
+.halfr{
+    width: 50%;
+    left:0
+}
+.halfi{
+    width: 50%;
+    right:0;
+}
