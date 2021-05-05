@@ -93,13 +93,8 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   getAsset() {
     let count = 0
     var assetData = []
-<<<<<<< HEAD
     this.meterComplianceService.getAssetAndMeter().subscribe(data =>{
       console.log('data',data)
-=======
-    this.planedAssestService.getPlannedAsset().subscribe(data =>{
-      console.log('dataasset',data)
->>>>>>> d057507eef7bb9a16e2c00ff1205e5aded170b33
       data.map(el =>{
         assetData.push({
           "assetnum":el.assetId_assetLookup ? el.assetId_assetLookup : "N/A",
