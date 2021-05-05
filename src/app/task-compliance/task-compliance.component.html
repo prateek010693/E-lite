@@ -7,25 +7,25 @@
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WorkOrder No.</label>
-              <input type="text" class="form-control" placeholder="WorkOrder No." value="" readonly>
+              <input type="text" class="form-control" formControlName="workorderNo" placeholder="WorkOrder No." value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Description</label>
-              <input type="text" class="form-control" placeholder="Description" value="" readonly>
+              <input type="text" class="form-control" formControlName="description" placeholder="Description" value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Worktype</label>
-              <input type="text" class="form-control" placeholder="Worktype" value="" readonly>
+              <input type="text" class="form-control" formControlName="worktype" placeholder="Worktype" value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WO Status</label>
-              <input type="text" class="form-control" placeholder="WO Status" value="" readonly>
+              <input type="text" class="form-control" formControlName="woStatus" placeholder="WO Status" value="" readonly>
             </div>
           </div>
           <div class="col-md-12 px-1">
@@ -64,18 +64,18 @@
                       </select>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'technicianName' + i" placeholder="Technician Name" formControlName="technicianName">
+                      <input type="text" class="form-control" [id]="'technicianName' + i" placeholder="Technician Name" [readonly]="true" formControlName="technicianName">
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'teskDiscription' + i" placeholder="Technician Discription" formControlName="teskDiscription">
                     </td>
                     <td>
-                      <input type="datetime-local" class="form-control" [id]="'complianceDate' + i" [readonly]="disableSaveButton[i]" placeholder="Compliance Date " formControlName="complianceDate">
+                      <input type="text" class="form-control" [id]="'complianceDate' + i" [readonly]="true" placeholder="Compliance Date " formControlName="complianceDate">
                     </td>
                     <td>
-                      <button type="submit" *ngIf="!disableSaveButton[i]" (click)="onCompliance(i)">Compliance</button>
-                      <button type="submit" *ngIf="!disableSaveButton[i]" (click)="onDelete(i)">Delete</button>
-                      <button type="submit"  *ngIf="disableSaveButton[i]" (click)="saveTLC(i)">Save</button> 
+                      <button type="button" *ngIf="!disableSaveButton[i]" [ngClass]="closestatus == true ? 'isDisabled' : ''"  (click)="onCompliance(i)">Compliance</button>
+                      <button type="button" *ngIf="!disableSaveButton[i]" [ngClass]="closestatus == true ? 'isDisabled' : ''"  (click)="onDelete(i)">Delete</button>
+                      <button type="button"  *ngIf="disableSaveButton[i]" (click)="saveTLC(i)">Save</button> 
                     </td>
 
                   
