@@ -13,6 +13,7 @@ import {DatePipe} from '@angular/common'
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { PlanedAssestService } from './services/planed-assest.service';
 import { WorkorderService } from './services/workorder.service';
+import { MeterComplianceService } from './services/meter-compliance.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 // import { TaskLevelComplianceService } from './services/task-level-compliance.service';
@@ -50,7 +51,7 @@ import { AdminLoginComponent } from './admin-login/admin-login.component';
     AdminLoginComponent,
   ],
   
-  providers: [PlanedAssestService,WorkorderService,LoaderService,AuthGuard,DatePipe,
+  providers: [PlanedAssestService,WorkorderService,MeterComplianceService,LoaderService,AuthGuard,DatePipe,
   {provide:HTTP_INTERCEPTORS, useClass: InterceptorService, multi:true}],
   bootstrap: [AppComponent]
   // TaskLevelComplianceService

@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common'
 import { WorkorderService } from '../services/workorder.service';
 import { LoaderService } from '../services/loader.service';
-import { PlanedAssestService } from '../services/planed-assest.service';
+import { MeterComplianceService } from '../services/meter-compliance.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-workorderdetails',
@@ -35,7 +35,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     private bootstrapModel: NgbModal,
     private workorderService:WorkorderService,
     public _loderservice:LoaderService,
-    private planedAssestService:PlanedAssestService,
+    private meterComplianceService:MeterComplianceService,
     private dataPipe:DatePipe,
     private toastr:ToastrService) { }
 
@@ -44,18 +44,23 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
       return value;
     }
     return value.filter(item => {
-      if(item.assetnum == undefined && item.workType == undefined){
+      console.log('item',item)
+      if(item.assetnum == undefined && item.workType == undefined && item.meternum == undefined){
         var filter =item.pm.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
       }
-      if(item.assetnum == undefined && item.pm == undefined){
+      if(item.assetnum == undefined && item.pm == undefined  && item.meternum == undefined){
         var filter =item.workType.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase()) 
         return filter
       }
-      if(item.workType == undefined && item.pm == undefined){
-        var filter =item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase()) 
+      if(item.workType == undefined && item.pm == undefined  && item.meternum == undefined){
+        var filter =item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
       }   
+      if(item.workType == undefined && item.pm == undefined && item.assetnum == undefined ){
+        var filter =item.meternum.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase()) 
+        return filter
+      }
     })
   }
   ngOnInit(): void {
@@ -88,15 +93,15 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   getAsset() {
     let count = 0
     var assetData = []
-    this.planedAssestService.getPlannedAsset().subscribe(data =>{
-      console.log('dataasset',data)
+    this.meterComplianceService.getAssetAndMeter().subscribe(data =>{
+      console.log('data',data)
       data.map(el =>{
         assetData.push({
-          "assetnum":el.assetnum ? el.assetnum : "N/A",
-          "description":el.description ? el.description : "N/A",
-          "status":el.status ? el.status : "N/A",
-          "serialnumber":el.serialnum ? el.serialnum : "N/A",
-          "cmitem":el.cmitem ? el.cmitem : "N/A",
+          "assetnum":el.assetId_assetLookup ? el.assetId_assetLookup : "N/A",
+          "description":el.assetDescription_assetLookup ? el.assetDescription_assetLookup : "N/A",
+          "status":el.statusString ? el.statusString : "N/A",
+          "serialnumber":el.serialNum ? el.serialNum : "N/A",
+          "cmitem":el.partNumber_meterLookup ? el.partNumber_meterLookup : "N/A",
           "indexCount":count++
         })
       })
