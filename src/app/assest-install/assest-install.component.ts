@@ -1,9 +1,10 @@
-import { Component, OnInit, PipeTransform, Pipe  } from '@angular/core';
+import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { WorkorderService } from '../services/workorder.service';
-import { PlanedAssestService } from '../services/planed-assest.service';
+import { AssetInstallRemoveService } from '../services/asset-install-remove.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MeterComplianceService } from '../services/meter-compliance.service';
 @Component({
   selector: 'app-assest-install',
   templateUrl: './assest-install.component.html',
@@ -12,19 +13,21 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Pipe({
   name: 'search',
 })
-export class AssestInstallComponent implements OnInit,PipeTransform {
+export class AssestInstallComponent implements OnInit, PipeTransform {
   assetInstallRemoveForm: FormGroup
   removeForm: FormGroup
   installForm: FormGroup
   id: any;
-  index:any;
-  searchvalue:any;
+  index: any;
+  searchvalue: any;
   closestatus: any;
   isShow: boolean = false
+  installedsave: boolean = false
+  removedsave: boolean = false
   isShow1: boolean = false
   isShow2: boolean = false
   isDisabled: boolean = false
-  buildItemArray : any = []
+  buildItemArray: any = []
   JobType = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
   removalReason = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
   buildItem = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
@@ -33,26 +36,27 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
   constructor(private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private workorderService: WorkorderService,
-    private planedAssestService:PlanedAssestService,
+    private meterComplianceService: MeterComplianceService,
+    private assetInstallRemoveService: AssetInstallRemoveService,
     private bootstrapModel: NgbModal,
   ) { }
-  transform(value:any, searchvalue: any): any {
+  transform(value: any, searchvalue: any): any {
     if (!value || !searchvalue) {
       return value;
     }
     return value.filter(item => {
-      if(item.assetnum == undefined && item.workType == undefined){
-        var filter =item.pm.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
+      if (item.installedBy == undefined) {
+        var filter = item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
       }
-      if(item.assetnum == undefined && item.pm == undefined){
-        var filter =item.workType.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase()) 
+      if (item.assetnum == undefined && item.pm == undefined) {
+        var filter = item.workType.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
       }
-      if(item.workType == undefined && item.pm == undefined){
-        var filter =item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase()) 
+      if (item.workType == undefined && item.pm == undefined) {
+        var filter = item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
-      }   
+      }
     })
   }
   ngOnInit(): void {
@@ -69,7 +73,7 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
 
     })
     this.removeForm = this.fb.group({
-      insRemId: '1',
+      insRemId: '',
       workorderId: '1',
       jobType: '1',
       buildItem: '1',
@@ -88,19 +92,23 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
       remarks: '1',
 
     })
+
     this.installForm = this.fb.group({
-      asset: '1',
-      installedDate: '1',
-      installedPartNo: '1',
-      installedserialNo: '1',
+      insRemId: '',
+      insAssetNo: '1',
+      remInsDate: '1',
+      insPartNo: '1',
+      insSerialNo: '1',
       installedBy: '1',
-      installedAssetCond: '1',
+      remarks: '1',
+      insCond: '1',
     })
     if (this.id == "null") {
       this.isDisabled = true
     }
     else {
       this.getExistingWO()
+      this.fetchExistingAsset()
 
     }
   }
@@ -126,7 +134,7 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
     this.isShow = true
     this.isShow1 = true
     this.isShow2 = true
-
+    document.getElementById("IRdiv").scrollIntoView();
     console.log("here", this.isShow, this.isShow1)
   }
   onCheckedRemoved(event: any) {
@@ -135,11 +143,13 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
 
       this.isShow1 = true
       this.isShow2 = false
+      this.removedsave = true
       console.log("sho1,sho2", this.isShow1, this.isShow2)
     }
     else {
       this.isShow2 = true
       this.isShow1 = true
+      this.removedsave = false
     }
 
   }
@@ -147,19 +157,21 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
     if (event.target.checked == true) {
       this.isShow2 = true
       this.isShow1 = false
+      this.installedsave = true
       console.log("sho1,sho2", this.isShow1, this.isShow2)
 
     }
     else {
       this.isShow2 = true
       this.isShow1 = true
+      this.installedsave = false
     }
 
   }
   getExistingWO() {
     console.log('this.id++++', this.id)
     this.workorderService.getExistingWO(this.id).subscribe(data => {
-      console.log('data', data)
+      console.log('workorderdata', data)
 
 
       //this.date = (this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') != null) ?  this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') : "N/A"
@@ -190,8 +202,8 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
       }
 
     });
-    this.buildItemArray=this.getAsset();
-    
+    this.buildItemArray = this.getAsset();
+
   }
   rReason(asset) {
     this.searchvalue = ''
@@ -202,65 +214,206 @@ export class AssestInstallComponent implements OnInit,PipeTransform {
       }
 
     });
-    this.buildItemArray=this.getAsset();
-    
+    this.buildItemArray = this.getAsset();
+
   }
-  assetLookup(asset) {
+  iAsset(asset) {
     this.searchvalue = ''
     this.bootstrapModel.open(asset, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
-      console.log('resultasset', result)
+      console.log('resultrReason', result)
       if (result == 'Save click') {
         //this.assetSave(this.index)
       }
 
     });
-    this.buildItemArray=this.getAsset();
-    
+    this.buildItemArray = this.getAsset();
+
   }
-  assetSave(index) {
+  rassetSave(index) {
     this.index = index
     this.removeForm.controls['assetNo'].setValue(this.buildItemArray[this.index].assetnum)
     this.removeForm.controls['serialNo'].setValue(this.buildItemArray[this.index].serialnumber)
+    this.removeForm.controls['item'].setValue(this.buildItemArray[this.index].cmitem)
+    this.removeForm.controls['buildItem'].setValue(this.buildItemArray[this.index].buildItem)
+    this.removeForm.controls['lcn'].setValue(this.buildItemArray[this.index].lcn)
+    this.removeForm.controls['position'].setValue(this.buildItemArray[this.index].position)
+    //this.removeForm.controls['cmItem'].setValue(this.buildItemArray[this.index].cmitem)
+  }
+  iassetSave(index) {
+    this.index = index
+    this.installForm.controls['insAssetNo'].setValue(this.buildItemArray[this.index].assetnum)
+    //this.installForm.controls['remInsDate'].setValue(this.buildItemArray[this.index].serialnumber)
+    this.installForm.controls['insSerialNo'].setValue(this.buildItemArray[this.index].serialnumber)
+    this.installForm.controls['insPartNo'].setValue(this.buildItemArray[this.index].cmitem)
+    //this.installForm.controls['lcn'].setValue(this.buildItemArray[this.index].lcn)
+    //this.installForm.controls['position'].setValue(this.buildItemArray[this.index].position)
     //this.removeForm.controls['cmItem'].setValue(this.buildItemArray[this.index].cmitem)
   }
   getAsset() {
     let count = 0
     var assetData = []
-    this.planedAssestService.getPlannedAsset().subscribe(data =>{
-      console.log('data',data)
-      data.map(el =>{
+    this.meterComplianceService.getAssetAndMeter().subscribe(data => {
+      console.log('dataofasset', data)
+      data.map(el => {
         assetData.push({
-          "assetnum":el.assetnum ? el.assetnum : "N/A",
-          "description":el.description ? el.description : "N/A",
-          "status":el.status ? el.status : "N/A",
-          "serialnumber":el.serialnum ? el.serialnum : "N/A",
-          "cmitem":el.cmitem ? el.cmitem : "N/A",
-          "indexCount":count++
+          "assetnum": el.assetId_assetLookup ? el.assetId_assetLookup : "N/A",
+          "description": el.assetDescription_assetLookup ? el.assetDescription_assetLookup : "N/A",
+          "meterdescription": el.partDescription_meterLookup ? el.partDescription_meterLookup : "N/A",
+          "status": el.statusString ? el.statusString : "N/A",
+          "serialnumber": el.serialNum ? el.serialNum : "N/A",
+          "position": el.position ? el.position : "N/A",
+          "lcn": el.lcn ? el.lcn : "N/A",
+          "assetNum_meterLookup": el.assetNum_meterLookup ? el.assetNum_meterLookup : "N/A",
+          "cmitem": el.partNumber_meterLookup ? el.partNumber_meterLookup : "N/A",
+          "buildItem": el.buildItem ? el.buildItem : "N/A",
+          "indexCount": count++
         })
       })
     })
     return assetData
   }
-  removedSave(){
-    var workorderData = { 
-      "insRemId":this.removeForm.controls['insRemId'].value,
-     "workorderId":this.removeForm.controls['workorderId'].value,
-     "jobType":this.removeForm.controls['jobType'].value,
-     // status:this.removeForm.controls['woStatus'].value,
-     "buildItem":this.removeForm.controls['buildItem'].value,
-     "lcn":this.removeForm.controls['lcn'].value,
-     "position":this.removeForm.controls['position'].value,
-     "partNo":this.removeForm.controls['partNo'].value,
-     "item":this.removeForm.controls['item'].value,
-     "removePartNo":this.removeForm.controls['removePartNo'].value,
-     "serialNo":this.removeForm.controls['serialNo'].value,
-     "assetNo":this.removeForm.controls['assetNo'].value,
-     "removedBy":this.removeForm.controls['removedBy'].value,
-     "removalDate":this.removeForm.controls['removalDate'].value,
-     "removalReason":this.removeForm.controls['removalReason'].value,
-     "removalCond":this.removeForm.controls['removalCond'].value,
-     "removalType":this.removeForm.controls['removalType'].value,
-     "remarks":this.removeForm.controls['remarks'].value,
-      }
+  removedSave() {
+
+
+    var workorderData = {
+      "insRemId": this.removeForm.controls['insRemId'].value,
+      "workorderId": this.removeForm.controls['workorderId'].value,
+      "jobType": this.removeForm.controls['jobType'].value,
+      "buildItem": this.removeForm.controls['buildItem'].value,
+      "lcn": this.removeForm.controls['lcn'].value,
+      "position": this.removeForm.controls['position'].value,
+      "partNo": this.removeForm.controls['partNo'].value,
+      "item": this.removeForm.controls['item'].value,
+      "removePartNo": this.removeForm.controls['removePartNo'].value,
+      "serialNo": this.removeForm.controls['serialNo'].value,
+      "assetNo": this.removeForm.controls['assetNo'].value,
+      "removedBy": this.removeForm.controls['removedBy'].value,
+      "removalDate": this.removeForm.controls['removalDate'].value,
+      "removalReason": this.removeForm.controls['removalReason'].value,
+      "removalCond": this.removeForm.controls['removalCond'].value,
+      "removalType": this.removeForm.controls['removalType'].value,
+      "remarks": this.removeForm.controls['remarks'].value,
+    }
+    this.assetInstallRemoveService.saveAssetInsRem(this.id, workorderData).subscribe(data => {
+      console.log("dataofnewasset", data)
+
+
+      const abc = this.fb.group({
+        insRemId: data.insRemId,
+        workorderId: data.workorderId,
+        jobType: data.jobType,
+        buildItem: data.buildItem,
+        lcn: data.lcn,
+        position: data.position,
+        partNo: data.partNo,
+        item: data.item,
+        removePartNo: data.removePartNo,
+        serialNo: data.serialNo,
+        assetNo: data.assetNo,
+        removedBy: data.removedBy,
+        removalDate: data.removalDate,
+        removalReason: data.removalReason,
+        removalCond: data.removalCond,
+        removalType: data.removalType,
+        remarks: data.remarks,
+
+
+      })
+
+      this.assetDetailFunction.push(abc)
+
+      this.reset()
+
+
+
+    })
+
+  }
+
+  installedSave() {
+
+
+    var workorderData = {
+      "insRemId": this.installForm.controls['insRemId'].value,
+      "insAssetNo": this.installForm.controls['insAssetNo'].value,
+      "remInsDate": this.installForm.controls['remInsDate'].value,
+      "insPartNo": this.installForm.controls['insPartNo'].value,
+      "insSerialNo": this.installForm.controls['insSerialNo'].value,
+      "installedBy": this.installForm.controls['installedBy'].value,
+      "remarks": this.installForm.controls['remarks'].value,
+      "insCond": this.installForm.controls['insCond'].value,
+
+    }
+    this.assetInstallRemoveService.saveAssetInsRem(this.id, workorderData).subscribe(data => {
+      console.log("dataofnewasseti", data)
+
+
+      const abc = this.fb.group({
+        insRemId: data.insRemId,
+        insAssetNo: data.insAssetNo,
+        remInsDate: data.remInsDate,
+        insPartNo: data.insPartNo,
+        insSerialNo: data.insSerialNo,
+        installedBy: data.installedBy,
+        remarks: data.remarks,
+        insCond: data.insCond,
+        jobType: data.jobType,
+        item: data.item,
+        buildItem: data.buildItem,
+        position: data.position,
+      })
+
+      this.assetDetailFunction.push(abc)
+
+      this.reset()
+
+
+
+    })
+
+  }
+
+  fetchExistingAsset() {
+    const formArray = new FormArray([]);
+    this.assetInstallRemoveService.fetchExistingasset(this.id).subscribe(data => {
+      console.log("dataofexistingasset", data)
+      data.map(el => {
+        formArray.push(
+          this.fb.group({
+            insRemId: el.insRemId,
+            workorderId: el.workorderId,
+            jobType: el.jobType,
+            buildItem: el.buildItem,
+            lcn: el.lcn,
+            position: el.position,
+            partNo: el.partNo,
+            item: el.item,
+            removePartNo: el.removePartNo,
+            serialNo: el.serialNo,
+            assetNo: el.assetNo,
+            removedBy: el.removedBy,
+            removalDate: el.removalDate,
+            removalReason: el.removalReason,
+            removalCond: el.removalCond,
+            removalType: el.removalType,
+            remarks: el.remarks,
+
+
+          })
+        )
+        this.assetInstallRemoveForm.setControl('assetdetails', formArray)
+        
+      })
+      console.log("alreadyassinged", formArray)
+
+    })
+  }
+  reset(){
+    this.isShow= false
+  this.installedsave= false
+  this.removedsave = false
+  this.isShow1 = false
+  this.isShow2 = false
+  
   }
 }

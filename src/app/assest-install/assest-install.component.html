@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col-lg-12">
       <form [formGroup]="assetInstallRemoveForm">
-        {{assetInstallRemoveForm.value | json}}
+        <!-- {{assetInstallRemoveForm.value | json}} -->
         <div class="row">
           <div class="col-md-3 px-1">
             <div class="form-group">
@@ -69,28 +69,30 @@
 
                       <td>
                         <input type="text" class="form-control" [id]="'asset' + i" placeholder="JobType"
-                          formControlName="JobType">
+                          formControlName="jobType" readonly>
                       </td>
                       <td>
                         <input type="text" class="form-control" [id]="'description' + i" placeholder="Item"
-                          formControlName="Item">
+                          formControlName="item" readonly>
                       </td>
                       <td>
                         <input type="text" class="form-control" [id]="'partNo' + i" placeholder="BuildItem"
-                          formControlName="BuildItem">
+                          formControlName="buildItem" readonly>
                       </td>
                       <td>
                         <input type="text" class="form-control" [id]="'serial' + i" placeholder="Position"
-                          formControlName="Position">
+                          formControlName="position" readonly>
                       </td>
                       <td>
                         <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="PartNo"
-                          formControlName="PartNo">
+                          formControlName="partNo" readonly>
                       </td>
 
 
                       <td>
                         <button type="submit">Install/Remove</button>
+                      </td>
+                      <td>
                         <button type="submit">Delete</button>
                       </td>
 
@@ -103,8 +105,8 @@
           </div>
         </div>
       </form>
-      <div>
-        <div class="row">
+      <div id="IRdiv">
+        <div  class="row">
           <div [ngClass]="isShow2 == false ? 'fullwidth': 'halfr'" *ngIf="isShow ">
             <div class="card" *ngIf="isShow1 ">
               <div class="card-body">
@@ -118,8 +120,7 @@
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>JobType</label>
-                            <select class="form-control"  placeholder="jobType" (change)="abc(i)"
-                              formControlName="jobType">
+                            <select class="form-control" placeholder="jobType" formControlName="jobType">
                               <option value="" disabled selected hidden>Select JobType</option>
                               <option *ngFor="let jobtype of JobType" [value]="jobtype.value">{{jobtype.id}}</option>
                             </select>
@@ -136,16 +137,15 @@
                           <div class="form-group">
                             <label>Removal Reason</label>
                             <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="rReason(rreason)"></i>
-  
-                              <input type="text" class="form-control" placeholder="RemovalReason" value=""
-                                formControlName="removalReason" readonly>
+
+                            <input type="text" class="form-control" placeholder="RemovalReason" value=""
+                              formControlName="removalReason" readonly>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Build Item</label>
-                            <i class="now-ui-icons ui-1_zoom-bold lookup" 
-                            (click)="open(buildItem)"></i>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="open(buildItem)"></i>
 
                             <input type="text" class="form-control" placeholder="Asset" value=""
                               formControlName="buildItem" readonly>
@@ -162,8 +162,7 @@
                           <div class="form-group">
                             <label>Removal Condition</label>
 
-                            <select class="form-control"  placeholder="removalCondition"
-                              (change)="abc(i)" formControlName="removalCond">
+                            <select class="form-control" placeholder="removalCondition" formControlName="removalCond">
                               <option value="" disabled selected hidden>Select Build Item</option>
                               <option *ngFor="let removalCondition of removalCondition"
                                 [value]="removalCondition.value">{{removalCondition.id}}</option>
@@ -188,8 +187,7 @@
                           <div class="form-group">
                             <label>Removal Type</label>
 
-                            <select class="form-control"  placeholder="removalType"
-                              (change)="abc(i)" formControlName="removalType">
+                            <select class="form-control" placeholder="removalType" formControlName="removalType">
                               <option value="" disabled selected hidden>Select removalType</option>
                               <option *ngFor="let removalType of removalType" [value]="removalType.value">
                                 {{removalType.id}}</option>
@@ -241,7 +239,7 @@
                         <div class="col-md-4 px-1">
                           <div class="form-group btn-normal">
                             <!-- <label style="visibility:hidden">Create Snag</label> -->
-                            <button type="button"(click)="removedSave()">Save</button>
+                            <button type="button" *ngIf="removedsave" (click)="removedSave()">Save</button>
                           </div>
                         </div>
 
@@ -266,53 +264,58 @@
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Asset</label>
-                            <i class="now-ui-icons ui-1_zoom-bold lookup" 
-                            (click)="open(asset)"></i>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="iAsset(asset)"></i>
 
                             <input type="text" class="form-control" placeholder="Asset" value=""
-                              formControlName="asset" readonly>
+                              formControlName="insAssetNo" readonly>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Installed Date</label>
-                            <input type="text" class="form-control" formControlName="asset" placeholder="Description" readonly="true" value="">
+                            <input type="text" class="form-control" formControlName="remInsDate" placeholder="Description"
+                              readonly="true" value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Installed Part Number</label>
-                            <input type="text" class="form-control" formControlName="installedDate" placeholder="Description" readonly="true" value="">
+                            <input type="text" class="form-control" formControlName="insPartNo"
+                              placeholder="Description" readonly="true" value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Remarks</label>
-                            <input type="text" class="form-control" formControlName="installedPartNo" placeholder="Description" readonly="true" value="">
+                            <input type="text" class="form-control" formControlName="remarks" placeholder="Description"
+                              readonly="true" value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Installed Serial Number</label>
-                            <input type="text" class="form-control" formControlName="installedserialNo" placeholder="Description" readonly="true" value="">
+                            <input type="text" class="form-control" formControlName="insSerialNo"
+                              placeholder="Description" readonly="true" value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Installed By</label>
-                            <input type="text" class="form-control" formControlName="installedBy" placeholder="Description" readonly="true" value="">
+                            <input type="text" class="form-control" formControlName="installedBy"
+                              placeholder="Description" readonly="true" value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Installed Asset Condition</label>
-                            <input type="text" class="form-control" formControlName="installedAssetCond" placeholder="Description" readonly="true" value="">
+                            <input type="text" class="form-control" formControlName="insCond" placeholder="Description"
+                              readonly="true" value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
                           <div class="form-group btn-normal">
                             <!-- <label style="visibility:hidden">Create Snag</label> -->
-                            <button type="button">Save</button>
+                            <button type="button" *ngIf="installedsave" (click)="installedSave()">Save</button>
                           </div>
                         </div>
                       </div>
@@ -330,141 +333,148 @@
           <div class="model-header">
             <h6 class="model-title" id="model-basic-title">Asset Name</h6>
             <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
-                <i class="now-ui-icons ui-1_simple-remove"></i>
+              <i class="now-ui-icons ui-1_simple-remove"></i>
             </button>
-        </div>
-        <div class="model-body">
+          </div>
+          <div class="model-body">
             <div class="form-group">
-                <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
             </div>
             <div class="table-responsive">
-                <div class="table-scroll">
-                    <table class="table">
-                        <thead class="text-primary">
-                            <th>Selection</th>
-                            <th>Assest</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Serial#</th>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
-                              <td>
-                                  <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio" value="{{buildItemArray.indexCount}}">
-                              </td>
-                              <td>{{buildItemArray.assetnum}}</td>
-                              <td>{{buildItemArray.description}}</td>
-                              <td>{{buildItemArray.status}}</td>
-                              <td>{{buildItemArray.serialnumber}}</td>
-                              <td style="display: none;">{{buildItemArray.indexCount}}</td>
-                          </tr>
-                      </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-
-        <div class="model-footer">
-            <button type="button" (click)="model.close('Save click')">Save</button>
-        </div>
-
-    </ng-template>
-    <div class="col-lg-12">
-      <ng-template #rreason let-model class="assest">
-        <div class="model-header">
-          <h6 class="model-title" id="model-basic-title">Asset Name</h6>
-          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
-              <i class="now-ui-icons ui-1_simple-remove"></i>
-          </button>
-      </div>
-      <div class="model-body">
-          <div class="form-group">
-              <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
-          </div>
-          <div class="table-responsive">
               <div class="table-scroll">
-                  <table class="table">
-                      <thead class="text-primary">
-                          <th>Selection</th>
-                          <th>Assest</th>
-                          <th>Description</th>
-                          <th>Status</th>
-                          <th>Serial#</th>
-                      </thead>
-                      <tbody>
-                          <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
-                              <td>
-                                  <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio" value="{{buildItemArray.indexCount}}">
-                              </td>
-                              <td>{{buildItemArray.assetnum}}</td>
-                              <td>{{buildItemArray.description}}</td>
-                              <td>{{buildItemArray.status}}</td>
-                              <td>{{buildItemArray.serialnumber}}</td>
-                              <td style="display: none;">{{buildItemArray.indexCount}}</td>
-                          </tr>
-                      </tbody>
-                  </table>
+                <table class="table">
+                  <thead class="text-primary">
+                    <th>Selection</th>
+                    <th>Assest</th>
+                    <th>Description</th>
+                    <th>LCN</th>
+                    <th>BuildItem</th>
+                    <th>Position</th>
+                    <th>Serial#</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                      <td>
+                        <input type="radio" (click)="rassetSave(buildItemArray.indexCount)" name="radio"
+                          value="{{buildItemArray.indexCount}}">
+                      </td>
+                      <td>{{buildItemArray.assetnum}}</td>
+                      <td>{{buildItemArray.description}}</td>
+                      <td>{{buildItemArray.lcn}}</td>
+                      <td>{{buildItemArray.buildItem}}</td>
+                      <td>{{buildItemArray.position}}</td>
+                      <td>{{buildItemArray.serialnumber}}</td>
+                      <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-          </div>
-
-      </div>
-
-      <div class="model-footer">
-          <button type="button" (click)="model.close('Save click')">Save</button>
-      </div>
-
-  </ng-template>
-
-    </div>
-    <div class="col-lg-12">
-      <ng-template #asset let-model class="assest">
-        <div class="model-header">
-          <h6 class="model-title" id="model-basic-title">Asset Name</h6>
-          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
-            <i class="now-ui-icons ui-1_simple-remove"></i>
-          </button>
-        </div>
-        <div class="model-body">
-          <div class="form-group">
-            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
-          </div>
-          <div class="table-responsive">
-            <div class="table-scroll">
-              <table class="table">
-                <thead class="text-primary">
-                  <th>Selection</th>
-                  <th>Assest</th>
-                  <th>Description</th>
-                  <th>Status</th>
-                  <th>Serial#</th>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
-                    <td>
-                      <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
-                        value="{{buildItemArray.indexCount}}">
-                    </td>
-                    <td>{{buildItemArray.assetnum}}</td>
-                    <td>{{buildItemArray.description}}</td>
-                    <td>{{buildItemArray.status}}</td>
-                    <td>{{buildItemArray.serialnumber}}</td>
-                    <td style="display: none;">{{buildItemArray.indexCount}}</td>
-                  </tr>
-                </tbody>
-              </table>
             </div>
+
           </div>
 
+          <div class="model-footer">
+            <button type="button" (click)="model.close('Save click')">Save</button>
+          </div>
+
+        </ng-template>
+        <div class="col-lg-12">
+          <ng-template #rreason let-model class="assest">
+            <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+            </div>
+            <div class="model-body">
+              <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                <div class="table-scroll">
+                  <table class="table">
+                    <thead class="text-primary">
+                      <th>Selection</th>
+                      <th>Assest</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Serial#</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                        <td>
+                          <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
+                            value="{{buildItemArray.indexCount}}">
+                        </td>
+                        <td>{{buildItemArray.assetnum}}</td>
+                        <td>{{buildItemArray.description}}</td>
+                        <td>{{buildItemArray.status}}</td>
+                        <td>{{buildItemArray.serialnumber}}</td>
+                        <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+            </div>
+
+          </ng-template>
+
         </div>
+        <div class="col-lg-12">
+          <ng-template #asset let-model class="assest">
+            <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+            </div>
+            <div class="model-body">
+              <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                <div class="table-scroll">
+                  <table class="table">
+                    <thead class="text-primary">
+                      <th>Selection</th>
+                      <th>Assest</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Serial#</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                        <td>
+                          <input type="radio" (click)="iassetSave(buildItemArray.indexCount)" name="radio"
+                            value="{{buildItemArray.indexCount}}">
+                        </td>
+                        <td>{{buildItemArray.assetNum_meterLookup}}</td>
+                        <td>{{buildItemArray.meterdescription}}</td>
+                        
+                        <td>{{buildItemArray.cmitem}}</td>
+                        <td>{{buildItemArray.serialnumber}}</td>
+                        <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
 
-        <div class="model-footer">
-          <button type="button" (click)="model.close('Save click')">Save</button>
+            </div>
+
+            <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+            </div>
+
+          </ng-template>
+
         </div>
-
-      </ng-template>
-
-    </div>
       </div>
     </div>
   </div>

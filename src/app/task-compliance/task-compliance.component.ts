@@ -69,8 +69,7 @@ export class TaskComplianceComponent implements OnInit {
   fetchTLC(){
     const formArray = new FormArray([]);
     this.alreadyAssignTech = this.tasklevelcomplianceservice.fetchTaskLevelCompliance(this.id,this.userid).subscribe(element => {
-      var sampledata = []
-      var count = 0;
+      
       console.log("fetchtlc",this.disableSaveButton)
       element.map(el =>{
         
