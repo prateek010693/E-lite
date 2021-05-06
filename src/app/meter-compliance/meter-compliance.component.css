@@ -16,3 +16,11 @@
     right: 6%;
     top: 35%;
 }
+.errors{
+    color: red;
+    margin: 0;
+    font-size: 12px;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+}
