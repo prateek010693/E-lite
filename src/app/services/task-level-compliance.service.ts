@@ -20,7 +20,7 @@ export class TaskLevelComplianceService {
   createTaskLevelCompliance(wo_id:any, object:any):Observable<any>{
     console.log("inside createTaskLevelCompliance")
     const url = this.baseURL+'createTaskLevelCompliance/'+wo_id
-    return this.http.post(url,object)
+    return this.http.post(url,object,{observe:'response'})
   }
   deleteTaskLevelCompliance(tlcid:string):Observable<any>{
     console.log("inside deleteTaskLevelCompliance")

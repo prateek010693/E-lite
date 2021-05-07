@@ -16,5 +16,9 @@ export class AssetInstallRemoveService {
     const url = this.baseURL+'/createInsRemRow/'+woid
     return this.http.post(url,data)
   }
+  removalReason():Observable<any>{
+    const url = this.baseURL+'/viewRemReason'
+    return this.http.get(url)
+  }
   
 }

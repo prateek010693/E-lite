@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {FormGroup,FormBuilder,FormArray,Validator} from '@angular/forms'
+import {FormGroup,FormBuilder,FormArray,Validators} from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
 import { analyzeAndValidateNgModules } from '@angular/compiler';
 import { WorkorderService } from '../services/workorder.service';
@@ -25,6 +25,7 @@ export class TaskComplianceComponent implements OnInit {
   //SaveButtonCounter = 0;
   taskComplianceFrom :FormGroup;
   technicianIds =[];
+  isSubmitted = false;
   isDisabled = false;
   alreadyAssignTech : any = []
   constructor(
@@ -106,9 +107,9 @@ export class TaskComplianceComponent implements OnInit {
     //console.log("addProductFormGroup",this.disableSaveButton)
     return this.fb.group({
       tlcId : [""],
-      technicianId : [""],
+      technicianId : ["",Validators.required],
       technicianName : [""],
-      teskDiscription : [""],
+      teskDiscription : ["",Validators.required],
       complianceDate : [""],
       
     })
@@ -211,6 +212,8 @@ export class TaskComplianceComponent implements OnInit {
     //this.taskComplianceFrom.setControl('AddTechnician[event]',this.demoTaskTech(this.alreadyAssignTech))
   }
   saveTLC(index:any){
+
+    if(this.taskComplianceFrom.valid){
     this.disableSaveButton[index] = false
     const qwe =   (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(index) as FormGroup
     //console.log("save",qwe)
@@ -223,13 +226,18 @@ export class TaskComplianceComponent implements OnInit {
     }
     this.tasklevelcomplianceservice.createTaskLevelCompliance(this.id,TLCData).subscribe(
       (element) =>{
+      console.log(element)
+        if (element.status == 200) {
+          this.toastr.success("saved Sucessfully")
+        }
+        qwe.get('tlcId').patchValue(element.body.tlcId)
       
-        //console.log("tlcId",qwe.get('tlcId').value)
-        qwe.get('tlcId').patchValue(element.tlcId)
-      //console.log('TLCSaved',element.tlcId)
-      //console.log('TLCSaved1',element)
       
     })
+  }
+  else{
+    this.isSubmitted = true
+  }
   }
   getExistingWO(){ 
     console.log('this.id++++',this.id)

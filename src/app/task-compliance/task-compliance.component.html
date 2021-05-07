@@ -62,12 +62,16 @@
                         <option value="" disabled selected hidden>Select Technician Id</option>
                         <option *ngFor="let technicianId of technicianIds" [value]="technicianId.servicenum">{{technicianId.servicenum}}</option>
                       </select>
+                      <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
+                        Please select TechnicianID</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'technicianName' + i" placeholder="Technician Name" [readonly]="true" formControlName="technicianName">
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'teskDiscription' + i" placeholder="Technician Discription" formControlName="teskDiscription">
+                      <span class="errors" *ngIf="product.get('teskDiscription').errors?.required && isSubmitted ">
+                        Please enter Description</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'complianceDate' + i" [readonly]="true" placeholder="Compliance Date " formControlName="complianceDate">

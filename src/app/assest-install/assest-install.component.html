@@ -125,6 +125,8 @@
                               <option value="" disabled selected hidden>Select JobType</option>
                               <option *ngFor="let jobtype of JobType" [value]="jobtype.value">{{jobtype.id}}</option>
                             </select>
+                            <span class="errors" *ngIf="removeForm.controls['jobType'].errors?.required && isSubmitted ">
+                              Please Select JobType</span>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -141,6 +143,8 @@
 
                             <input type="text" class="form-control" placeholder="RemovalReason" value=""
                               formControlName="removalReason" readonly>
+                              <span class="errors" *ngIf="removeForm.controls['removalReason'].errors?.required && isSubmitted ">
+                                Please Select removalReason</span>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -150,6 +154,9 @@
 
                             <input type="text" class="form-control" placeholder="Asset" value=""
                               formControlName="buildItem" readonly>
+                              <span class="errors" *ngIf="removeForm.controls['buildItem'].errors?.required && isSubmitted ">
+                                Please Select buildItem</span>
+                              
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -168,6 +175,8 @@
                               <option *ngFor="let removalCondition of removalCondition"
                                 [value]="removalCondition.value">{{removalCondition.id}}</option>
                             </select>
+                            <span class="errors" *ngIf="removeForm.controls['removalCond'].errors?.required && isSubmitted ">
+                              Please Select removalCond</span>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -193,6 +202,8 @@
                               <option *ngFor="let removalType of removalType" [value]="removalType.value">
                                 {{removalType.id}}</option>
                             </select>
+                            <span class="errors" *ngIf="removeForm.controls['removalType'].errors?.required && isSubmitted ">
+                              Please Select removalType</span>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -269,6 +280,8 @@
 
                             <input type="text" class="form-control" placeholder="Asset" value=""
                               formControlName="insAssetNo" readonly>
+                              <span class="errors" *ngIf="installForm.controls['insAssetNo'].errors?.required && isSubmitted1 ">
+                                Please Select Asset</span>
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -289,7 +302,7 @@
                           <div class="form-group">
                             <label>Remarks</label>
                             <input type="text" class="form-control" formControlName="remarks" placeholder="Description"
-                              readonly="true" value="">
+                               value="">
                           </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -356,7 +369,7 @@
                   <tbody>
                     <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
                       <td>
-                        <input type="radio" (click)="rassetSave(buildItemArray.indexCount)" name="radio"
+                        <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
                           value="{{buildItemArray.indexCount}}">
                       </td>
                       <td>{{buildItemArray.assetnum}}</td>
@@ -395,21 +408,21 @@
                 <div class="table-scroll">
                   <table class="table">
                     <thead class="text-primary">
-                      <th>Selection</th>
-                      <th>Assest</th>
-                      <th>Description</th>
-                      <th>Status</th>
-                      <th>Serial#</th>
+                      <th>alndomainId</th>
+                      <th>domainId</th>
+                      <th>value</th>
+                      <th>serialnumber</th>
+                      
                     </thead>
                     <tbody>
-                      <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                      <tr *ngFor="let buildItemArray of removalReason | search : searchvalue ;let i = index">
                         <td>
-                          <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
+                          <input type="radio" (click)="rassetSave(buildItemArray.indexCount)" name="radio"
                             value="{{buildItemArray.indexCount}}">
                         </td>
-                        <td>{{buildItemArray.assetnum}}</td>
-                        <td>{{buildItemArray.description}}</td>
-                        <td>{{buildItemArray.status}}</td>
+                        <td>{{buildItemArray.alndomainId}}</td>
+                        <td>{{buildItemArray.domainId}}</td>
+                        <td>{{buildItemArray.value}}</td>
                         <td>{{buildItemArray.serialnumber}}</td>
                         <td style="display: none;">{{buildItemArray.indexCount}}</td>
                       </tr>

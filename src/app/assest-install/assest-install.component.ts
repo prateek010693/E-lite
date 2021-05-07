@@ -1,6 +1,6 @@
 import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray,Validators } from '@angular/forms';
 import { WorkorderService } from '../services/workorder.service';
 import { AssetInstallRemoveService } from '../services/asset-install-remove.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -24,15 +24,17 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
   isShow: boolean = false
   installedsave: boolean = false
   removedsave: boolean = false
+  isSubmitted:boolean = false
+  isSubmitted1:boolean = false
   isShow1: boolean = false
   isShow2: boolean = false
   isDisabled: boolean = false
   buildItemArray: any = []
-  JobType = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
-  removalReason = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
+  JobType = [{ id: "Install", value: "Install" }, { id: "Remove", value: "Remove" },{ id: "Install & Remove", value: "Install & Remove" }]
+  removalReason = []
   buildItem = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
-  removalCondition = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
-  removalType = [{ id: "1", value: "12" }, { id: "2", value: "14" }]
+  removalCondition = [{ id: "CAT A", value: "CAT A" },{ id: "CAT B", value: "CAT A" },{ id: "CAT C", value: "CAT C" },{ id: "CAT D", value: "CAT D" }]
+  removalType = [{ id: "Scheduled", value: "Scheduled" }, { id: "Unscheduled", value: "Unscheduled" }]
   constructor(private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private workorderService: WorkorderService,
@@ -65,43 +67,43 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       console.log('this.id', this.id)
     })
     this.assetInstallRemoveForm = this.fb.group({
-      workorderNo: '',
-      description: '',
-      worktype: '',
-      woStatus: '',
+      workorderNo: [""],
+      description: [""],
+      worktype: [""],
+      woStatus: [""],
       assetdetails: this.fb.array([])
 
     })
     this.removeForm = this.fb.group({
-      insRemId: '',
-      workorderId: '1',
-      jobType: '1',
-      buildItem: '1',
-      lcn: '1',
-      position: '1',
-      partNo: '1',
-      item: '1',
-      removePartNo: '1',
-      serialNo: '1',
-      assetNo: '1',
-      removedBy: '1',
-      removalDate: '1',
-      removalReason: '1',
-      removalCond: '1',
-      removalType: '1',
-      remarks: '1',
+      insRemId: [""],
+      workorderId: [""],
+      jobType: ["",Validators.required],
+      buildItem: ["",Validators.required],
+      lcn: [""],
+      position: [""],
+      partNo: [""],
+      item: [""],
+      removePartNo: [""],
+      serialNo: [""],
+      assetNo: [""],
+      removedBy: [""],
+      removalDate: [""],
+      removalReason: ["",Validators.required],
+      removalCond: ["",Validators.required],
+      removalType: ["",Validators.required],
+      remarks: [""],
 
     })
 
     this.installForm = this.fb.group({
-      insRemId: '',
-      insAssetNo: '1',
-      remInsDate: '1',
-      insPartNo: '1',
-      insSerialNo: '1',
-      installedBy: '1',
-      remarks: '1',
-      insCond: '1',
+      insRemId: [""],
+      insAssetNo: ["",Validators.required],
+      remInsDate: [""],
+      insPartNo: [""],
+      insSerialNo: [""],
+      installedBy: [""],
+      remarks: [""],
+      insCond: [""],
     })
     if (this.id == "null") {
       this.isDisabled = true
@@ -134,7 +136,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     this.isShow = true
     this.isShow1 = true
     this.isShow2 = true
-    document.getElementById("IRdiv").scrollIntoView();
+    document.getElementById('IRdiv').scrollIntoView();
     console.log("here", this.isShow, this.isShow1)
   }
   onCheckedRemoved(event: any) {
@@ -150,6 +152,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       this.isShow2 = true
       this.isShow1 = true
       this.removedsave = false
+      this.isSubmitted = false
     }
 
   }
@@ -165,6 +168,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       this.isShow2 = true
       this.isShow1 = true
       this.installedsave = false
+      this.isSubmitted1 = false
     }
 
   }
@@ -214,7 +218,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       }
 
     });
-    this.buildItemArray = this.getAsset();
+    this.removalReason = this.getRemReason();
 
   }
   iAsset(asset) {
@@ -229,14 +233,19 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     this.buildItemArray = this.getAsset();
 
   }
-  rassetSave(index) {
+  assetSave(index){
     this.index = index
     this.removeForm.controls['assetNo'].setValue(this.buildItemArray[this.index].assetnum)
-    this.removeForm.controls['serialNo'].setValue(this.buildItemArray[this.index].serialnumber)
-    this.removeForm.controls['item'].setValue(this.buildItemArray[this.index].cmitem)
     this.removeForm.controls['buildItem'].setValue(this.buildItemArray[this.index].buildItem)
+    this.removeForm.controls['serialNo'].setValue(this.buildItemArray[this.index].serialnumber)
     this.removeForm.controls['lcn'].setValue(this.buildItemArray[this.index].lcn)
     this.removeForm.controls['position'].setValue(this.buildItemArray[this.index].position)
+    this.removeForm.controls['partNo'].setValue(this.buildItemArray[this.index].cmitem)
+  }
+  rassetSave(index) {
+    this.index = index
+    this.removeForm.controls['removalReason'].setValue(this.removalReason[this.index].desc)
+    
     //this.removeForm.controls['cmItem'].setValue(this.buildItemArray[this.index].cmitem)
   }
   iassetSave(index) {
@@ -272,9 +281,28 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     })
     return assetData
   }
+  getRemReason(){
+    let count = 0
+    var assetData = []
+    this.assetInstallRemoveService.removalReason().subscribe(data => {
+      console.log('dataofremreason', data)
+      data.map(el => {
+        assetData.push({
+          "alndomainId": el.alndomainId ? el.alndomainId : "N/A",
+          "domainId": el.domainId ? el.domainId : "N/A",
+          "value": el.value ? el.value : "N/A",
+          "desc": el.desc ? el.desc : "N/A",
+          "siteId": el.siteId ? el.siteId : "N/A",
+          "orgId": el.orgId ? el.orgId : "N/A",
+          "indexCount": count++
+        })
+      })
+    })
+    return assetData
+  }
   removedSave() {
 
-
+    if(this.removeForm.valid){
     var workorderData = {
       "insRemId": this.removeForm.controls['insRemId'].value,
       "workorderId": this.removeForm.controls['workorderId'].value,
@@ -325,14 +353,18 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       this.reset()
 
 
-
+    
     })
-
+    this.isSubmitted = false
+  }
+  else{
+    this.isSubmitted = true
+  }
   }
 
   installedSave() {
 
-
+    if(this.installForm.valid){
     var workorderData = {
       "insRemId": this.installForm.controls['insRemId'].value,
       "insAssetNo": this.installForm.controls['insAssetNo'].value,
@@ -370,7 +402,11 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
 
 
     })
-
+    this.isSubmitted1 = false
+  }
+  else{
+    this.isSubmitted1 = true
+  }
   }
 
   fetchExistingAsset() {
