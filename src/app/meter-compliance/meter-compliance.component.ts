@@ -155,7 +155,6 @@ export class MeterComplianceComponent implements OnInit {
   addMeter() {
     this.meterDetailForm.push(this.addMeterComplianceFormGroup())
     this.isdisable.push(true)
-
   }
   assetSave(index) {
     this.index = index
@@ -201,6 +200,7 @@ export class MeterComplianceComponent implements OnInit {
       this.meterComplianceService.saveMeterDetails(this.id, saveMeterData).subscribe(response => {
         if (response.body.statusCode == 200) {
           this.toastr.success("row : " + count + " " + response.body.statusString)
+          this.getMeterByWorkorderIdAfterSaved()
         }
         // console.log('response-------',response.status)
       })
@@ -222,6 +222,43 @@ export class MeterComplianceComponent implements OnInit {
         this.toastr.error(response.statusText)
       }
     })
+  }
+  getMeterByWorkorderIdAfterSaved() {
+    this.meterComplianceService.getMeterByWorkorderId(this.id).subscribe(response => {
+      if (response.status == 200) {
+        this.savedMeterArray = response.body;
+        this.meterComplianceForm.setControl('meterdetails', this.viewMeterDetailsAfterSaved(this.savedMeterArray))
+
+      }
+      else {
+        this.toastr.error(response.statusText)
+      }
+    })
+  }
+  viewMeterDetailsAfterSaved(savedMeter){
+    const formArray = new FormArray([]);
+    savedMeter.forEach(element => {
+      console.log('element', element)
+      formArray.push(
+        this.fb.group({
+          wometerId: element.woMeterId ? element.woMeterId : "N/A",
+          asset: element.assetId ? element.assetId : "N/A",
+          description: element.description ? element.description : "N/A",
+          partNo: element.partNum ? element.partNum : "N/A",
+          serial: element.serialNum ? element.serialNum : "N/A",
+          buildItem: element.buildItem ? element.buildItem : "N/A",
+          meter: element.assetNum ? element.assetNum : "N/A",
+          meterDescription: element.meterName ? element.meterName : "N/A",
+          initialValue: element.initialValue ? element.initialValue : "N/A",
+          finalValue: element.finalValue ? element.finalValue : "N/A",
+          readingDate: element.readingDate ? element.readingDate : "N/A",
+          updatedBy: element.updatedBy ? element.updatedBy : "N/A",
+          updatedDate: element.updatedDate ? element.updatedDate : "N/A",
+        })
+      )
+
+    });
+    return formArray
   }
   viewMeterDetails(savedMeter): FormArray {
     const formArray = new FormArray([]);
@@ -262,5 +299,6 @@ export class MeterComplianceComponent implements OnInit {
         this.toastr.error(response.statusText)
       }
     })
+    this.isdisable.pop()
   }
 }
