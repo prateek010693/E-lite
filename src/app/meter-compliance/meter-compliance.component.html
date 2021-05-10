@@ -65,9 +65,15 @@
                 <ng-container formArrayName="meterdetails">
                   <tr *ngFor="let meterdetail of meterDetailForm.controls;let i = index" [formGroupName]="i">
                     <td class="table-position">
-                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="!meterDetails" (click)="selectAsset(asset,i)"></i>
-                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="asset"
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectAsset(asset,i)"></i>
+                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="asset*"
                         formControlName="asset" readonly>
+                        <span class="errors" *ngIf="meterdetail.get('asset').errors?.required && isSubmitted ">
+                          Please enter Asset Name</span>
+                    </td>
+                    <td style="display: none;">
+                      <input type="text" class="form-control" [id]="'description' + i"
+                        placeholder="description" formControlName="wometerId" readonly>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'description' + i"
@@ -86,37 +92,45 @@
                         formControlName="buildItem" readonly>
                     </td>
                     <td class="table-position">
-                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="!meterDetails" (click)="selectMeter(meter,i)"></i>
-                      <input type="text" class="form-control" [id]="'meter' + i" placeholder="meter"
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i)"></i>
+                      <input type="text" class="form-control" [id]="'meter' + i" placeholder="meter*"
                         formControlName="meter" readonly>
+                        <span class="errors" *ngIf="meterdetail.get('meter').errors?.required && isSubmitted ">
+                          Please enter Meter Name</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'meterDescription' + i" placeholder="meterDescription"
                         formControlName="meterDescription" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValue"
+                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValue*"
                         formControlName="initialValue">
+                        <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
+                          Please enter  Initial Value</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValue"
+                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValue*"
                         formControlName="finalValue">
+                        <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
+                          Please enter Final Value</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'readingDate' + i" placeholder="readingDate"
+                      <input type="datetime-local" class="form-control" [id]="'readingDate' + i" placeholder="readingDate*"
                         formControlName="readingDate">
+                        <span class="errors" *ngIf="meterdetail.get('readingDate').errors?.required && isSubmitted ">
+                          Please enter Reading Date</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'updatedBy' + i" placeholder="updatedBy"
-                        formControlName="updatedBy">
+                        formControlName="updatedBy"  readonly>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'updatedDate' + i" placeholder="updatedDate"
-                        formControlName="updatedDate">
+                        formControlName="updatedDate" readonly>
                     </td>
                     <td>
-                      <button type="button" (click)="saveMeter()">save</button>
-                      <button type="submit">Delete</button>
+                      <button type="button" *ngIf="isdisable[i]"(click)="saveMeter(i)">save</button>
+                      <button type="button" *ngIf="!isdisable[i]"(click)="deleteMeter(i)">Delete</button>
                     </td>
 
                   </tr>
