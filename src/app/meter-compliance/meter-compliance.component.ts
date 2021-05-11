@@ -61,16 +61,16 @@ export class MeterComplianceComponent implements OnInit {
   addMeterComplianceFormGroup(): FormGroup {
     return this.fb.group({
       wometerId: [""],
-      asset: ["",Validators.required],
+      asset: ["", Validators.required],
       description: [""],
       partNo: [""],
       serial: [""],
       buildItem: [""],
-      meter: ["",Validators.required],
+      meter: ["", Validators.required],
       meterDescription: [""],
-      initialValue: ["",Validators.required],
-      finalValue: ["",Validators.required],
-      readingDate: ["",Validators.required],
+      initialValue: ["", Validators.required],
+      finalValue: ["", Validators.required],
+      readingDate: ["", Validators.required],
       updatedBy: [this.userid],
       updatedDate: [""],
     })
@@ -155,7 +155,6 @@ export class MeterComplianceComponent implements OnInit {
   addMeter() {
     this.meterDetailForm.push(this.addMeterComplianceFormGroup())
     this.isdisable.push(true)
-
   }
   assetSave(index) {
     this.index = index
@@ -201,6 +200,7 @@ export class MeterComplianceComponent implements OnInit {
       this.meterComplianceService.saveMeterDetails(this.id, saveMeterData).subscribe(response => {
         if (response.body.statusCode == 200) {
           this.toastr.success("row : " + count + " " + response.body.statusString)
+          this.getMeterByWorkorderId()
         }
         // console.log('response-------',response.status)
       })
@@ -210,6 +210,10 @@ export class MeterComplianceComponent implements OnInit {
       console.log('this.meterComplianceForm------', this.meterComplianceForm)
       console.log("Not valid");
     }
+    setTimeout(() => {
+      var length = this.isdisable.length / 2;
+      this.isdisable.splice(0, length)
+    }, 500);
   }
   getMeterByWorkorderId() {
     this.meterComplianceService.getMeterByWorkorderId(this.id).subscribe(response => {
@@ -262,5 +266,6 @@ export class MeterComplianceComponent implements OnInit {
         this.toastr.error(response.statusText)
       }
     })
+    this.isdisable.pop()
   }
 }

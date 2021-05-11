@@ -79,6 +79,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
       cmItem: [""],
       pmDescription: [""],
       closedBy: [""],
+      assetDescription : [""]
       //LookUp Controller
       
     })
@@ -197,6 +198,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     this.workOrderDetailForm.controls['asset'].setValue(this.assetArray[this.index].assetnum)
     this.workOrderDetailForm.controls['serial'].setValue(this.assetArray[this.index].serialnumber)
     this.workOrderDetailForm.controls['cmItem'].setValue(this.assetArray[this.index].cmitem)
+    this.workOrderDetailForm.controls['assetDescription'].setValue(this.assetArray[this.index].description)
   }
   worktypeSave(index){
     this.index = index

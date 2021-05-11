@@ -116,7 +116,7 @@
                     </td>
                     <td>
                       <input type="datetime-local" class="form-control" [id]="'readingDate' + i" placeholder="readingDate*"
-                        formControlName="readingDate">
+                        formControlName="readingDate" step="1">
                         <span class="errors" *ngIf="meterdetail.get('readingDate').errors?.required && isSubmitted ">
                           Please enter Reading Date</span>
                     </td>

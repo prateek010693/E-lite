@@ -81,13 +81,7 @@ export class WorkorderComponent implements OnInit,PipeTransform {
     this.workorder_form = this.fb.group({
       recordNumber: [""],
       aircraftNumber: [""],
-      model: [""],
-      variation: [""],
-      locationOfAircraft: [""],
-      dateOfTransfer: [""],
       dettLocation: [""],
-      dettLocationBase: [""],
-      status: [""],
     })
   }
   createWorkorder(id){
