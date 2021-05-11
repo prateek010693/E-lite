@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,PipeTransform, Pipe } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormGroup,FormBuilder,FormArray,Validators} from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
@@ -17,8 +17,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './task-compliance.component.html',
   styleUrls: ['./task-compliance.component.css']
 })
+@Pipe({
+  name: 'searchTLC'
+})
 export class TaskComplianceComponent implements OnInit {
   id:any;
+
   searchvalue:any;
   closestatus:any; 
   userid:string = localStorage.getItem("userName")
@@ -70,6 +74,23 @@ export class TaskComplianceComponent implements OnInit {
     //console.log("tlc",this.alreadyAssignTech)
     
     // this.demoTaskTech(this.alreadyAssignTech)
+  }
+  transform(value: any, searchvalue: any): any {
+    // console.log("se",searchvalue)
+    // console.log("se",value)
+    var count =0
+    if (!value || !searchvalue) {
+      console.log("here")
+      return value;
+    }
+    return value.filter(item => {
+      var a=(
+        item.servicenum.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.name.toLowerCase().includes(searchvalue.toLowerCase())
+      )
+     
+      return a;
+    })
   }
   fetchTLC(){
     const formArray = new FormArray([]);
@@ -170,7 +191,7 @@ export class TaskComplianceComponent implements OnInit {
     var count = index+1
     const qwe = (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(index) as FormGroup
     const tlcid = qwe.get('tlcId').value
-    this.tasklevelcomplianceservice.complyTaskLevelCompliance(tlcid).subscribe(element =>{
+    this.tasklevelcomplianceservice.complyTaskLevelCompliance(tlcid,this.userid).subscribe(element =>{
      // console.log("element",element)
       qwe.get('complianceDate').patchValue(this.Date.transform(element.complianceDte,'dd/MM/yyyy HH:mm:ss'))
     })
@@ -220,7 +241,8 @@ export class TaskComplianceComponent implements OnInit {
       "technicianServicenum":qwe.get('technicianId').value,
       "taskDesc":qwe.get('teskDiscription').value,
       "complianceDate":qwe.get('complianceDate').value,
-      "tlcId":qwe.get('tlcId').value
+      "tlcId":qwe.get('tlcId').value,
+      "createdBy":this.userid
     }
     this.tasklevelcomplianceservice.createTaskLevelCompliance(this.id,TLCData).subscribe(
       (element) =>{

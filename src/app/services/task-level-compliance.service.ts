@@ -28,10 +28,10 @@ export class TaskLevelComplianceService {
     const url = this.baseURL+'deleteTaskLevelCompliance/'+tlcid
     return this.http.get(url,{observe:'response'})
   }
-  complyTaskLevelCompliance(tlcid:string):Observable<any>{
+  complyTaskLevelCompliance(tlcid:string,userid:string):Observable<any>{
     console.log("inside complyTaskLevelCompliance")
     const url = this.baseURL+'complyTaskLevelCompliance/'+tlcid
-    return this.http.put(url,{observe:'response'})
+    return this.http.put(url,userid,{observe:'response'})
   }
   handleError(error){
     console.log("error")

@@ -121,7 +121,7 @@
                               <th>Technician Name</th>
                           </thead>
                           <tbody>
-                              <tr *ngFor="let technicianId of technicianIds | search : searchvalue ;let i = index">
+                              <tr *ngFor="let technicianId of technicianIds | searchTLC : searchvalue ;let i = index">
                                   <td>
                                       <input type="radio" (click)="assetSave(technicianId.indexCount)" name="radio" value="{{technicianId.indexCount}}" >
                                   </td>
