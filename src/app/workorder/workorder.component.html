@@ -89,9 +89,11 @@
              </div>
             <table class="table">
               <thead class=" text-primary">
-                <th>WO Number</th>
+                <th>WO</th>
                 <th>Description</th>
                 <th>WorkType</th>
+                <th>PM</th>
+                <th>PM Description</th>
                 <th>Asset</th>
                 <th>Status</th>
               </thead>
@@ -103,6 +105,8 @@
                   <td><button class="btn-click" (click)="editWorkorder(finalData.wo_id)">{{finalData.wo}}</button></td>
                   <td>{{finalData.description}}</td>
                   <td>{{finalData.workType}}</td>
+                  <td>{{finalData.pm}}</td>
+                  <td>{{finalData.pm_desc}}</td>
                   <td>{{finalData.asset}}</td>
                   <td>{{finalData.status}}</td>
                 </tr>

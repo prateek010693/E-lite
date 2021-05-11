@@ -9,7 +9,8 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { element } from 'protractor';
 import {DatePipe} from '@angular/common'
 import { of } from 'rxjs';
-import { data } from 'jquery';
+import { data, error } from 'jquery';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-task-compliance',
@@ -18,18 +19,21 @@ import { data } from 'jquery';
 })
 export class TaskComplianceComponent implements OnInit {
   id:any;
-  searchvalue1:any;
+  searchvalue:any;
   closestatus:any; 
   userid:string = localStorage.getItem("userName")
   disableSaveButton:Boolean[] = []
   //SaveButtonCounter = 0;
   taskComplianceFrom :FormGroup;
+  index;
+  formArrayIndex;
   technicianIds =[];
   isSubmitted = false;
   isDisabled = false;
   alreadyAssignTech : any = []
   constructor(
     private workorderService:WorkorderService,
+    private bootstrapModel: NgbModal,
     private router:Router,
     private activatedRoute:ActivatedRoute,
     private fb:FormBuilder,
@@ -83,7 +87,7 @@ export class TaskComplianceComponent implements OnInit {
         formArray.push(
           this.fb.group({
           tlcId:el.tlcId,
-          complianceDate:this.Date.transform(el.complianceDte,'dd/MM/yyyy HH:mm'), 
+          complianceDate:this.Date.transform(el.complianceDte,'dd/MM/yyyy HH:mm:ss'), 
           teskDiscription:el.taskDesc, 
           technicianName:el.technicianName, 
           technicianId:el.technicianServicenum, 
@@ -138,9 +142,10 @@ export class TaskComplianceComponent implements OnInit {
   //   { id : '3',name : 'ashu'},
   //  { id : '5',name : 'sarab'}
   //  ]
-    this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
-      let count = 0
+  let count = 0
       var sampleData= []
+    this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
+      
       
       element.map(el =>{
         sampleData.push({
@@ -150,10 +155,11 @@ export class TaskComplianceComponent implements OnInit {
           "indexCount":count++
         })
       })
-      this.technicianIds = sampleData
+      
       //console.log('element+++',element)
     //  this.taskComplianceFrom.setControl('AddTechnician',this.demoTaskTech(this.alreadyAssignTech))
     })
+    return sampleData
    }
   addProductButtonClick(){
     (<FormArray>this.taskComplianceFrom.get("AddTechnician")).push(
@@ -166,7 +172,7 @@ export class TaskComplianceComponent implements OnInit {
     const tlcid = qwe.get('tlcId').value
     this.tasklevelcomplianceservice.complyTaskLevelCompliance(tlcid).subscribe(element =>{
      // console.log("element",element)
-      qwe.get('complianceDate').patchValue(this.Date.transform(element.complianceDte,'dd/MM/yyyy HH:mm'))
+      qwe.get('complianceDate').patchValue(this.Date.transform(element.complianceDte,'dd/MM/yyyy HH:mm:ss'))
     })
     //console.log("AddTechnician Array",this.taskComplianceFrom.value["AddTechnician"][index])
     this.toastr.success("row : "+ count + " Task Compliance Done")
@@ -201,20 +207,12 @@ export class TaskComplianceComponent implements OnInit {
         name = element.name
       }
     })
-    //console.log("name",name)
-    
-    qwe.get('technicianName').patchValue(name);
-    
-    // [
-      
-    //   {technicianId : "1",technicianName :"abcd"}
-    // ]
-    //this.taskComplianceFrom.setControl('AddTechnician[event]',this.demoTaskTech(this.alreadyAssignTech))
+    qwe.get('technicianName').patchValue(name); 
   }
   saveTLC(index:any){
 
     if(this.taskComplianceFrom.valid){
-    this.disableSaveButton[index] = false
+      
     const qwe =   (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(index) as FormGroup
     //console.log("save",qwe)
     var TLCData = { 
@@ -226,14 +224,19 @@ export class TaskComplianceComponent implements OnInit {
     }
     this.tasklevelcomplianceservice.createTaskLevelCompliance(this.id,TLCData).subscribe(
       (element) =>{
-      console.log(element)
+      console.log(element.status)
         if (element.status == 200) {
+          this.disableSaveButton[index] = false
           this.toastr.success("saved Sucessfully")
         }
         qwe.get('tlcId').patchValue(element.body.tlcId)
       
       
-    })
+    },(error) => {
+      
+      this.toastr.success("Some error occured")
+    }
+    )
   }
   else{
     this.isSubmitted = true
@@ -272,6 +275,27 @@ export class TaskComplianceComponent implements OnInit {
       this.isDisabled = true
       this.closestatus = true
     
+  }
+  open(asset,index) {
+    this.formArrayIndex = index
+    this.searchvalue = ''
+    this.bootstrapModel.open(asset, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
+      console.log('result', result)
+      if (result == 'Save click') {
+        //this.assetSave(this.index)
+      }
+
+    });
+    this.technicianIds=this.gettechnicianId();
+    
+  }
+  assetSave(index){
+    this.index = index
+    const TechinicianGroup = (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(this.formArrayIndex) as FormGroup
+    TechinicianGroup.get('technicianId').setValue(this.technicianIds[this.index].servicenum)
+    TechinicianGroup.get('technicianName').setValue(this.technicianIds[this.index].name)
+
+
   }
   
 }

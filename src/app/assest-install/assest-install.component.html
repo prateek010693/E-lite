@@ -91,10 +91,10 @@
 
 
                       <td>
-                        <button type="submit">Install/Remove</button>
+                        <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''"[disabled]="closestatus && isDisabled">Install/Remove</button>
                       </td>
                       <td>
-                        <button type="submit">Delete</button>
+                        <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="closestatus && isDisabled">Delete</button>
                       </td>
 
                     </tr>

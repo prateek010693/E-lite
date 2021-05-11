@@ -28,16 +28,19 @@ removeRequest(req: HttpRequest<any>){
       .subscribe(
         event => {
           if(event instanceof HttpResponse){
+            console.log("requests-->11" );
             this.removeRequest(req);
             observer.next(event);
           }
         },
         () => {
+          console.log("requests-->21" );
           this.removeRequest(req);
           observer.complete();
         }
       );
       return () => {
+        console.log("requests-->31" );
         this.removeRequest(req);
         subscription.unsubscribe();
       }

@@ -1,6 +1,6 @@
 <div class="main-content">
   <form [formGroup]="taskComplianceFrom">
-     {{taskComplianceFrom.value | json}} 
+     <!-- {{taskComplianceFrom.value | json}}  -->
     <div class="row">
       <div class="col-lg-12">
         <div class="row">
@@ -57,13 +57,20 @@
                 
                   <ng-container formArrayName="AddTechnician">
                 <tr  *ngFor="let product of technicians.controls;let i = index" [formGroupName]="i">
-                    <td>
+                    <!-- <td>
                       <select class="form-control" [id]="'technicianId' + i" placeholder="Technician Id"  (change)="abc(i)" formControlName="technicianId">
                         <option value="" disabled selected hidden>Select Technician Id</option>
                         <option *ngFor="let technicianId of technicianIds" [value]="technicianId.servicenum">{{technicianId.servicenum}}</option>
                       </select>
                       <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
                         Please select TechnicianID</span>
+                    </td> -->
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  (click)="open(TID,i)"></i>
+                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="asset*"
+                        formControlName="technicianId" readonly>
+                        <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
+                          Please select Technician ID</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'technicianName' + i" placeholder="Technician Name" [readonly]="true" formControlName="technicianName">
@@ -92,4 +99,49 @@
       </div>
     </div>
   </form>
+  <div class="row">
+    <div class="col-lg-12">
+      <ng-template #TID let-model class="assest">
+          <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Technicians</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                  <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+          </div>
+          <div class="model-body">
+            
+              <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                  <div class="table-scroll">
+                      <table class="table">
+                          <thead class="text-primary">
+                              <th>Technician Id</th>
+                              <th>Technician Name</th>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let technicianId of technicianIds | search : searchvalue ;let i = index">
+                                  <td>
+                                      <input type="radio" (click)="assetSave(technicianId.indexCount)" name="radio" value="{{technicianId.indexCount}}" >
+                                  </td>
+                                  <td>{{technicianId.servicenum}}</td>
+                                  <td>{{technicianId.name}}</td>
+                                  
+                                  <td style="display: none;">{{technicianId.indexCount}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+             
+          </div>
+
+          <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')" >Save</button>
+          </div>
+
+      </ng-template>
+    </div>
+  </div>
 </div>
