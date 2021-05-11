@@ -44,6 +44,12 @@
                     </div>
                     <div class="col-md-3 px-1">
                         <div class="form-group">
+                            <label>Asset Description</label>
+                            <input type="text" class="form-control" placeholder="Assest Description" value="" formControlName="assetDescription" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
                             <label>Serial#</label>
                             <input type="text" class="form-control" placeholder="Serial#" value=""
                                 formControlName="serial" readonly>
@@ -56,13 +62,7 @@
                                 formControlName="statusDate" readonly>
                         </div>
                     </div>
-                    <div class="col-md-3 px-1">
-                        <div class="form-group">
-                            <label>Closed By</label>
-                            <input type="text" class="form-control" placeholder="Closed By" value=""
-                                formControlName="closedBy" readonly>
-                        </div>
-                    </div>
+                   
                     <div class="col-md-3 px-1">
                         <div class="form-group">
                             <label>CM Item</label>
@@ -70,15 +70,10 @@
                                 formControlName="cmItem" readonly>
                         </div>
                     </div>
-                    <!-- <div class="col-md-3 px-1">
-                        <div class="form-group">
-                            <label>Description</label>
-                            <input type="text" class="form-control" placeholder="Description" value="">
-                        </div>
-                    </div> -->
+                   
                     <div class="col-md-3 px-1">
                         <div class="form-group">
-                            <label>PM Item</label>
+                            <label>PM </label>
                             <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="pmItem(pmitem)"></i>
                             <input type="text" class="form-control" placeholder="PM Item" value=""
                                 formControlName="pmNumber" readonly>
@@ -91,12 +86,19 @@
                                 formControlName="pmDescription" readonly>
                         </div>
                     </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Closed By</label>
+                            <input type="text" class="form-control" placeholder="Closed By" value=""
+                                formControlName="closedBy" readonly>
+                        </div>
+                    </div>
                     <div class="col-md-12 px-1" *ngIf="isEditable">
                         <div class="form-group btn-normal btn-savecancel">
                             <button type="button" class="cancel" (click)="cancelworkorder()">Cancel</button>
                             <button type="button" class="save" (click)="saveworkorder(id)">Save</button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </form>
             <div class="col-lg-12">
