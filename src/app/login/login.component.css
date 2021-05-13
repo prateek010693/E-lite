@@ -26,10 +26,6 @@
     margin:0;
     margin-bottom: 10px;
 }
-
-.buttons{
-           
-}
 .check-grp .check .control-label{
     display: initial;
     vertical-align: text-bottom;
@@ -61,7 +57,7 @@
 .visibility{
     position: absolute;
     right: 1%;
-    top: 55%;
+    top: 35px;
     font-size: 16px;
     background-color: transparent;
     padding: 0;
@@ -78,5 +74,7 @@
     color: red;
     margin: 0;
     font-size: 12px;
-    padding: 0 10px;
+}
+.errors.errors-plus{
+    padding: 0 15px;
 }
