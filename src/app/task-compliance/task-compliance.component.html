@@ -66,8 +66,8 @@
                         Please select TechnicianID</span>
                     </td> -->
                     <td class="table-position">
-                      <i class="now-ui-icons ui-1_zoom-bold lookup"  (click)="open(TID,i)"></i>
-                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="asset*"
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  *ngIf="disableSaveButton[i]" (click)="open(TID,i)"></i>
+                      <input type="text" class="form-control"  [id]="'asset' + i" placeholder="asset*"
                         formControlName="technicianId" readonly>
                         <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
                           Please select Technician ID</span>
@@ -84,7 +84,7 @@
                       <input type="text" class="form-control" [id]="'complianceDate' + i" [readonly]="true" placeholder="Compliance Date " formControlName="complianceDate">
                     </td>
                     <td>
-                      <button type="button" *ngIf="!disableSaveButton[i]" [ngClass]="closestatus == true ? 'isDisabled' : ''"  (click)="onCompliance(i)">Compliance</button>
+                      <button type="button" *ngIf="!disableSaveButton[i]" [disabled]="disableComp[i]" [ngClass]="(closestatus == true|| disableComp[i] == true) ? 'isDisabled' : ''"  (click)="onCompliance(i)">Compliance</button>
                       <button type="button" *ngIf="!disableSaveButton[i]" [ngClass]="closestatus == true ? 'isDisabled' : ''"  (click)="onDelete(i)">Delete</button>
                       <button type="button"  *ngIf="disableSaveButton[i]" (click)="saveTLC(i)">Save</button> 
                     </td>

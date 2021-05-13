@@ -25,6 +25,8 @@ export class TaskComplianceComponent implements OnInit {
 
   searchvalue:any;
   closestatus:any; 
+  
+  disableComp:boolean[] =[]
   userid:string = localStorage.getItem("userName")
   disableSaveButton:Boolean[] = []
   //SaveButtonCounter = 0;
@@ -101,6 +103,7 @@ export class TaskComplianceComponent implements OnInit {
         
        // this.SaveButtonCounter = 0
         this.disableSaveButton.push(false)
+        this.disableComp.push(true)
         //this.SaveButtonCounter = this.SaveButtonCounter +1
         //console.log("counter",this.SaveButtonCounter)
         //console.log("date",this.Date.transform(el.complianceDte,'dd/MM/yyyy HH:mm'))
@@ -127,6 +130,7 @@ export class TaskComplianceComponent implements OnInit {
   }
   addProductFormGroup(): FormGroup {
     this.disableSaveButton.push(true)
+    this.disableComp.push(false)
     //this.SaveButtonCounter = this.SaveButtonCounter +1
     //console.log("counter",this.SaveButtonCounter)
     //console.log("addProductFormGroup",this.disableSaveButton)
@@ -189,11 +193,12 @@ export class TaskComplianceComponent implements OnInit {
   }
   onCompliance(index){
     var count = index+1
+    this.disableComp[index] = true
     const qwe = (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(index) as FormGroup
     const tlcid = qwe.get('tlcId').value
     this.tasklevelcomplianceservice.complyTaskLevelCompliance(tlcid,this.userid).subscribe(element =>{
-     // console.log("element",element)
-      qwe.get('complianceDate').patchValue(this.Date.transform(element.complianceDte,'dd/MM/yyyy HH:mm:ss'))
+      console.log("element",element)
+      qwe.get('complianceDate').patchValue(this.Date.transform(element.body.complianceDte,'dd/MM/yyyy HH:mm:ss'))
     })
     //console.log("AddTechnician Array",this.taskComplianceFrom.value["AddTechnician"][index])
     this.toastr.success("row : "+ count + " Task Compliance Done")
@@ -209,6 +214,7 @@ export class TaskComplianceComponent implements OnInit {
     const tlcid = qwe.get('tlcId').value
     //console.log('tlcid',tlcid)
     this.disableSaveButton.splice(index,1)
+    this.disableComp.splice(index,1)
     //console.log("delete",this.disableSaveButton)
     this.tasklevelcomplianceservice.deleteTaskLevelCompliance(tlcid).subscribe(element =>{
       //console.log('TLCDelete',element)
@@ -281,7 +287,7 @@ export class TaskComplianceComponent implements OnInit {
         //   })
         this.closestatus = this.taskComplianceFrom.get('woStatus').value
         console.log("closestatu",this.closestatus)
-        if(this.closestatus == 'CLOSE'){
+        if(this.closestatus == 'CLOSE' || this.closestatus == 'CAN'){
           this.disabler()
 
         }
