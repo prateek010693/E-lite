@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,PipeTransform, Pipe } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {FormGroup,FormBuilder,FormArray,Validators} from '@angular/forms'
 import { ToastrService } from 'ngx-toastr';
@@ -9,27 +9,37 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { element } from 'protractor';
 import {DatePipe} from '@angular/common'
 import { of } from 'rxjs';
-import { data } from 'jquery';
+import { data, error } from 'jquery';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-task-compliance',
   templateUrl: './task-compliance.component.html',
   styleUrls: ['./task-compliance.component.css']
 })
+@Pipe({
+  name: 'searchTLC'
+})
 export class TaskComplianceComponent implements OnInit {
   id:any;
-  searchvalue1:any;
+
+  searchvalue:any;
   closestatus:any; 
+  
+  disableComp:boolean[] =[]
   userid:string = localStorage.getItem("userName")
   disableSaveButton:Boolean[] = []
   //SaveButtonCounter = 0;
   taskComplianceFrom :FormGroup;
+  index;
+  formArrayIndex;
   technicianIds =[];
   isSubmitted = false;
   isDisabled = false;
   alreadyAssignTech : any = []
   constructor(
     private workorderService:WorkorderService,
+    private bootstrapModel: NgbModal,
     private router:Router,
     private activatedRoute:ActivatedRoute,
     private fb:FormBuilder,
@@ -67,6 +77,23 @@ export class TaskComplianceComponent implements OnInit {
     
     // this.demoTaskTech(this.alreadyAssignTech)
   }
+  transform(value: any, searchvalue: any): any {
+    // console.log("se",searchvalue)
+    // console.log("se",value)
+    var count =0
+    if (!value || !searchvalue) {
+      console.log("here")
+      return value;
+    }
+    return value.filter(item => {
+      var a=(
+        item.servicenum.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.name.toLowerCase().includes(searchvalue.toLowerCase())
+      )
+     
+      return a;
+    })
+  }
   fetchTLC(){
     const formArray = new FormArray([]);
     this.alreadyAssignTech = this.tasklevelcomplianceservice.fetchTaskLevelCompliance(this.id,this.userid).subscribe(element => {
@@ -76,6 +103,7 @@ export class TaskComplianceComponent implements OnInit {
         
        // this.SaveButtonCounter = 0
         this.disableSaveButton.push(false)
+        this.disableComp.push(true)
         //this.SaveButtonCounter = this.SaveButtonCounter +1
         //console.log("counter",this.SaveButtonCounter)
         //console.log("date",this.Date.transform(el.complianceDte,'dd/MM/yyyy HH:mm'))
@@ -83,7 +111,7 @@ export class TaskComplianceComponent implements OnInit {
         formArray.push(
           this.fb.group({
           tlcId:el.tlcId,
-          complianceDate:this.Date.transform(el.complianceDte,'dd/MM/yyyy HH:mm'), 
+          complianceDate:this.Date.transform(el.complianceDte,'dd/MM/yyyy HH:mm:ss'), 
           teskDiscription:el.taskDesc, 
           technicianName:el.technicianName, 
           technicianId:el.technicianServicenum, 
@@ -102,6 +130,7 @@ export class TaskComplianceComponent implements OnInit {
   }
   addProductFormGroup(): FormGroup {
     this.disableSaveButton.push(true)
+    this.disableComp.push(false)
     //this.SaveButtonCounter = this.SaveButtonCounter +1
     //console.log("counter",this.SaveButtonCounter)
     //console.log("addProductFormGroup",this.disableSaveButton)
@@ -138,9 +167,10 @@ export class TaskComplianceComponent implements OnInit {
   //   { id : '3',name : 'ashu'},
   //  { id : '5',name : 'sarab'}
   //  ]
-    this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
-      let count = 0
+  let count = 0
       var sampleData= []
+    this.tasklevelcomplianceservice.fetchTechnicianDetails().subscribe(element =>{
+      
       
       element.map(el =>{
         sampleData.push({
@@ -150,10 +180,11 @@ export class TaskComplianceComponent implements OnInit {
           "indexCount":count++
         })
       })
-      this.technicianIds = sampleData
+      
       //console.log('element+++',element)
     //  this.taskComplianceFrom.setControl('AddTechnician',this.demoTaskTech(this.alreadyAssignTech))
     })
+    return sampleData
    }
   addProductButtonClick(){
     (<FormArray>this.taskComplianceFrom.get("AddTechnician")).push(
@@ -162,11 +193,12 @@ export class TaskComplianceComponent implements OnInit {
   }
   onCompliance(index){
     var count = index+1
+    this.disableComp[index] = true
     const qwe = (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(index) as FormGroup
     const tlcid = qwe.get('tlcId').value
-    this.tasklevelcomplianceservice.complyTaskLevelCompliance(tlcid).subscribe(element =>{
-     // console.log("element",element)
-      qwe.get('complianceDate').patchValue(this.Date.transform(element.complianceDte,'dd/MM/yyyy HH:mm'))
+    this.tasklevelcomplianceservice.complyTaskLevelCompliance(tlcid,this.userid).subscribe(element =>{
+      console.log("element",element)
+      qwe.get('complianceDate').patchValue(this.Date.transform(element.body.complianceDte,'dd/MM/yyyy HH:mm:ss'))
     })
     //console.log("AddTechnician Array",this.taskComplianceFrom.value["AddTechnician"][index])
     this.toastr.success("row : "+ count + " Task Compliance Done")
@@ -182,6 +214,7 @@ export class TaskComplianceComponent implements OnInit {
     const tlcid = qwe.get('tlcId').value
     //console.log('tlcid',tlcid)
     this.disableSaveButton.splice(index,1)
+    this.disableComp.splice(index,1)
     //console.log("delete",this.disableSaveButton)
     this.tasklevelcomplianceservice.deleteTaskLevelCompliance(tlcid).subscribe(element =>{
       //console.log('TLCDelete',element)
@@ -201,20 +234,12 @@ export class TaskComplianceComponent implements OnInit {
         name = element.name
       }
     })
-    //console.log("name",name)
-    
-    qwe.get('technicianName').patchValue(name);
-    
-    // [
-      
-    //   {technicianId : "1",technicianName :"abcd"}
-    // ]
-    //this.taskComplianceFrom.setControl('AddTechnician[event]',this.demoTaskTech(this.alreadyAssignTech))
+    qwe.get('technicianName').patchValue(name); 
   }
   saveTLC(index:any){
 
     if(this.taskComplianceFrom.valid){
-    this.disableSaveButton[index] = false
+      
     const qwe =   (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(index) as FormGroup
     //console.log("save",qwe)
     var TLCData = { 
@@ -222,18 +247,24 @@ export class TaskComplianceComponent implements OnInit {
       "technicianServicenum":qwe.get('technicianId').value,
       "taskDesc":qwe.get('teskDiscription').value,
       "complianceDate":qwe.get('complianceDate').value,
-      "tlcId":qwe.get('tlcId').value
+      "tlcId":qwe.get('tlcId').value,
+      "createdBy":this.userid
     }
     this.tasklevelcomplianceservice.createTaskLevelCompliance(this.id,TLCData).subscribe(
       (element) =>{
-      console.log(element)
+      console.log(element.status)
         if (element.status == 200) {
+          this.disableSaveButton[index] = false
           this.toastr.success("saved Sucessfully")
         }
         qwe.get('tlcId').patchValue(element.body.tlcId)
       
       
-    })
+    },(error) => {
+      
+      this.toastr.success("Some error occured")
+    }
+    )
   }
   else{
     this.isSubmitted = true
@@ -256,7 +287,7 @@ export class TaskComplianceComponent implements OnInit {
         //   })
         this.closestatus = this.taskComplianceFrom.get('woStatus').value
         console.log("closestatu",this.closestatus)
-        if(this.closestatus == 'CLOSE'){
+        if(this.closestatus == 'CLOSE' || this.closestatus == 'CAN'){
           this.disabler()
 
         }
@@ -272,6 +303,27 @@ export class TaskComplianceComponent implements OnInit {
       this.isDisabled = true
       this.closestatus = true
     
+  }
+  open(asset,index) {
+    this.formArrayIndex = index
+    this.searchvalue = ''
+    this.bootstrapModel.open(asset, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
+      console.log('result', result)
+      if (result == 'Save click') {
+        //this.assetSave(this.index)
+      }
+
+    });
+    this.technicianIds=this.gettechnicianId();
+    
+  }
+  assetSave(index){
+    this.index = index
+    const TechinicianGroup = (this.taskComplianceFrom.get('AddTechnician') as FormArray).at(this.formArrayIndex) as FormGroup
+    TechinicianGroup.get('technicianId').setValue(this.technicianIds[this.index].servicenum)
+    TechinicianGroup.get('technicianName').setValue(this.technicianIds[this.index].name)
+
+
   }
   
 }
