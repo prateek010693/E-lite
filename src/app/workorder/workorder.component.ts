@@ -51,7 +51,16 @@ export class WorkorderComponent implements OnInit,PipeTransform {
       return value;
     }
     return value.filter(item => {
-      var a=item.wo.toLowerCase().includes(searchvalue.toLowerCase())
+      var a=(
+        item.wo.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.workType.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.asset.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.status.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.pm.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.pm_desc.toLowerCase().includes(searchvalue.toLowerCase())
+
+      )
       
       if(a){
         count++
@@ -91,6 +100,7 @@ export class WorkorderComponent implements OnInit,PipeTransform {
       var sampleData= []
       element.map(el =>{
         count++
+        console.log("hereel",el)
         sampleData.push({
           "wo_id": el.workorder_id ? el.workorder_id : "N/A",
           "wo":el.wo_num ? el.wo_num : 'N/A',
@@ -98,6 +108,8 @@ export class WorkorderComponent implements OnInit,PipeTransform {
           "workType":el.work_type ? el.work_type : 'N/A',
           "asset":el.asset_num ? el.asset_num : 'N/A',
           "status":el.wo_status ? el.wo_status : 'N/A',
+          "pm":el.pm ? el.pm : 'N/A',
+          "pm_desc":el.pm_desc ? el.pm_desc : 'N/A',
         })
       })
       this.viewWorkorder = sampleData
