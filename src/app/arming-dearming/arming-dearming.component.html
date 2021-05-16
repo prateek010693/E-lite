@@ -47,7 +47,7 @@
               <thead class=" text-primary">
                 <th>Hard Point Build Item</th>
                 <th>Station No.</th>
-                <th>Armamenr Position</th>
+                <th>Armament Position</th>
                 <th>Armament Item/GIG nO.</th>
                 <th>Description</th>
                 <th>Part No.</th>
@@ -65,10 +65,12 @@
                 <ng-container formArrayName="armamentdetails">
                   <tr *ngFor="let armamentdetail of ArmingDearminForm.controls;let i = index" [formGroupName]="i">
 
-
-                    <td>
-                      <input type="text" class="form-control" [id]="'hardPointBuildItem' + i"
-                        placeholder="hardPointBuildItem" formControlName="hardPointBuildItem">
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  (click)="selectBuildItem(builditem)"></i>
+                      <input type="text" class="form-control" [id]="'hardPointBuildItem' + i" placeholder="BuildItem*"
+                        formControlName="hardPointBuildItem" readonly>
+                        <span class="errors" *ngIf="armamentdetail.get('hardPointBuildItem').errors?.required && isSubmitted ">
+                          Please enter Build Item</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'stationNo' + i" placeholder="description"
@@ -77,6 +79,13 @@
                     <td>
                       <input type="text" class="form-control" [id]="'armamentPosition' + i" placeholder="partNo"
                         formControlName="armamentPosition">
+                    </td>
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  (click)="selectGig(gig)"></i>
+                      <input type="text" class="form-control" [id]="'armamentPosition' + i" placeholder="GigNo*"
+                        formControlName="armamentPosition" readonly>
+                        <span class="errors" *ngIf="armamentdetail.get('armamentPosition').errors?.required && isSubmitted ">
+                          Please enter Build Item</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'armamentItem' + i" placeholder="serial"
@@ -119,8 +128,8 @@
                         formControlName="remarks">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'status' + i" placeholder="updatedDate"
-                        formControlName="status">
+                      <button type="button" [ngClass]="closestatus == true ? 'isDisabled' : ''">load</button>
+                      <button type="button" [ngClass]="closestatus == true ? 'isDisabled' : ''">Delete</button>
                     </td>
 
 
@@ -133,4 +142,100 @@
       </div>
     </div>
   </form>
+  <div class="col-lg-12">
+    <ng-template #builditem let-model class="assest">
+      <div class="model-header">
+        <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+        <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+          <i class="now-ui-icons ui-1_simple-remove"></i>
+        </button>
+      </div>
+      <div class="model-body">
+        <div class="form-group">
+          <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+        </div>
+        <div class="table-responsive">
+          <div class="table-scroll">
+            <table class="table">
+              <thead class="text-primary">
+                <th>Selection</th>
+                <th>Assest</th>
+                <th>Description</th>
+                <th>LCN</th>
+                <th>BuildItem</th>
+                <th>Position</th>
+                <th>Serial#</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let buildItemArray of buildItemArray | search : searchvalue ;let i = index">
+                  <td>
+                    <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
+                      value="{{buildItemArray.indexCount}}">
+                  </td>
+                  <td>{{buildItemArray.assetnum}}</td>
+                  <td>{{buildItemArray.description}}</td>
+                  <td>{{buildItemArray.lcn}}</td>
+                  <td>{{buildItemArray.buildItem}}</td>
+                  <td>{{buildItemArray.position}}</td>
+                  <td>{{buildItemArray.serialnumber}}</td>
+                  <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="model-footer">
+        <button type="button" (click)="model.close('Save click')">Save</button>
+      </div>
+
+    </ng-template>
+    <div class="col-lg-12">
+      <ng-template #gig let-model class="assest">
+        <div class="model-header">
+          <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+            <i class="now-ui-icons ui-1_simple-remove"></i>
+          </button>
+        </div>
+        <div class="model-body">
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+          </div>
+          <div class="table-responsive">
+            <div class="table-scroll">
+              <table class="table">
+                <thead class="text-primary">
+                  <th>alndomainId</th>
+                  <th>domainId</th>
+                  <th>value</th>
+                  <th>serialnumber</th>
+                  
+                </thead>
+                <tbody>
+                  <tr *ngFor="let buildItemArray of removalReason | search : searchvalue ;let i = index">
+                    <td>
+                      <input type="radio" (click)="rassetSave(buildItemArray.indexCount)" name="radio"
+                        value="{{buildItemArray.indexCount}}">
+                    </td>
+                    <td>{{buildItemArray.alndomainId}}</td>
+                    <td>{{buildItemArray.domainId}}</td>
+                    <td>{{buildItemArray.value}}</td>
+                    <td>{{buildItemArray.serialnumber}}</td>
+                    <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="model-footer">
+          <button type="button" (click)="model.close('Save click')">Save</button>
+        </div>
+
+      </ng-template>
 </div>

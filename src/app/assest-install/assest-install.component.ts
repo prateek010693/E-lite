@@ -5,14 +5,14 @@ import { WorkorderService } from "../services/workorder.service";
 import { AssetInstallRemoveService } from "../services/asset-install-remove.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { MeterComplianceService } from "../services/meter-compliance.service";
-
+import { ConditionalExpr } from "@angular/compiler";
 @Component({
   selector: "app-assest-install",
   templateUrl: "./assest-install.component.html",
   styleUrls: ["./assest-install.component.css"],
 })
 @Pipe({
-  name: "search",
+  name: "searchAI",
 })
 export class AssestInstallComponent implements OnInit, PipeTransform {
   assetInstallRemoveForm: FormGroup;
@@ -63,25 +63,39 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     if (!value || !searchvalue) {
       return value;
     }
+
     return value.filter((item) => {
-      if (item.installedBy == undefined) {
+      console.log("item", item);
+      //console.log('item1',item.assetnum)
+      console.log("item2", item.domainId);
+      console.log("item3", item.assetNum_meterLookup);
+      if (item.domainId == undefined) {
+        console.log("third");
         var filter =
+          item.assetNum_meterLookup
+            .toLowerCase()
+            .includes(searchvalue.toLowerCase()) ||
+          item.meterdescription
+            .toLowerCase()
+            .includes(searchvalue.toLowerCase()) ||
           item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) ||
           item.description.toLowerCase().includes(searchvalue.toLowerCase());
         return filter;
       }
-      if (item.assetnum == undefined && item.pm == undefined) {
-        var filter =
-          item.workType.toLowerCase().includes(searchvalue.toLowerCase()) ||
-          item.description.toLowerCase().includes(searchvalue.toLowerCase());
+      if (item.assetNum_meterLookup == undefined) {
+        console.log("second");
+        var filter = item.value
+          .toLowerCase()
+          .includes(searchvalue.toLowerCase());
         return filter;
       }
-      if (item.workType == undefined && item.pm == undefined) {
-        var filter =
-          item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) ||
-          item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase());
-        return filter;
-      }
+      // if (item.assetNum_meterLookup == undefined && item.domainId == undefined ) {
+      //   console.log("first")
+      //   var filter = (item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) ||
+      //   item.description.toLowerCase().includes(searchvalue.toLowerCase())
+      //   )
+      //   return filter
+      //}
     });
   }
   ngOnInit(): void {

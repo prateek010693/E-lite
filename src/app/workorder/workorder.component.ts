@@ -50,11 +50,20 @@ export class WorkorderComponent implements OnInit, PipeTransform {
       console.log("here");
       return value;
     }
-    return value.filter((item) => {
-      var a = item.wo.toLowerCase().includes(searchvalue.toLowerCase());
+    return value.filter(item => {
+      var a=(
+        item.wo.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.workType.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.asset.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.status.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.pm.toLowerCase().includes(searchvalue.toLowerCase()) ||
+        item.pm_desc.toLowerCase().includes(searchvalue.toLowerCase())
 
-      if (a) {
-        count++;
+      )
+      
+      if(a){
+        count++
       }
       if (count <= 6) {
         this.isShow = false;
@@ -71,14 +80,8 @@ export class WorkorderComponent implements OnInit, PipeTransform {
     this.workorder_form = this.fb.group({
       recordNumber: [""],
       aircraftNumber: [""],
-      model: [""],
-      variation: [""],
-      locationOfAircraft: [""],
-      dateOfTransfer: [""],
       dettLocation: [""],
-      dettLocationBase: [""],
-      status: [""],
-    });
+    })
   }
   createWorkorder(id) {
     if (id == "") {
@@ -91,29 +94,35 @@ export class WorkorderComponent implements OnInit, PipeTransform {
         "workorder/createworkorder/" + id + "/workorderdetails",
       ]);
     }
-  }
-
-  getWorkorder() {
-    this.workOrderService.getWorkOrder().subscribe((element) => {
-      var count = 0;
-      var sampleData = [];
-      element.map((el) => {
-        count++;
+    else{
+      this.router.navigate(['workorder/createworkorder/'+id+'/workorderdetails'])
+    }
+  } 
+  
+  getWorkorder(){
+    this.workOrderService.getWorkOrder().subscribe(element =>{
+      var count = 0
+      var sampleData= []
+      element.map(el =>{
+        count++
+        console.log("hereel",el)
         sampleData.push({
-          wo_id: el.workorder_id ? el.workorder_id : "N/A",
-          wo: el.wo_num ? el.wo_num : "N/A",
-          description: el.wo_desc ? el.wo_desc : "N/A",
-          workType: el.work_type ? el.work_type : "N/A",
-          asset: el.asset_num ? el.asset_num : "N/A",
-          status: el.wo_status ? el.wo_status : "N/A",
-        });
-      });
-      this.viewWorkorder = sampleData;
-      this.totalrecs = count;
-      if (count <= 6) {
-        this.isShow = false;
-      } else {
-        this.isShow = true;
+          "wo_id": el.workorder_id ? el.workorder_id : "N/A",
+          "wo":el.wo_num ? el.wo_num : 'N/A',
+          "description":el.wo_desc ? el.wo_desc : 'N/A',
+          "workType":el.work_type ? el.work_type : 'N/A',
+          "asset":el.asset_num ? el.asset_num : 'N/A',
+          "status":el.wo_status ? el.wo_status : 'N/A',
+          "pm":el.pm ? el.pm : 'N/A',
+          "pm_desc":el.pm_desc ? el.pm_desc : 'N/A',
+        })
+      })
+      this.viewWorkorder = sampleData
+      this.totalrecs = count
+      if(count <= 6){
+        this.isShow = false
+      }else{
+        this.isShow=true
       }
 
       console.log("count is:", count);

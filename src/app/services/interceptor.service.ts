@@ -43,11 +43,13 @@ export class InterceptorService implements HttpInterceptor {
           observer.error(error);
         },
         () => {
+          console.log("requests-->21");
           this.removeRequest(req);
           observer.complete();
         }
       );
       return () => {
+        console.log("requests-->31");
         this.removeRequest(req);
         subscription.unsubscribe();
       };

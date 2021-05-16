@@ -79,6 +79,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
       cmItem: [""],
       pmDescription: [""],
       closedBy: [""],
+      assetDescription : [""]
       //LookUp Controller
       
     })
@@ -197,6 +198,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     this.workOrderDetailForm.controls['asset'].setValue(this.assetArray[this.index].assetnum)
     this.workOrderDetailForm.controls['serial'].setValue(this.assetArray[this.index].serialnumber)
     this.workOrderDetailForm.controls['cmItem'].setValue(this.assetArray[this.index].cmitem)
+    this.workOrderDetailForm.controls['assetDescription'].setValue(this.assetArray[this.index].description)
   }
   worktypeSave(index){
     this.index = index
@@ -229,15 +231,11 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
         this.toastr.success("Status Chnage Successfully.")
       }
     })
-    console.log('this.index ',this.index )
   }
   cancelworkorder() {
     this.router.navigate(['workorder'])
   }
   saveworkorder(id) {
-    var date = this.workOrderDetailForm.controls['statusDate'].value
-    console.log('date',typeof date,date)
-    console.log('id+++++',typeof id,id)   
     if(id == "null"){
       console.log("new Workorder")
       var workorderData = { 
@@ -250,22 +248,25 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
         "cm_item":this.workOrderDetailForm.controls['cmItem'].value,
         "pm":this.workOrderDetailForm.controls['pmNumber'].value,
         "pm_desc":this.workOrderDetailForm.controls['pmDescription'].value,
-        
+        "asset_desc" : this.workOrderDetailForm.controls['assetDescription'].value,
       }
       this.workorderService.createWO(workorderData).subscribe(element =>{
         console.log('element',element)
+        this.router.navigate(['workorder'])
       })
 
-    }
-    console.log('this.workOrderDetailForm', this.workOrderDetailForm)
-    this.router.navigate(['workorder'])
+    }    
   }
   getExistingWO(){ 
-    console.log('this.id++++',this.id)
       this.workorderService.getExistingWO(this.id).subscribe(data =>{
         console.log('data',data)
         if(data.wo_status =="CAN" || data.wo_status =="CLOSE"){
           this.statusChangeIndex = false
+          this.workOrderDetailForm.controls['statusDate'].setValue(data.closure_date ? data.closure_date  : "N/A") 
+        }
+        else{
+          this.workOrderDetailForm.controls['statusDate'].setValue(data.creation_date ? data.creation_date  : "N/A") 
+
         }
         //this.date = (this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') != null) ?  this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') : "N/A"
         this.workOrderDetailForm.controls['woNumber'].setValue(data.wo_num ? data.wo_num : "N/A") 
@@ -274,15 +275,14 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
         this.workOrderDetailForm.controls['asset'].setValue(data.asset_num ? data.asset_num : "N/A") 
         this.workOrderDetailForm.controls['serial'].setValue(data.serial_num ? data.serial_num : "N/A") 
         this.workOrderDetailForm.controls['pmNumber'].setValue(data.pm ? data.pm : "N/A") 
-        this.workOrderDetailForm.controls['statusDate'].setValue(data.closure_date ? data.closure_date  : "N/A") 
         this.workOrderDetailForm.controls['cmItem'].setValue(data.cm_item ? data.cm_item : "N/A") 
         this.workOrderDetailForm.controls['pmDescription'].setValue(data.pm_desc ? data.pm_desc : "N/A") 
         this.workOrderDetailForm.controls['closedBy'].setValue(data.closed_by ? data.closed_by : "N/A") 
         this.workOrderDetailForm.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A") 
+        this.workOrderDetailForm.controls['assetDescription'].setValue(data.asset_desc ? data.asset_desc : "N/A") 
       })
   }
   getWorkorderNo(){
-    console.log('fdfdfdfd')
     this.workorderService.getWorkorderNo().subscribe(data =>{
       console.log('data',data)
       this.workOrderDetailForm.controls['woNumber'].setValue(data.wonum)
