@@ -3,62 +3,72 @@
         <div class="col-md-4 px-1">
             <div class="form-group">
                 <label>Record No.</label>
-                <input [value]="headerObject.recordNum" type="text" class="form-control" placeholder="Record No">
+                <input [value]="headerObject.recordNum" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Record No">
             </div>
         </div>
         <div class="col-md-4 px-1">
             <div class="form-group">
                 <label>Aircraft No.</label>
-                <input [value]="headerObject.arcrftNum" type="text" class="form-control" placeholder="Aircraft No" value="">
-            </div>
-        </div>
-        <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Model</label>
-                <input [value]="headerObject.model" type="text" class="form-control" placeholder="Model" value="">
-            </div>
-        </div>
-        <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Variation</label>
-                <input [value]="headerObject.variation" type="text" class="form-control" placeholder="Variation" value="">
-            </div>
-        </div>
-        <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Location Of Aircraft</label>
-                <input [value]="headerObject.arcrftLoc" type="text" class="form-control" placeholder="Location Of Aircraft" value="">
-            </div>
-        </div>
-        <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Date Of Transfer</label>
-                <input [value]="headerObject.trnsfrDate" type="date" class="form-control" placeholder="Date Of Transfer" value="">
-            </div>
-        </div>
-        <!-- <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Date Of Return</label>
-                <input type="date" class="form-control" placeholder="Date Of Return" value="">
-            </div>
-        </div> -->
-        <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Dett Location</label>
-                <input [value]="headerObject.dettLoc" type="text" class="form-control" placeholder="Dett Location" value="">
-            </div>
-        </div>
-        <div class="col-md-4 px-1">
-            <div class="form-group">
-                <label>Dett Location Base</label>
-                <input [value]="headerObject.dettLocBase" type="text" class="form-control" placeholder="Dett Location Base" value="">
+                <input [value]="headerObject.arcrftNum" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Aircraft No">
             </div>
         </div>
         <div class="col-md-4 px-1">
             <div class="form-group">
                 <label>Status</label>
-                <input [value]="headerObject.status" type="text" class="form-control" placeholder="Status" value="">
+                <input [value]="headerObject.status" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Status">
             </div>
         </div>
+        <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Model</label>
+                <input [value]="headerObject.model" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Model">
+            </div>
+        </div>
+        <!-- <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Variation</label>
+                <input [value]="headerObject.variation" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Variation">
+            </div>
+        </div>
+        <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Location Of Aircraft</label>
+                <input [value]="headerObject.arcrftLoc" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Location Of Aircraft">
+            </div>
+        </div>
+        <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Date Of Transfer</label>
+                <input [value]="headerObject.trnsfrDate" [attr.disabled]="true" type="date" class="form-control"
+                    placeholder="Date Of Transfer">
+            </div>
+        </div>
+        <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Date Of Return</label>
+                <input [value]="headerObject.returnDate" type="date" [attr.disabled]="true" class="form-control"
+                    placeholder="Date Of Return">
+            </div>
+        </div> -->
+        <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Dett Location</label>
+                <input [value]="headerObject.dettLoc" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Dett Location">
+            </div>
+        </div>
+        <!-- <div class="col-md-4 px-1">
+            <div class="form-group">
+                <label>Dett Location Base</label>
+                <input [value]="headerObject.dettLocBase" [attr.disabled]="true" type="text" class="form-control"
+                    placeholder="Dett Location Base">
+            </div>
+        </div> -->
     </div>
 </form>

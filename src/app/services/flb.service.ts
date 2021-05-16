@@ -21,25 +21,15 @@ export class FlbService {
     return this.http.get(url, { observe: "response", responseType: "json" });
   }
 
-  private handleError(error: HttpErrorResponse): Observable<any> {
-    if (error.status === 0) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.log(error.status);
-      console.error("An error occurred:", error.error);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong.
-      console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
-      );
-    }
-    // Return an observable with a user-facing error message.
-    return throwError(error);
-  }
-
   // To create new sortie
   createSortie(recordId: any, sortie: any): Observable<any> {
     const url = this.baseURL + "create/" + recordId;
     return this.http.post(url, sortie, { observe: "response" });
+  }
+
+  // To save all sorties
+  saveSorties(recordId: any, sorties: Array<any>): Observable<any> {
+    const url = this.baseURL + "save/" + recordId;
+    return this.http.put(url, sorties, { observe: "response" });
   }
 }
