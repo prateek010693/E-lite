@@ -14,12 +14,16 @@ export class MeterComplianceService {
   
   //-------------API for View Asset----------------------//
   getAssetAndMeter():Observable<any>{
-    console.log('sasasasa')
-    const url = this.baseURL+'getAssetLookup'
+    
+    const url = this.baseURL+'getAssetAndRmBuildItemLookup'
     return this.http.get(url)
   }
   //-------------End----------------------//\
-
+  getInstalledAssetLookup():Observable<any>{
+    
+    const url = this.baseURL+'getInstallBuildItemLookup'
+    return this.http.get(url)
+  }
   //-------------API for Save Meter----------------------//
   saveMeterDetails(wo_id,meterData):Observable<any>{
     console.log('sasasasa')
