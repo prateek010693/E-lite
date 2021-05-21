@@ -99,6 +99,7 @@ export class WorkorderComponent implements OnInit,PipeTransform {
       var count = 0
       var sampleData= []
       element.map(el =>{
+       console.log("el",el)
         count++
         console.log("hereel",el)
         sampleData.push({
