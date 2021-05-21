@@ -18,6 +18,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
   assetInstallRemoveForm: FormGroup;
   removeForm: FormGroup;
   installForm: FormGroup;
+  user_id = localStorage.getItem("userName");
   id: any;
   index: any;
   searchvalue: any;
@@ -122,7 +123,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       removePartNo: [""],
       serialNo: [""],
       assetNo: [""],
-      removedBy: [""],
+      removedBy: [`${this.user_id}`],
       removalDate: [""],
       removalReason: ["", Validators.required],
       removalCond: ["", Validators.required],
@@ -133,10 +134,12 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     this.installForm = this.fb.group({
       insRemId: [""],
       insAssetNo: ["", Validators.required],
+      buildItem: [""],
       remInsDate: [""],
+      lcn: [""],
       insPartNo: [""],
       insSerialNo: [""],
-      installedBy: [""],
+      installedBy: [`${this.user_id}`],
       remarks: [""],
       insCond: [""],
     });
@@ -152,6 +155,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     return this.fb.group({
       JobType: [""],
       Item: [""],
+      lcn: [""],
       BuildItem: [""],
       Position: [""],
       PartNo: [""],
@@ -263,7 +267,36 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
           //this.assetSave(this.index)
         }
       });
-    this.buildItemArray = this.getAsset();
+    this.buildItemArray = this.getinstalledAsset();
+  }
+  getinstalledAsset() {
+    let count = 0;
+    var assetData = [];
+    this.meterComplianceService.getInstalledAssetLookup().subscribe((data) => {
+      console.log("dataofinstalledasset", data);
+      data.map((el) => {
+        assetData.push({
+          assetnum: el.assetId_assetLookup ? el.assetId_assetLookup : "N/A",
+          description: el.assetDescription_assetLookup
+            ? el.assetDescription_assetLookup
+            : "N/A",
+          meterdescription: el.partDescription_meterLookup
+            ? el.partDescription_meterLookup
+            : "N/A",
+          status: el.statusString ? el.statusString : "N/A",
+          serialnumber: el.serialNum ? el.serialNum : "N/A",
+          position: el.position ? el.position : "N/A",
+          lcn: el.lcn ? el.lcn : "N/A",
+          assetNum_meterLookup: el.assetNum_meterLookup
+            ? el.assetNum_meterLookup
+            : "N/A",
+          cmitem: el.partNumber_meterLookup ? el.partNumber_meterLookup : "N/A",
+          buildItem: el.buildItem ? el.buildItem : "N/A",
+          indexCount: count++,
+        });
+      });
+    });
+    return assetData;
   }
   assetSave(index) {
     this.index = index;
@@ -298,6 +331,12 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     this.index = index;
     this.installForm.controls["insAssetNo"].setValue(
       this.buildItemArray[this.index].assetnum
+    );
+    this.installForm.controls["lcn"].setValue(
+      this.buildItemArray[this.index].lcn
+    );
+    this.installForm.controls["buildItem"].setValue(
+      this.buildItemArray[this.index].buildItem
     );
     //this.installForm.controls['remInsDate'].setValue(this.buildItemArray[this.index].serialnumber)
     this.installForm.controls["insSerialNo"].setValue(
@@ -420,6 +459,8 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
         insRemId: this.installForm.controls["insRemId"].value,
         insAssetNo: this.installForm.controls["insAssetNo"].value,
         remInsDate: this.installForm.controls["remInsDate"].value,
+        lcn: this.installForm.controls["lcn"].value,
+        buildItem: this.installForm.controls["buildItem"].value,
         insPartNo: this.installForm.controls["insPartNo"].value,
         insSerialNo: this.installForm.controls["insSerialNo"].value,
         installedBy: this.installForm.controls["installedBy"].value,
@@ -437,12 +478,13 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
             remInsDate: data.remInsDate,
             insPartNo: data.insPartNo,
             insSerialNo: data.insSerialNo,
+            buildItem: data.buildItem,
+            lcn: data.lcn,
             installedBy: data.installedBy,
             remarks: data.remarks,
             insCond: data.insCond,
             jobType: data.jobType,
             item: data.item,
-            buildItem: data.buildItem,
             position: data.position,
           });
 
@@ -471,7 +513,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
               buildItem: el.buildItem,
               lcn: el.lcn,
               position: el.position,
-              partNo: el.partNo,
+              PartNo: el.partNo,
               item: el.item,
               removePartNo: el.removePartNo,
               serialNo: el.serialNo,
