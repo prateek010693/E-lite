@@ -90,6 +90,7 @@ export class WorkorderComponent implements OnInit,PipeTransform {
       var count = 0
       var sampleData= []
       element.map(el =>{
+       console.log("el",el)
         count++
         sampleData.push({
           "wo_id": el.workorder_id ? el.workorder_id : "N/A",
@@ -98,6 +99,8 @@ export class WorkorderComponent implements OnInit,PipeTransform {
           "workType":el.work_type ? el.work_type : 'N/A',
           "asset":el.asset_num ? el.asset_num : 'N/A',
           "status":el.wo_status ? el.wo_status : 'N/A',
+          
+          
         })
       })
       this.viewWorkorder = sampleData
