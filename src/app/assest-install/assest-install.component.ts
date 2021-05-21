@@ -5,18 +5,20 @@ import { WorkorderService } from '../services/workorder.service';
 import { AssetInstallRemoveService } from '../services/asset-install-remove.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MeterComplianceService } from '../services/meter-compliance.service';
+import { ConditionalExpr } from '@angular/compiler';
 @Component({
   selector: 'app-assest-install',
   templateUrl: './assest-install.component.html',
   styleUrls: ['./assest-install.component.css']
 })
 @Pipe({
-  name: 'search',
+  name: 'searchAI',
 })
 export class AssestInstallComponent implements OnInit, PipeTransform {
   assetInstallRemoveForm: FormGroup
   removeForm: FormGroup
   installForm: FormGroup
+  user_id=localStorage.getItem('userName')
   id: any;
   index: any;
   searchvalue: any;
@@ -46,19 +48,36 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     if (!value || !searchvalue) {
       return value;
     }
+    
     return value.filter(item => {
-      if (item.installedBy == undefined) {
-        var filter = item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
+      console.log('item',item)
+      //console.log('item1',item.assetnum)
+      console.log('item2',item.domainId)
+      console.log('item3',item.assetNum_meterLookup)
+      if (item.domainId == undefined  ) {
+        console.log("third")
+        var filter = (item.assetNum_meterLookup.toLowerCase().includes(searchvalue.toLowerCase()) ||
+         item.meterdescription.toLowerCase().includes(searchvalue.toLowerCase()) ||
+         item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || 
+         item.description.toLowerCase().includes(searchvalue.toLowerCase())
+        )
         return filter
       }
-      if (item.assetnum == undefined && item.pm == undefined) {
-        var filter = item.workType.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
+      if (item.assetNum_meterLookup == undefined ) {
+        console.log("second")
+        var filter = (
+        item.value.toLowerCase().includes(searchvalue.toLowerCase())
+        )
         return filter
       }
-      if (item.workType == undefined && item.pm == undefined) {
-        var filter = item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase())
-        return filter
-      }
+      // if (item.assetNum_meterLookup == undefined && item.domainId == undefined ) {
+      //   console.log("first")
+      //   var filter = (item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || 
+      //   item.description.toLowerCase().includes(searchvalue.toLowerCase())
+      //   )
+      //   return filter
+      //}
+     
     })
   }
   ngOnInit(): void {
@@ -86,7 +105,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       removePartNo: [""],
       serialNo: [""],
       assetNo: [""],
-      removedBy: [""],
+      removedBy: [`${this.user_id}`],
       removalDate: [""],
       removalReason: ["",Validators.required],
       removalCond: ["",Validators.required],
@@ -98,10 +117,12 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     this.installForm = this.fb.group({
       insRemId: [""],
       insAssetNo: ["",Validators.required],
+      buildItem: [""],
       remInsDate: [""],
+      lcn: [""],
       insPartNo: [""],
       insSerialNo: [""],
-      installedBy: [""],
+      installedBy: [`${this.user_id}`],
       remarks: [""],
       insCond: [""],
     })
@@ -119,6 +140,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     return this.fb.group({
       JobType: [""],
       Item: [""],
+      lcn:[""],
       BuildItem: [""],
       Position: [""],
       PartNo: [""],
@@ -230,8 +252,31 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       }
 
     });
-    this.buildItemArray = this.getAsset();
+    this.buildItemArray = this.getinstalledAsset();
 
+  }
+  getinstalledAsset(){
+    let count = 0
+    var assetData = []
+    this.meterComplianceService.getInstalledAssetLookup().subscribe(data => {
+      console.log('dataofinstalledasset', data)
+      data.map(el => {
+        assetData.push({
+          "assetnum": el.assetId_assetLookup ? el.assetId_assetLookup : "N/A",
+          "description": el.assetDescription_assetLookup ? el.assetDescription_assetLookup : "N/A",
+          "meterdescription": el.partDescription_meterLookup ? el.partDescription_meterLookup : "N/A",
+          "status": el.statusString ? el.statusString : "N/A",
+          "serialnumber": el.serialNum ? el.serialNum : "N/A",
+          "position": el.position ? el.position : "N/A",
+          "lcn": el.lcn ? el.lcn : "N/A",
+          "assetNum_meterLookup": el.assetNum_meterLookup ? el.assetNum_meterLookup : "N/A",
+          "cmitem": el.partNumber_meterLookup ? el.partNumber_meterLookup : "N/A",
+          "buildItem": el.buildItem ? el.buildItem : "N/A",
+          "indexCount": count++
+        })
+      })
+    })
+    return assetData
   }
   assetSave(index){
     this.index = index
@@ -251,6 +296,8 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
   iassetSave(index) {
     this.index = index
     this.installForm.controls['insAssetNo'].setValue(this.buildItemArray[this.index].assetnum)
+    this.installForm.controls['lcn'].setValue(this.buildItemArray[this.index].lcn)
+    this.installForm.controls['buildItem'].setValue(this.buildItemArray[this.index].buildItem)
     //this.installForm.controls['remInsDate'].setValue(this.buildItemArray[this.index].serialnumber)
     this.installForm.controls['insSerialNo'].setValue(this.buildItemArray[this.index].serialnumber)
     this.installForm.controls['insPartNo'].setValue(this.buildItemArray[this.index].cmitem)
@@ -369,6 +416,8 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       "insRemId": this.installForm.controls['insRemId'].value,
       "insAssetNo": this.installForm.controls['insAssetNo'].value,
       "remInsDate": this.installForm.controls['remInsDate'].value,
+      "lcn":this.installForm.controls['lcn'].value,
+      "buildItem":this.installForm.controls['buildItem'].value,
       "insPartNo": this.installForm.controls['insPartNo'].value,
       "insSerialNo": this.installForm.controls['insSerialNo'].value,
       "installedBy": this.installForm.controls['installedBy'].value,
@@ -386,12 +435,13 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
         remInsDate: data.remInsDate,
         insPartNo: data.insPartNo,
         insSerialNo: data.insSerialNo,
+        buildItem:data.buildItem,
+        lcn:data.lcn,
         installedBy: data.installedBy,
         remarks: data.remarks,
         insCond: data.insCond,
         jobType: data.jobType,
         item: data.item,
-        buildItem: data.buildItem,
         position: data.position,
       })
 
@@ -422,7 +472,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
             buildItem: el.buildItem,
             lcn: el.lcn,
             position: el.position,
-            partNo: el.partNo,
+            PartNo: el.partNo,
             item: el.item,
             removePartNo: el.removePartNo,
             serialNo: el.serialNo,

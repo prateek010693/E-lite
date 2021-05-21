@@ -2,9 +2,9 @@
   <div class="col-sm-12">
     <div class="sidebar-wrapper">
       <ul class="nav nav-tabs nav-justified work-order">
-        <li routerLinkActive="active" *ngFor="let workorderItem of workorderItems"
+        <li routerLinkActive="active" *ngFor="let workorderItem of temp; let i = index"
           class="{{workorderItem.class}} nav-item">
-          <a [routerLink]="[workorderItem.path]">
+          <a   [routerLink]="[workorderItem.path]">
             <p>{{workorderItem.title}}</p>
           </a>
         </li>
