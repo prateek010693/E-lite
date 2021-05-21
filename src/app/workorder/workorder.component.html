@@ -35,6 +35,40 @@
             </div>
           </div>
         </div>
+    </form>
+      <div class="col-md-12">
+        <div class="table-responsive">
+          <p class="table-heading">Work Order List</p>
+          <div class="table-scroll">
+            <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue'   placeholder="search">
+             </div>
+            <table class="table">
+              <thead class=" text-primary">
+                <th>WO</th>
+                <th>Description</th>
+                <th>WorkType</th>
+                <th>PM</th>
+                <th>PM Description</th>
+                <th>Asset</th>
+                <th>Status Date</th>
+                <th>Status</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let finalData of viewWorkorder |  search: searchvalue|paginate : {id: 'listing_pagination',
+                itemsPerPage: 5,
+                currentPage:page,
+                totalItems: totalrecs }">
+                  <td><button class="btn-click" (click)="editWorkorder(finalData.wo_id)">{{finalData.wo}}</button></td>
+                  <td>{{finalData.description}}</td>
+                  <td>{{finalData.workType}}</td>
+                  <td>{{finalData.pm}}</td>
+                  <td>{{finalData.pm_desc}}</td>
+                  <td>{{finalData.asset}}</td>
+                  <td>{{finalData.status_date}}</td>
+                  <td>{{finalData.status}}</td>
+                </tr>
+                <!-- <tr>
       </form>
     </div>
 
