@@ -8,8 +8,18 @@
   white-space: nowrap;
 }
 
+.fit-content {
+  width: fit-content;
+}
+
+.table-responsive .table td .form-control {
+  width: fit-content;
+  margin-bottom: 5px;
+}
+
 #save-wrapper {
-  margin-top: 20px;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
   display: flex;
   justify-content: center;
 }

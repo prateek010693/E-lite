@@ -16,7 +16,6 @@ import { FscComponent } from "../../fsc/fsc.component";
 import { SnagreportingdetailsComponent } from "../../snagreportingdetails/snagreportingdetails.component";
 import { CreateWorkorderComponent } from "../../create-workorder/create-workorder.component";
 import { WorkorderComponent } from "../../workorder/workorder.component";
-import { PlannedAssetHeaderComponent } from "../../planned-asset-header/planned-asset-header.component";
 // import {Ng2SearchPipeModule} from 'ng2-search-filter'
 
 @NgModule({
@@ -45,7 +44,6 @@ import { PlannedAssetHeaderComponent } from "../../planned-asset-header/planned-
     FscComponent,
     SnagreportingdetailsComponent,
     WorkorderComponent,
-    PlannedAssetHeaderComponent,
     CreateWorkorderComponent,
   ],
   exports: [RouterModule],

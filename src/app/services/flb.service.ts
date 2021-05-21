@@ -32,4 +32,10 @@ export class FlbService {
     const url = this.baseURL + "save/" + recordId;
     return this.http.put(url, sorties, { observe: "response" });
   }
+
+  // Get Sorties with given status
+  getSortieNum(status, recordId): Observable<any> {
+    const url = this.baseURL + "/num/" + status + "/" + recordId;
+    return this.http.get(url, { observe: "response" });
+  }
 }
