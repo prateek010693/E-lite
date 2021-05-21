@@ -149,6 +149,30 @@ export class MeterComplianceComponent implements OnInit {
     this.meterArray = this.getMeter();
 
   }
+  initialCharactersticMeter(initialCharacterstic, formArrayIndex) {
+    // this.searchvalue = ''
+    this.formArrayIndex = formArrayIndex;
+    this.bootstrapModel.open(initialCharacterstic, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
+      if (result == 'Save click') {
+        // this.meterSave(this.index)
+      }
+
+    });
+    // this.meterArray = this.getMeter();
+
+  }
+  finalCharactersticMeter(finalCharacterstic, formArrayIndex) {
+    // this.searchvalue = ''
+    this.formArrayIndex = formArrayIndex;
+    this.bootstrapModel.open(finalCharacterstic, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
+      if (result == 'Save click') {
+        // this.meterSave(this.index)
+      }
+
+    });
+    // this.meterArray = this.getMeter();
+
+  }
   get meterDetailForm() {
     return this.meterComplianceForm.get('meterdetails') as FormArray
   }
