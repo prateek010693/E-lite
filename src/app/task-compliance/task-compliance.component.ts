@@ -68,6 +68,8 @@ export class TaskComplianceComponent implements OnInit {
       description: '',
       worktype:'',
       woStatus:'',
+      assetno:[""],
+      assetdec:[""],
       AddTechnician : this.fb.array([])
     })
      this.gettechnicianId()
@@ -280,11 +282,10 @@ export class TaskComplianceComponent implements OnInit {
         this.taskComplianceFrom.controls['workorderNo'].setValue(data.wo_num ? data.wo_num : "N/A") 
         this.taskComplianceFrom.controls['woStatus'].setValue(data.wo_status ? data.wo_status : "N/A")
         this.taskComplianceFrom.controls['description'].setValue(data.wo_desc ? data.wo_desc : "N/A")  
-        this.taskComplianceFrom.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A") 
-        // data.map(el => {
-        //   this.closestatus = el.wo_status
-        //   console.log("this.closestatu",this.closestatus)
-        //   })
+        this.taskComplianceFrom.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A")
+        this.taskComplianceFrom.controls['assetno'].setValue(data.asset_num ? data.asset_num : "N/A")
+        this.taskComplianceFrom.controls['assetdec'].setValue(data.asset_desc ? data.asset_desc : "N/A") 
+        
         this.closestatus = this.taskComplianceFrom.get('woStatus').value
         console.log("closestatu",this.closestatus)
         if(this.closestatus == 'CLOSE' || this.closestatus == 'CAN'){

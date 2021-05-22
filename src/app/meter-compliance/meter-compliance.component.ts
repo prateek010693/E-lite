@@ -52,6 +52,8 @@ export class MeterComplianceComponent implements OnInit {
       description: '',
       worktype: '',
       woStatus: '',
+      assetno:[""],
+      assetdec:[""],
       meterdetails: this.fb.array([])
 
     })
@@ -87,7 +89,8 @@ export class MeterComplianceComponent implements OnInit {
       this.meterComplianceForm.controls['woStatus'].setValue(data.wo_status ? data.wo_status : "N/A")
       this.meterComplianceForm.controls['description'].setValue(data.wo_desc ? data.wo_desc : "N/A")
       this.meterComplianceForm.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A")
-
+      this.meterComplianceForm.controls['assetno'].setValue(data.asset_num ? data.asset_num : "N/A")
+      this.meterComplianceForm.controls['assetdec'].setValue(data.asset_desc ? data.asset_desc : "N/A")
     })
   }
   getAsset() {

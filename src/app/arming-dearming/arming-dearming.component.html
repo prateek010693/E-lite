@@ -31,6 +31,20 @@
               <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus" readonly>
             </div>
           </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
+            </div>
+          </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
@@ -112,15 +126,11 @@
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'loadQuantity' + i" placeholder="loadQuantity" 
-                      (focus)="alternator2(i)" formControlName="loadQuantity">
-                      
-                
-                      <span class="errors" *ngIf="armamentdetail.get('loadQuantity').errors?.required || armamentdetail.get('loadQuantity').touched ">
-                        Please Select Armament Item</span>
+                      (focus)="alternator1(i)" formControlName="loadQuantity" [readonly] = "!alternate1[i]">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'unloadQuantity' + i" placeholder="unloadQuantity" (focus)="alternator1(i)"
-                        formControlName="unloadQuantity">
+                      <input type="text" class="form-control" [id]="'unloadQuantity' + i" placeholder="unloadQuantity" 
+                      (focus)="alternator2(i)"  formControlName="unloadQuantity" [readonly] = "!alternate2[i]">
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'evaluatedQuantity' + i" placeholder="updatedDate"
