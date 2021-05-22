@@ -14,8 +14,8 @@ export const ROUTES: RouteInfo[] = [
 
   { path: 'workorderdetails', title: 'Workorder', role:['admin','user','technician'],work:[''],class: '' },
   { path: 'tasklevelcompliance', title: 'Task Level Compliance',work:[''],role:['admin','technician'], class: '' },
-  { path: 'metercompliance', title: 'Meter Compliance',role:['admin','technician'],work:[''], class: '' },
-  { path: 'armingdearming', title: 'Arming/Dearming',role:['admin'],work:['Servicing'], class: '' },
+  { path: 'metercompliance', title: 'Meter Compliance',role:['admin','technician'],work:['Servicing'], class: '' },
+  { path: 'armingdearming', title: 'Arming/Dearming',role:['admin'],work:[], class: '' },
   { path: 'assestinstallremove', title: 'Assest Install/Remove',work:[''],role:['admin'], class: '' },
 ];
 @Component({

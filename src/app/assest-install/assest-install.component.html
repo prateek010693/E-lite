@@ -34,10 +34,24 @@
                 readonly>
             </div>
           </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
+            </div>
+          </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
-              <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" (click)="addNewLine()"
+              <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" (click)="addNewRow()"
                 [disabled]="isDisabled">Add
                 Line</button>
             </div>
@@ -111,19 +125,30 @@
           </div>
         </div>
       </form>
+      <div class="row">
+        <div class="col-md-12 px-1">
+          <div class="form-group">
+            <label style="padding: 0 50%;">JobType</label>
+            <select class="form-control" placeholder="jobType" [(ngModel)]='jobTyper' (change)="addNewLine()">
+              <option value=""  selected hidden>Select JobType</option>
+              <option *ngFor="let jobtype of JobType" [value]="jobtype.value">{{jobtype.id}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
       <div id="IRdiv">
         <div  class="row">
           <div [ngClass]="isShow2 == false ? 'fullwidth': 'halfr'" *ngIf="isShow ">
             <div class="card" *ngIf="isShow1 ">
               <div class="card-body">
-                <input type="checkbox" id="check" value="" (change)="onCheckedRemoved($event)">
-                <label class="control-label">Removed</label>
+                <!-- <input type="checkbox" id="check" value="" (change)="onCheckedRemoved($event)">
+                <label class="control-label">Removed</label> -->
                 <div class="row">
                   <div class="col-lg-12">
                     <form [formGroup]="removeForm">
                       <!-- {{removeForm.value | json}} -->
                       <div class="row">
-                        <div class="col-md-4 px-1">
+                        <!-- <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>JobType</label>
                             <select class="form-control" placeholder="jobType" formControlName="jobType">
@@ -133,7 +158,7 @@
                             <span class="errors" *ngIf="removeForm.controls['jobType'].errors?.required && isSubmitted ">
                               Please Select JobType</span>
                           </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-4 px-1">
                           <div class="form-group">
                             <label>Removed Part</label>
@@ -271,8 +296,8 @@
 
             <div class="card" *ngIf="isShow2 ">
               <div class="card-body">
-                <input type="checkbox" id="check" value="" (change)="onCheckedInstalled($event)">
-                <label class="control-label">Installed</label>
+                <!-- <input type="checkbox" id="check" value="" (change)="onCheckedInstalled($event)">
+                <label class="control-label">Installed</label> -->
                 <div class="row">
                   <div class="col-lg-12">
                     <form [formGroup]="installForm">

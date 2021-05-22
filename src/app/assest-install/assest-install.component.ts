@@ -20,6 +20,7 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
   installForm: FormGroup
   user_id=localStorage.getItem('userName')
   id: any;
+  jobTyper: any;
   index: any;
   searchvalue: any;
   closestatus: any;
@@ -90,13 +91,15 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       description: [""],
       worktype: [""],
       woStatus: [""],
+      assetno:[""],
+      assetdec:[""],
       assetdetails: this.fb.array([])
 
     })
     this.removeForm = this.fb.group({
       insRemId: [""],
       workorderId: [""],
-      jobType: ["",Validators.required],
+      
       buildItem: ["",Validators.required],
       lcn: [""],
       position: [""],
@@ -155,43 +158,43 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
     this.assetDetailFunction.push(this.addAssetDetailsFormGroup())
   }
   addNewLine() {
+    console.log("qwe",this.jobTyper)
     this.isShow = true
-    this.isShow1 = true
-    this.isShow2 = true
+    if(this.jobTyper === 'Remove'){
+    
+    this.onCheckedRemoved()
+    }
+    else{
+    this.onCheckedInstalled()
+    }
     document.getElementById('IRdiv').scrollIntoView();
     console.log("here", this.isShow, this.isShow1)
   }
-  onCheckedRemoved(event: any) {
-    console.log(event.target.checked)
-    if (event.target.checked == true) {
+  onCheckedRemoved() {
+    
+    
 
       this.isShow1 = true
       this.isShow2 = false
       this.removedsave = true
       console.log("sho1,sho2", this.isShow1, this.isShow2)
-    }
-    else {
-      this.isShow2 = true
-      this.isShow1 = true
-      this.removedsave = false
-      this.isSubmitted = false
-    }
+    
 
   }
-  onCheckedInstalled(event: any) {
-    if (event.target.checked == true) {
+  onCheckedInstalled() {
+    
       this.isShow2 = true
       this.isShow1 = false
       this.installedsave = true
       console.log("sho1,sho2", this.isShow1, this.isShow2)
 
-    }
-    else {
-      this.isShow2 = true
-      this.isShow1 = true
-      this.installedsave = false
-      this.isSubmitted1 = false
-    }
+    // }
+    // else {
+    //   this.isShow2 = true
+    //   this.isShow1 = true
+    //   this.installedsave = false
+    //   this.isSubmitted1 = false
+    // }
 
   }
   getExistingWO() {
@@ -205,7 +208,10 @@ export class AssestInstallComponent implements OnInit, PipeTransform {
       this.assetInstallRemoveForm.controls['woStatus'].setValue(data.wo_status ? data.wo_status : "N/A")
       this.assetInstallRemoveForm.controls['description'].setValue(data.wo_desc ? data.wo_desc : "N/A")
       this.assetInstallRemoveForm.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A")
-
+      this.assetInstallRemoveForm.controls['assetno'].setValue(data.asset_num ? data.asset_num : "N/A")
+      this.assetInstallRemoveForm.controls['assetdec'].setValue(data.asset_desc ? data.asset_desc : "N/A")
+      
+      
       this.closestatus = this.assetInstallRemoveForm.get('woStatus').value
       console.log("closestatu", this.closestatus)
       if (this.closestatus == 'CLOSE') {
