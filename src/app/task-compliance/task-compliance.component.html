@@ -28,6 +28,20 @@
               <input type="text" class="form-control" formControlName="woStatus" placeholder="WO Status" value="" readonly>
             </div>
           </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
+            </div>
+          </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
@@ -85,7 +99,7 @@
                     </td>
                     <td>
                       <button type="button" *ngIf="!disableSaveButton[i]" [disabled]="disableComp[i]" [ngClass]="(closestatus == true|| disableComp[i] == true) ? 'isDisabled' : ''"  (click)="onCompliance(i)">Compliance</button>
-                      <button type="button" *ngIf="!disableSaveButton[i]" [ngClass]="closestatus == true ? 'isDisabled' : ''"  (click)="onDelete(i)">Delete</button>
+                      <button type="button" *ngIf="!disableSaveButton[i]" [disabled]="disableComp[i]" [ngClass]="(closestatus == true|| disableComp[i] == true) ? 'isDisabled' : ''"  (click)="onDelete(i)">Delete</button>
                       <button type="button"  *ngIf="disableSaveButton[i]" (click)="saveTLC(i)">Save</button> 
                     </td>
 

@@ -99,18 +99,34 @@ export class WorkorderComponent implements OnInit, PipeTransform {
       var count = 0;
       var sampleData = [];
       element.map((el) => {
+        console.log("el", el);
         count++;
         console.log("hereel", el);
-        sampleData.push({
-          wo_id: el.workorder_id ? el.workorder_id : "N/A",
-          wo: el.wo_num ? el.wo_num : "N/A",
-          description: el.wo_desc ? el.wo_desc : "N/A",
-          workType: el.work_type ? el.work_type : "N/A",
-          asset: el.asset_num ? el.asset_num : "N/A",
-          status: el.wo_status ? el.wo_status : "N/A",
-          pm: el.pm ? el.pm : "N/A",
-          pm_desc: el.pm_desc ? el.pm_desc : "N/A",
-        });
+        if (el.wo_status == "CAN" || el.wo_status == "CLOSE") {
+          sampleData.push({
+            wo_id: el.workorder_id ? el.workorder_id : "N/A",
+            wo: el.wo_num ? el.wo_num : "N/A",
+            description: el.wo_desc ? el.wo_desc : "N/A",
+            workType: el.work_type ? el.work_type : "N/A",
+            asset: el.asset_num ? el.asset_num : "N/A",
+            status: el.wo_status ? el.wo_status : "N/A",
+            status_date: el.closure_date ? el.closure_date : "N/A",
+            pm: el.pm ? el.pm : "N/A",
+            pm_desc: el.pm_desc ? el.pm_desc : "N/A",
+          });
+        } else {
+          sampleData.push({
+            wo_id: el.workorder_id ? el.workorder_id : "N/A",
+            wo: el.wo_num ? el.wo_num : "N/A",
+            description: el.wo_desc ? el.wo_desc : "N/A",
+            workType: el.work_type ? el.work_type : "N/A",
+            asset: el.asset_num ? el.asset_num : "N/A",
+            status: el.wo_status ? el.wo_status : "N/A",
+            status_date: el.creation_date ? el.creation_date : "N/A",
+            pm: el.pm ? el.pm : "N/A",
+            pm_desc: el.pm_desc ? el.pm_desc : "N/A",
+          });
+        }
       });
       this.viewWorkorder = sampleData;
       this.totalrecs = count;

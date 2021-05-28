@@ -28,6 +28,7 @@ export class FlbComponent implements OnInit {
     model: "",
     dettLoc: "",
   };
+  // Fetch using api
   fltTypeDomain = [
     { id: 1, name: "ABCD" },
     { id: 2, name: "WXYZ" },
@@ -45,15 +46,8 @@ export class FlbComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.headerService.getPlannedAssetHeader().subscribe(
-      (res) => {
-        console.log("This is header response", res.body);
-        this.headerObject = res.body;
-      },
-      (err) => {
-        console.log(err);
-      }
-    );
+    this.getSorties();
+    this.getHeaders();
     this.flbService
       .getSortieNum(this.statusDomain.accept, this.recordId)
       .subscribe(
@@ -65,10 +59,25 @@ export class FlbComponent implements OnInit {
           console.log(err);
         }
       );
+
+    this.getPostFlightData();
+
     this.flbForm = this.formBuilder.group({
       sorties: this.formBuilder.array([]),
+      postFlight: this.formBuilder.array([]),
     });
-    this.getSorties();
+  }
+
+  getHeaders() {
+    this.headerService.getPlannedAssetHeader().subscribe(
+      (res) => {
+        console.log("This is header response", res.body);
+        this.headerObject = res.body;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   /*--------Functions for Sortie Accept reject-------*/
@@ -245,6 +254,40 @@ export class FlbComponent implements OnInit {
   /*--------End of Functions for Sortie Accept reject-------*/
 
   /*--------Functions for Post Flight Data-------*/
+  getPostFlightData() {
+    this.flbService.getPostFlight(this.recordId).subscribe(
+      (res) => {
+        console.log(res);
+        res.body.forEach((postFlight) => {
+          console.log(this.initialFltTypes);
+          this.addPostFlightRow(postFlight);
+        });
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  // This function initializes a form group for postFlight Rows
+  initPostFlight(postFlight = null) {
+    return this.formBuilder.group({
+      postFltId: [postFlight?.postFltId],
+      fltType: [postFlight?.fltType],
+      fltDate: [postFlight?.fltDate],
+      flbStatus: [postFlight?.flbStatus],
+      sortieNum: [postFlight?.sortieNum],
+      departureTime: [postFlight?.departureTime],
+      arrivalTime: [postFlight?.arrivalTime],
+      fltHours: [postFlight?.fltHours],
+    });
+  }
+
+  // This function pushes new postFlight row in the postFlight form array
+  addPostFlightRow(postFlight = null) {
+    const control = <FormArray>this.flbForm.controls["postFlight"];
+    control.push(this.initPostFlight(postFlight));
+  }
   /*--------Functions for Post Flight Data-------*/
 
   /*-----------Utility Functions----------*/

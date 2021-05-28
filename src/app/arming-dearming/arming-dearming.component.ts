@@ -20,6 +20,8 @@ export class ArmingDearmingComponent implements OnInit,PipeTransform {
   searchvalue : any
   formarrayindex : any
   index : any
+  alternate1 = []
+  alternate2 = []
   closestatus:any
   isDisabled : boolean = false
   hpBuildItem = []
@@ -58,6 +60,8 @@ export class ArmingDearmingComponent implements OnInit,PipeTransform {
       description: '',
       worktype:'',
       woStatus:'',
+      assetno:'',
+      assetdec:'',
       armamentdetails: this.fb.array([])
                 
     })
@@ -87,6 +91,8 @@ export class ArmingDearmingComponent implements OnInit,PipeTransform {
     return this.armingDearmingForm.get('armamentdetails') as FormArray
   }
   addArmament(){
+    this.alternate1.push(true);
+    this.alternate2.push(true);
     
     this.ArmingDearminForm.push(this.addArmingDearmingFormGroup())
   }
@@ -182,7 +188,8 @@ export class ArmingDearmingComponent implements OnInit,PipeTransform {
       this.armingDearmingForm.controls['woStatus'].setValue(data.wo_status ? data.wo_status : "N/A")
       this.armingDearmingForm.controls['description'].setValue(data.wo_desc ? data.wo_desc : "N/A")
       this.armingDearmingForm.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A")
-
+      this.armingDearmingForm.controls['assetno'].setValue(data.asset_num ? data.asset_num : "N/A")
+      this.armingDearmingForm.controls['assetdec'].setValue(data.asset_desc ? data.asset_desc : "N/A")
       this.closestatus = this.armingDearmingForm.get('woStatus').value
       console.log("closestatu", this.closestatus)
       if (this.closestatus == 'CLOSE' || this.closestatus == 'CAN') {
@@ -320,6 +327,8 @@ export class ArmingDearmingComponent implements OnInit,PipeTransform {
     )
   }
   deleteExistingData(index){
+    this.alternate1.splice(index,1)
+    this.alternate2.splice(index,1)
     var id = (this.ArmingDearminForm.at(index) as FormGroup).get('arm_id').value;
     (<FormArray>this.armingDearmingForm.get("armamentdetails")).removeAt(index);
     
@@ -334,12 +343,17 @@ export class ArmingDearmingComponent implements OnInit,PipeTransform {
   }
   alternator1(index){
     console.log("alternator1")
-    this.ArmingDearminForm.at(index).get("loadQuantity").setValue("")
+    if(this.alternate1[index] == true)
+    this.alternate2[index] = false
+    //this.ArmingDearminForm.at(index).get("loadQuantity").setValue("")
 
   }
   alternator2(index){
+
     console.log("alternator2")
-    this.ArmingDearminForm.at(index).get("unloadQuantity").setValue("")
+    if(this.alternate2[index] == true)
+    this.alternate1[index] = false
+    //this.ArmingDearminForm.at(index).get("unloadQuantity").setValue("")
 
   }
 }
