@@ -1,7 +1,7 @@
 import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray,Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common'
 import { WorkorderService } from '../services/workorder.service';
@@ -24,11 +24,14 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   searchvalue: any;
   editdata: any;
   isEditable : boolean = true;
+  beforeAsset : boolean = false;
+  afterPM : boolean = true
   date : any;
   statusArray :any = [];
   statusChangeIndex : boolean = true;
   workTypeArray : any = [];
-  pmArray : any = []
+  pmArray : any = [];
+  isSubmitted: boolean = false;
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
@@ -69,10 +72,10 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     })
     this.workOrderDetailForm = this.fb.group({
       woNumber: [""],
-      description: [""],
-      worktype: [""],
+      description: ["",Validators.required],
+      worktype: ["",Validators.required],
       woStatus: ["APPR"],
-      asset: [""],
+      asset: ["",Validators.required],
       serial: [""],
       pmNumber: [""],
       statusDate: [""],
@@ -129,12 +132,17 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     var pmData = []
     this.workorderService.getPM().subscribe(data =>{
       console.log('pmData',data)
-      data.map(el =>{
-        pmData.push({
-          "pm":el.pmNum ? el.pmNum : "N/A",
-          "description":el.pmDesc ? el.pmDesc : "N/A",
-          "indexCount":count++
-        })
+      data.filter(el =>{
+        if(this.workOrderDetailForm.value['asset'] == el.assetNum){
+          console.log('el',el)
+          pmData.push({
+            "pm":el.pmNum ? el.pmNum : "N/A",
+            "description":el.pmDesc ? el.pmDesc : "N/A",
+            "workType" : el.workType ? el.workType : "N/A",
+            "indexCount":count++
+          })
+          return el
+        }  
       })
     })
     return pmData
@@ -153,6 +161,10 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   }
   open(asset) {
     this.searchvalue = ''
+    this.workOrderDetailForm.controls['pmNumber'].setValue("")
+    this.workOrderDetailForm.controls['pmDescription'].setValue("")
+    this.workOrderDetailForm.controls['worktype'].setValue("")
+    this.afterPM = true;
     this.bootstrapModel.open(asset, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
       console.log('result', result)
       if (result == 'Save click') {
@@ -185,6 +197,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   }
   pmItem(pmitem) {
     this.searchvalue = ''
+    
     this.bootstrapModel.open(pmitem, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
       console.log('result', result)
       if (result == 'Save click') {
@@ -194,6 +207,8 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     this.pmArray = this.getPM()
   }
   assetSave(index) {
+    this.beforeAsset = true
+    
     this.index = index
     this.workOrderDetailForm.controls['asset'].setValue(this.assetArray[this.index].assetnum)
     this.workOrderDetailForm.controls['serial'].setValue(this.assetArray[this.index].serialnumber)
@@ -205,9 +220,12 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     this.workOrderDetailForm.controls['worktype'].setValue(this.workTypeArray[this.index].workType)
   }
   pmSave(index){
+    this.afterPM = false;
     this.index = index
+    console.log('asasa',this.pmArray[this.index])
     this.workOrderDetailForm.controls['pmNumber'].setValue(this.pmArray[this.index].pm)
     this.workOrderDetailForm.controls['pmDescription'].setValue(this.pmArray[this.index].description)
+    this.workOrderDetailForm.controls['worktype'].setValue(this.pmArray[this.index].workType)
 
   }
   statusSave(index){
@@ -236,26 +254,33 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     this.router.navigate(['workorder'])
   }
   saveworkorder(id) {
-    if(id == "null"){
-      console.log("new Workorder")
-      var workorderData = { 
-         "wo_num":this.workOrderDetailForm.controls['woNumber'].value,
-        "wo_desc":this.workOrderDetailForm.controls['description'].value,
-        "work_type":this.workOrderDetailForm.controls['worktype'].value,
-        // status:this.workOrderDetailForm.controls['woStatus'].value,
-        "asset_num":this.workOrderDetailForm.controls['asset'].value,
-        "serial_num":this.workOrderDetailForm.controls['serial'].value,
-        "cm_item":this.workOrderDetailForm.controls['cmItem'].value,
-        "pm":this.workOrderDetailForm.controls['pmNumber'].value,
-        "pm_desc":this.workOrderDetailForm.controls['pmDescription'].value,
-        "asset_desc" : this.workOrderDetailForm.controls['assetDescription'].value,
-      }
-      this.workorderService.createWO(workorderData).subscribe(element =>{
-        console.log('element',element)
-        this.router.navigate(['workorder'])
-      })
-
-    }    
+    if (this.workOrderDetailForm.valid){
+      if(id == "null"){
+        console.log("new Workorder")
+        var workorderData = { 
+           "wo_num":this.workOrderDetailForm.controls['woNumber'].value,
+          "wo_desc":this.workOrderDetailForm.controls['description'].value,
+          "work_type":this.workOrderDetailForm.controls['worktype'].value,
+          // status:this.workOrderDetailForm.controls['woStatus'].value,
+          "asset_num":this.workOrderDetailForm.controls['asset'].value,
+          "serial_num":this.workOrderDetailForm.controls['serial'].value,
+          "cm_item":this.workOrderDetailForm.controls['cmItem'].value,
+          "pm":this.workOrderDetailForm.controls['pmNumber'].value,
+          "pm_desc":this.workOrderDetailForm.controls['pmDescription'].value,
+          "asset_desc" : this.workOrderDetailForm.controls['assetDescription'].value,
+        }
+        this.workorderService.createWO(workorderData).subscribe(element =>{
+          console.log('element',element)
+          this.router.navigate(['workorder'])
+        })
+  
+      } 
+    }
+    else {
+      this.isSubmitted = true
+      console.log('this.meterComplianceForm------', this.workOrderDetailForm)
+      console.log("Not valid");
+    }  
   }
   getExistingWO(){ 
       this.workorderService.getExistingWO(this.id).subscribe(data =>{
