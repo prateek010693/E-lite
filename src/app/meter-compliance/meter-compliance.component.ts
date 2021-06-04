@@ -25,7 +25,19 @@ export class MeterComplianceComponent implements OnInit {
   isdisable: boolean[] = []
   userid: string = localStorage.getItem("userName");
   isSubmitted: boolean = false;
-
+  meterType : string
+  // meterType : string = "characterstic";
+  // meterType : string = "continous"
+  // meterType: string = "gauge"
+  guageflag: boolean = false;
+  charactersticflag: boolean = false;
+  continousflag: boolean = false;
+  reGexDecimal = new RegExp(/^\d*(\.\d{0,2})?$/);
+  reGexTime = new RegExp(/^(?:(?:(\d*):)?([0-5]?\d):)?([0-5]?\d)(?:\.(\d+))?$/);
+  reGexBoolInitialGuage: boolean[] = [];
+  reGexBoolFinalGuage: boolean[] = [];
+  reGexBoolInitialCon : boolean[] = []
+  reGexBoolFinalCon : boolean[] = []
   constructor(private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private bootstrapModel: NgbModal,
@@ -52,8 +64,8 @@ export class MeterComplianceComponent implements OnInit {
       description: '',
       worktype: '',
       woStatus: '',
-      assetno:[""],
-      assetdec:[""],
+      assetno: [""],
+      assetdec: [""],
       meterdetails: this.fb.array([])
 
     })
@@ -70,8 +82,14 @@ export class MeterComplianceComponent implements OnInit {
       buildItem: [""],
       meter: ["", Validators.required],
       meterDescription: [""],
-      initialValue: ["", Validators.required],
-      finalValue: ["", Validators.required],
+      // initialValueChar: ["", Validators.required],
+      // finalValueChar: ["", Validators.required],
+      // initialValueCon: ["", Validators.required],
+      // finalValueCon: ["", Validators.required],
+      initialValue: ["",Validators.required],
+      finalValue: ["",Validators.required],
+      // initialValueGuage: ["", Validators.required],
+      // finalValueGuage: ["", Validators.required],
       readingDate: ["", Validators.required],
       updatedBy: [this.userid],
       updatedDate: [""],
@@ -205,6 +223,67 @@ export class MeterComplianceComponent implements OnInit {
     const meterFormGroup = <FormArray>this.meterComplianceForm.get('meterdetails');
     meterFormGroup.controls[this.formArrayIndex].get('meter').setValue(this.meterArray[this.index].meternum)
     meterFormGroup.controls[this.formArrayIndex].get('meterDescription').setValue(this.meterArray[this.index].description)
+    if (this.meterType == "characterstic") {
+      this.charactersticflag = true
+      console.log('meterType c', this.meterType)
+    }
+    else if (this.meterType == "gauge") {
+      this.guageflag = true;
+      this.continousflag = true;
+      console.log('meterType g', this.meterType)
+    }
+  }
+  checkInitialGuageMeter(index) {
+    this.reGexBoolInitialGuage[index] = false
+    const meterFormGroup = <FormArray>this.meterComplianceForm.get('meterdetails');
+    if (this.reGexDecimal.test(meterFormGroup.controls[index].value['initialValue'])) {
+      this.reGexBoolInitialGuage[index] = true
+      console.log('valid')
+      return true
+    }
+    else {
+      console.log('invalid')
+      return false
+    }
+  }
+  checkFinalGuageMeter(index) {
+    this.reGexBoolFinalGuage[index] = false
+    const meterFormGroup = <FormArray>this.meterComplianceForm.get('meterdetails');
+    if (this.reGexDecimal.test(meterFormGroup.controls[index].value['finalValue'])) {
+      this.reGexBoolFinalGuage[index] = true
+      console.log('valid')
+      return true
+    }
+    else {
+      console.log('invalid')
+      return false
+    }
+  }
+  checkInitialConMeter(index) {
+    this.reGexBoolInitialCon[index] = false
+    const meterFormGroup = <FormArray>this.meterComplianceForm.get('meterdetails');
+    if (this.reGexTime.test(meterFormGroup.controls[index].value['initialValue'])) {
+      this.reGexBoolInitialCon[index] = true
+      console.log('valid')
+      return true
+    }
+    else {
+      console.log('invalid')
+      return false
+    }
+  }
+  checkFinalConMeter(index){
+    this.reGexBoolFinalCon[index] = false
+    const meterFormGroup = <FormArray>this.meterComplianceForm.get('meterdetails');
+    if (this.reGexTime.test(meterFormGroup.controls[index].value['finalValue'])) {
+      this.reGexBoolFinalCon[index] = true
+      console.log('valid')
+      return true
+    }
+    else {
+      console.log('invalid')
+      return false
+    }
   }
   saveMeter(index) {
     if (this.meterComplianceForm.valid) {
@@ -232,6 +311,7 @@ export class MeterComplianceComponent implements OnInit {
         readingDate: meterFormGroup.value[savedAssetMeterIndex]['readingDate'],
         updatedBy: this.userid
       }
+
       this.meterComplianceService.saveMeterDetails(this.id, saveMeterData).subscribe(response => {
         if (response.body.statusCode == 200) {
           this.toastr.success("row : " + count + " " + response.body.statusString)
@@ -254,6 +334,7 @@ export class MeterComplianceComponent implements OnInit {
     this.meterComplianceService.getMeterByWorkorderId(this.id).subscribe(response => {
       if (response.status == 200) {
         this.savedMeterArray = response.body;
+        console.log(' this.savedMeterArray', this.savedMeterArray)
         this.meterComplianceForm.setControl('meterdetails', this.viewMeterDetails(this.savedMeterArray))
 
       }
@@ -302,5 +383,10 @@ export class MeterComplianceComponent implements OnInit {
       }
     })
     this.isdisable.pop()
+  }
+  rowDelete(index) {
+    var count = index + 1;
+    this.toastr.success("row : " + count + " Deleted Sucessfully.");
+    (<FormArray>this.meterComplianceForm.get("meterdetails")).removeAt(index)
   }
 }
