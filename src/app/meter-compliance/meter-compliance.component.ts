@@ -110,14 +110,15 @@ export class MeterComplianceComponent implements OnInit {
     })
     return assetData
   }
-  getMeter() {
+  getMeter(assetNum) {
+  console.log('assetnum='+assetNum)
     let count = 0
     var assetData = []
-    this.meterComplianceService.getAssetAndMeter().subscribe(data => {
+    this.meterComplianceService.getMeterLookUp(assetNum).subscribe(data => {
       data.map(el => {
         assetData.push({
-          "meternum": el.assetNum_meterLookup ? el.assetNum_meterLookup : "N/A",
-          "description": el.partDescription_meterLookup ? el.partDescription_meterLookup : "N/A",
+          "meternum": el.meterName ? el.meterName : "N/A",
+          "description": el.meterDescription ? el.meterDescription : "N/A",
           "indexCount": count++
         })
       })
@@ -140,7 +141,8 @@ export class MeterComplianceComponent implements OnInit {
       this.assetRadio = false
     }
   }
-  selectMeter(meter, formArrayIndex) {
+  selectMeter(meter, formArrayIndex,asset) {
+ 
     // this.searchvalue = ''
     this.formArrayIndex = formArrayIndex;
     this.bootstrapModel.open(meter, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
@@ -149,7 +151,13 @@ export class MeterComplianceComponent implements OnInit {
       }
 
     });
-    this.meterArray = this.getMeter();
+
+    const meterFormGroup = <FormArray>this.meterComplianceForm.get('meterdetails');
+   console.log('assetNum=',meterFormGroup.value[this.formArrayIndex]['asset'])
+   //meterFormGroup.controls[this.formArrayIndex].value('asset');
+// meterFormGroup.value[[this.formArrayIndex]['asset']]
+
+    this.meterArray = this.getMeter(meterFormGroup.value[this.formArrayIndex]['asset']);
 
   }
   initialCharactersticMeter(initialCharacterstic, formArrayIndex) {

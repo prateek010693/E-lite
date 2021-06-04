@@ -106,7 +106,7 @@
                         formControlName="buildItem" readonly>
                     </td>
                     <td class="table-position">
-                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i)"></i>
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i,asset)"></i>
                       <input type="text" class="form-control" [id]="'meter' + i" placeholder="meter*"
                         formControlName="meter" readonly>
                         <span class="errors" *ngIf="meterdetail.get('meter').errors?.required && isSubmitted ">
