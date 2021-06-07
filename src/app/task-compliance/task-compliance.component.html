@@ -81,7 +81,7 @@
                     </td> -->
                     <td class="table-position">
                       <i class="now-ui-icons ui-1_zoom-bold lookup"  *ngIf="disableSaveButton[i]" (click)="open(TID,i)"></i>
-                      <input type="text" class="form-control"  [id]="'asset' + i" placeholder="asset*"
+                      <input type="text" class="form-control"  [id]="'Technician Id' + i" placeholder="Technician Id*"
                         formControlName="technicianId" readonly>
                         <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
                           Please select Technician ID</span>

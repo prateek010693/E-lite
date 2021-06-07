@@ -24,6 +24,14 @@ export class MeterComplianceService {
     const url = this.baseURL+'getInstallBuildItemLookup'
     return this.http.get(url)
   }
+//-----meter lookup----//
+getMeterLookUp(assetNum):Observable<any>{
+  
+    const url = this.baseURL+'getMeterLookupById/'+assetNum
+     console.log('meterLookUp'+assetNum+','+url)
+    return this.http.get(url)
+  }
+
   //-------------API for Save Meter----------------------//
   saveMeterDetails(wo_id,meterData):Observable<any>{
     console.log('sasasasa')

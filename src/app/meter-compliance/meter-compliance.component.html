@@ -60,15 +60,15 @@
           <div class="table-scroll">
             <table class="table ">
               <thead class=" text-primary">
-                <th>Asset</th>
+                <th>Asset<span class="mandate">*</span></th>
                 <th>Description</th>
                 <th>Part No.</th>
                 <th>Serial#</th>
                 <th>Build Item</th>
-                <th>Meter</th>
+                <th>Meter<span class="mandate">*</span></th>
                 <th>Meter Description</th>
-                <th>Initial Value</th>
-                <th>Final Value</th>
+                <th>Initial Value<span class="mandate">*</span></th>
+                <th>Final Value<span class="mandate">*</span></th>
                 <th>Reading Date</th>
                 <th>Updated By</th>
                 <th>Updated Date</th>
@@ -106,7 +106,7 @@
                         formControlName="buildItem" readonly>
                     </td>
                     <td class="table-position">
-                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i)"></i>
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i,asset)"></i>
                       <input type="text" class="form-control" [id]="'meter' + i" placeholder="meter*"
                         formControlName="meter" readonly>
                         <span class="errors" *ngIf="meterdetail.get('meter').errors?.required && isSubmitted ">
@@ -116,31 +116,52 @@
                       <input type="text" class="form-control" [id]="'meterDescription' + i" placeholder="meterDescription"
                         formControlName="meterDescription" readonly>
                     </td>
-                    <!-- <td class="table-position">
+                    <td class="table-position" *ngIf="charactersticflag">
                       <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="initialCharactersticMeter(initialCharacterstic,i)"></i>
-                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValue*"
+                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValuec*"
                         formControlName="initialValue" readonly>
                         <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
                           Please enter  Initial Value</span>
                     </td>
-                    <td class="table-position">
+                    <td class="table-position" *ngIf="charactersticflag">
                       <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="finalCharactersticMeter(finalCharacterstic,i)"></i>
-                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValue*"
+                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValuec*"
                         formControlName="finalValue" readonly>
                         <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
                           Please enter Final Value</span>
-                    </td> -->
-                    <td>
-                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValue*"
-                        formControlName="initialValue" readonly>
+                    </td>
+                    <td class="table-position" *ngIf="!continousflag">
+                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="HH:MM:SS"
+                        formControlName="initialValue" [readonly]="!isdisable[i]" (blur)="checkInitialConMeter(i)">
                         <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
                           Please enter  Initial Value</span>
+                        <span class="errors" *ngIf= " !reGexBoolInitialCon[i] && meterDetailForm.controls[i].get('initialValue').touched ">
+                         Correct Format HH:MM:SS</span>
                     </td>
-                    <td>
-                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValue*"
-                        formControlName="finalValue" readonly>
+                    <td class="table-position" *ngIf="!continousflag">
+                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="HH:MM:SS"
+                        formControlName="finalValue" [readonly]="!isdisable[i]" (blur)="checkFinalConMeter(i)">
                         <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
                           Please enter Final Value</span>
+                          <span class="errors" *ngIf= " !reGexBoolFinalCon[i] && meterDetailForm.controls[i].get('finalValue').touched ">
+                            Correct Format HH:MM:SS</span>
+                          
+                    </td>
+                    <td class="table-position" *ngIf="guageflag">
+                      <input type="number" class="form-control" [id]="'initialValue' + i" placeholder="01.00"
+                        formControlName="initialValue"  (blur)="checkInitialGuageMeter(i)">
+                        <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
+                          Please enter  Initial Value</span>
+                        <span class="errors" *ngIf= " !reGexBoolInitialGuage[i] && meterDetailForm.controls[i].get('initialValue').touched ">
+                          Decimal take only 2 position</span>
+                    </td>
+                    <td class="table-position" *ngIf="guageflag">
+                      <input type="number" class="form-control" [id]="'finalValue' + i" placeholder="01:00"
+                        formControlName="finalValue" (blur)="checkFinalGuageMeter(i)">
+                        <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
+                          Please enter Final Value</span>
+                          <span class="errors" *ngIf= " !reGexBoolFinalGuage[i] && meterDetailForm.controls[i].get('finalValue').touched ">
+                            Decimal take only 2 position</span>
                     </td>
                     <td>
                       <input type="datetime-local" class="form-control" [id]="'readingDate' + i" placeholder="readingDate*"
@@ -158,6 +179,7 @@
                     </td>
                     <td>
                       <button type="button" *ngIf="isdisable[i]"(click)="saveMeter(i)">save</button>
+                      <button type="button" *ngIf="isdisable[i]"(click)="rowDelete(i)">Delete</button>
                       <button type="button" *ngIf="!isdisable[i]"(click)="deleteMeter(i)">Delete</button>
                     </td>
 
