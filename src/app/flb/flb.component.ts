@@ -11,6 +11,8 @@ import { HeaderService } from "../services/header.service";
   styleUrls: ["./flb.component.css"],
 })
 export class FlbComponent implements OnInit {
+  pageSortie: number = 1;
+  oneSortiePage: number = 4;
   currentUser = localStorage.getItem("userName");
   flbForm: FormGroup;
   recordId = "1001";
@@ -121,6 +123,9 @@ export class FlbComponent implements OnInit {
           console.log(this.initialStatuses);
           if (res.status == 200) {
             this.addSortieRow(res.body);
+            const sortieLen = (<FormArray>this.flbForm.controls["sorties"])
+              .length;
+            this.pageSortie = Math.ceil(sortieLen / this.oneSortiePage);
             this.toastr.success("New sortie row added");
           }
         },
@@ -157,11 +162,15 @@ export class FlbComponent implements OnInit {
   }
 
   // Save the sorties in backend
-  save(data) {
-    if (this.flbForm.valid) {
-      const sorties = data.value.sorties;
-      sorties.forEach((sortie) => {
-        sortie.duration = this.toSeconds(sortie.duration);
+  saveSorties() {
+    const sortieForm = <FormArray>this.flbForm.controls["sorties"];
+    if (sortieForm.valid) {
+      const sorties = sortieForm.value.map((sortie) => {
+        return {
+          ...sortie,
+          duration:
+            sortie.duration != null ? this.toSeconds(sortie.duration) : null,
+        };
       });
       this.flbService.saveSorties(this.recordId, sorties).subscribe(
         (res) => {
@@ -205,21 +214,6 @@ export class FlbComponent implements OnInit {
     }
   }
 
-  toYYYY_MM_dd(date: Date) {
-    let year: any = date.getFullYear();
-    let month: any = date.getMonth() + 1;
-    let day: any = date.getDate();
-
-    if (month < 10) {
-      month = "0" + month;
-    }
-    if (day < 10) {
-      day = "0" + day;
-    }
-
-    return year + "-" + month + "-" + day;
-  }
-
   isSortieDate(index) {
     const sortieDate = this.getValueOf("sortieDate", index);
     return sortieDate != null;
@@ -254,12 +248,12 @@ export class FlbComponent implements OnInit {
   /*--------End of Functions for Sortie Accept reject-------*/
 
   /*--------Functions for Post Flight Data-------*/
+  // Get the postflight data using api and add to the postFlight form array
   getPostFlightData() {
     this.flbService.getPostFlight(this.recordId).subscribe(
       (res) => {
         console.log(res);
         res.body.forEach((postFlight) => {
-          console.log(this.initialFltTypes);
           this.addPostFlightRow(postFlight);
         });
       },
@@ -291,6 +285,10 @@ export class FlbComponent implements OnInit {
   /*--------Functions for Post Flight Data-------*/
 
   /*-----------Utility Functions----------*/
+  // Get the index for pagination
+  getSortieIndex(index: number) {
+    return (this.pageSortie - 1) * this.oneSortiePage + index;
+  }
   // Convert seconds to HH:mm:ss
   toHHMM(seconds) {
     let hours: any = Math.floor(seconds / 3600);
@@ -309,6 +307,22 @@ export class FlbComponent implements OnInit {
     if (duration == null) return null;
     let [hours, minutes] = duration.split(":");
     return parseInt(hours) * 60 * 60 + parseInt(minutes) * 60;
+  }
+
+  // convert date to YYYY-MM-dd format
+  toYYYY_MM_dd(date: Date) {
+    let year: any = date.getFullYear();
+    let month: any = date.getMonth() + 1;
+    let day: any = date.getDate();
+
+    if (month < 10) {
+      month = "0" + month;
+    }
+    if (day < 10) {
+      day = "0" + day;
+    }
+
+    return year + "-" + month + "-" + day;
   }
   /*-----------End of Utility functions-----------*/
 }

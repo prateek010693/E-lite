@@ -44,9 +44,28 @@ export class FlbService {
   /*-------------------------------End of Sortie API calls-------------------------------------*/
 
   /*-------------------------------Post Flight API calls-------------------------------------*/
+  // To retrieve all postFlight data
   getPostFlight(recordId: any): Observable<any> {
     const url = this.baseURL + this.postFlight + "all/" + recordId;
     return this.http.get(url, { observe: "response", responseType: "json" });
+  }
+
+  // To create a new row of postFlight data
+  createPostFlight(recordId: any, postFlight: any): Observable<any> {
+    const url = this.baseURL + this.postFlight + "create/" + recordId;
+    return this.http.post(url, postFlight, {
+      observe: "response",
+      responseType: "json",
+    });
+  }
+
+  // To save the given postFlight data
+  savePostFlight(recordId: any, postFlight: Array<any>): Observable<any> {
+    const url = this.baseURL + this.postFlight + "save/" + recordId;
+    return this.http.put(url, postFlight, {
+      observe: "response",
+      responseType: "json",
+    });
   }
 
   /*-------------------------------End of Post Flight API calls-------------------------------------*/

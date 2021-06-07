@@ -1,4 +1,5 @@
 <div class="flb">
+    <!-----------------------------------------Header Table------------------------------------------------------->
     <div class="flb__headers">
         <div class="row">
             <div class="col-md-4 px-1">
@@ -29,34 +30,6 @@
                         placeholder="Model">
                 </div>
             </div>
-            <!-- <div class="col-md-4 px-1">
-                    <div class="form-group">
-                        <label>Variation</label>
-                        <input [value]="headerObject.variation" [attr.disabled]="true" type="text" class="form-control"
-                            placeholder="Variation">
-                    </div>
-                </div>
-                <div class="col-md-4 px-1">
-                    <div class="form-group">
-                        <label>Location Of Aircraft</label>
-                        <input [value]="headerObject.arcrftLoc" [attr.disabled]="true" type="text" class="form-control"
-                            placeholder="Location Of Aircraft">
-                    </div>
-                </div>
-                <div class="col-md-4 px-1">
-                    <div class="form-group">
-                        <label>Date Of Transfer</label>
-                        <input [value]="headerObject.trnsfrDate" [attr.disabled]="true" type="date" class="form-control"
-                            placeholder="Date Of Transfer">
-                    </div>
-                </div>
-                <div class="col-md-4 px-1">
-                    <div class="form-group">
-                        <label>Date Of Return</label>
-                        <input [value]="headerObject.returnDate" type="date" [attr.disabled]="true" class="form-control"
-                            placeholder="Date Of Return">
-                    </div>
-                </div> -->
             <div class="col-md-4 px-1">
                 <div class="form-group">
                     <label>Dett Location</label>
@@ -64,19 +37,11 @@
                         placeholder="Dett Location">
                 </div>
             </div>
-            <!-- <div class="col-md-4 px-1">
-                    <div class="form-group">
-                        <label>Dett Location Base</label>
-                        <input [value]="headerObject.dettLocBase" [attr.disabled]="true" type="text" class="form-control"
-                            placeholder="Dett Location Base">
-                    </div>
-                </div> -->
         </div>
     </div>
-
-
-    <form [formGroup]="flbForm" (ngSubmit)="save(flbForm)">
-        <!----------------------------------- Sortie Table --------------------------------->
+    <!-----------------------------------------FLB Tables-------------------------------------------------------->
+    <form class="flb__form" [formGroup]="flbForm">
+        <!-------------------------------------Sortie Table --------------------------------->
         <div class="row">
             <div class="col-lg-12">
                 <div class="table-responsive">
@@ -99,30 +64,31 @@
                                 <th>Action</th>
                             </thead>
                             <tbody formArrayName="sorties">
-                                <tr *ngFor="let sortie of flbForm.get('sorties')['controls']; let i = index"
-                                    [formGroupName]="i">
+                                <tr *ngFor="let sortie of flbForm.get('sorties')['controls'] | paginate: {itemsPerPage:oneSortiePage, currentPage:pageSortie}; let i = index;"
+                                    [formGroupName]="getSortieIndex(i)">
                                     <td><input formControlName="sortieNum" type="text" class="form-control"
                                             placeholder="Sortie Number" [attr.disabled]="true">
                                     </td>
                                     <td><input formControlName="sortieDate" step="1"
                                             min="{{currentDate|date: 'yyyy-MM-ddTHH:mm:ss'}}" type="datetime-local"
-                                            class="form-control" (change)="resetEtdDate(i)"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null">
+                                            class="form-control" (change)="resetEtdDate(getSortieIndex(i))"
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null">
                                     </td>
-                                    <td><input formControlName="etdDate" min="{{getSortieDate(i)|date: 'yyyy-MM-dd'}}"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null"
+                                    <td><input formControlName="etdDate"
+                                            min="{{getSortieDate(getSortieIndex(i))|date: 'yyyy-MM-dd'}}"
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null"
                                             type="date" class="form-control"></td>
                                     <td><input formControlName="etd" type="time" class="form-control"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null">
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null">
                                     </td>
                                     <td><input formControlName="duration" type="time" class="form-control"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null">
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null">
                                     </td>
                                     <td><select formControlName="fltType" class="custom-select custom-select-sm"
                                             style="width:fit-content"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null">
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null">
                                             <option *ngFor="let type of fltTypeDomain"
-                                                [attr.selected]="initialFltTypes[i] == type.name?true:null"
+                                                [attr.selected]="initialFltTypes[getSortieIndex(i)] == type.name?true:null"
                                                 [ngValue]="type.name">{{type.name}}</option>
                                         </select>
                                     </td>
@@ -133,29 +99,40 @@
                                     <td><input formControlName="changedBy" type="text" [attr.disabled]="true"
                                             class="form-control"></td>
                                     <td><input formControlName="remarks" type="text" class="form-control"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null">
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null">
                                     </td>
                                     <td><input formControlName="reason" placeholder="Required to reject sortie"
                                             type="text" class="form-control"
-                                            [attr.disabled]="initialStatuses[i]!=statusDomain.pending?true:null">
+                                            [attr.disabled]="initialStatuses[getSortieIndex(i)]!=statusDomain.pending?true:null">
                                     </td>
                                     <td>
-                                        <button (click)="changeStatus(statusDomain.accept, i)" type="button"
-                                            class="btn btn-success">Accept</button>
-                                        <button (click)="changeStatus(statusDomain.reject, i)"
-                                            [attr.disabled]="!isReasonFilled(i)?true:null" type="button"
+                                        <button (click)="changeStatus(statusDomain.accept, getSortieIndex(i))"
+                                            type="button" class="btn btn-success">Accept</button>
+                                        <button (click)="changeStatus(statusDomain.reject, getSortieIndex(i))"
+                                            [attr.disabled]="!isReasonFilled(getSortieIndex(i))?true:null" type="button"
                                             class="btn btn-danger">Reject</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <button type="button" (click)="createNewSortie()" class="float-right">New</button>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <pagination-controls class="float-right" (pageChange)="pageSortie=$event"></pagination-controls>
+                        </div>
+                        <div class="col-lg-12">
+                            <button type="button" (click)="createNewSortie()" class="float-right">New</button>
+                            <div class="save-wrapper sortie__save">
+                                <button (click)="saveSorties()" type="button">Save</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        <!----------------------------------- Post Flight Table --------------------------------->
+        <!-------------------------------------Post Flight Table --------------------------------->
         <div class="row">
             <div class="col-lg-12">
                 <div formArrayName="postFlight" class="table-responsive">
@@ -165,26 +142,30 @@
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Flight Date</label>
-                                <input formControlName="fltDate" type="datetime-local" class="form-control" placeholder="Flight Date" value="">
+                                <input formControlName="fltDate" type="datetime-local" class="form-control"
+                                    placeholder="Flight Date" value="">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Flight Type</label>
-                                <input formControlName="fltType" type="text" class="form-control" placeholder="Flight Type" value="">
+                                <input formControlName="fltType" type="text" class="form-control"
+                                    placeholder="Flight Type" value="">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
-                                <label>FLB Status</label>
-                                <input formControlName="flbStatus" type="text" class="form-control" placeholder="FLB Status" value="">
+                                <label>Post Flight Status</label>
+                                <input formControlName="flbStatus" type="text" class="form-control"
+                                    placeholder="FLB Status" value="">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Sortie Number</label>
                                 <br>
-                                <select formControlName="sortieNum" class="custom-select custom-select-sm" style="width:fit-content">
+                                <select formControlName="sortieNum" class="custom-select custom-select-sm"
+                                    style="width:fit-content">
                                     <option *ngFor="let type of sortieNums" [ngValue]="type.sortieNum">
                                         {{type.sortieNum}}
                                     </option>
@@ -194,28 +175,36 @@
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Departure Time</label>
-                                <input formControlName="departureTime" type="text" class="form-control" placeholder="Departure Time" value="">
+                                <input formControlName="departureTime" type="text" class="form-control"
+                                    placeholder="Departure Time" value="">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Flight Hours</label>
-                                <input formControlName="fltHours" type="text" class="form-control" placeholder="Flight Hours" value="">
+                                <input formControlName="fltHours" type="text" class="form-control"
+                                    placeholder="Flight Hours" value="">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Arrival Time</label>
-                                <input formControlName="arrivalTime" type="text" class="form-control" placeholder="Arrival Time" value="">
+                                <input formControlName="arrivalTime" type="text" class="form-control"
+                                    placeholder="Arrival Time" value="">
                             </div>
                         </div>
                     </div>
                     <button type="button" class="float-right">New</button>
+                    <div class="save-wrapper">
+                        <button [disabled]="!flbForm.valid" type="submit">Save</button>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <!----------------------------------- Continuous Meter Table --------------------------------->
-            <div class="col-md-12">
+        <!----------------------------------- Continuous Meter Table --------------------------------->
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="table-responsive">
                     <p class="table-heading">Continuous Meter</p>
                     <div class="table-scroll">
@@ -247,13 +236,17 @@
                         </table>
 
                     </div>
-
+                    <div class="save-wrapper">
+                        <button [disabled]="!flbForm.valid" type="submit">Save</button>
+                    </div>
 
                 </div>
             </div>
+        </div>
 
-            <!----------------------------------- Arm/De-Arm Table --------------------------------->
-            <div class="col-md-12">
+        <!----------------------------------- Arm/De-Arm Table --------------------------------->
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="table-responsive">
                     <p class="table-heading">Arming-De-Arming Logs</p>
 
@@ -294,14 +287,11 @@
                         </table>
 
                     </div>
-
-
+                    <div class="save-wrapper">
+                        <button [disabled]="!flbForm.valid" type="submit">Save</button>
+                    </div>
                 </div>
             </div>
-
-        </div>
-        <div id="save-wrapper">
-            <button [disabled]="!flbForm.valid" type="submit">Save</button>
         </div>
     </form>
 </div>
