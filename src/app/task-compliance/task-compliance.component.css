@@ -13,7 +13,7 @@
     position: absolute;
     margin-top: 0;
     margin-right: 0;
-    right: 23%;
+    right: 6%;
     top: 35%;
 }
 .table-responsive .table  button.isDisabled {
@@ -28,4 +28,7 @@
     display: inline-block;
     position: absolute;
     bottom: 0;
+}
+.table-responsive .table td .form-control {
+    width: 100% !important;
 }

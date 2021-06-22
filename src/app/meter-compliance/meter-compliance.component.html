@@ -80,40 +80,40 @@
                   <tr *ngFor="let meterdetail of meterDetailForm.controls;let i = index" [formGroupName]="i">
                     <td class="table-position">
                       <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectAsset(asset,i)"></i>
-                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="asset*"
+                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="Asset*"
                         formControlName="asset" readonly>
                         <span class="errors" *ngIf="meterdetail.get('asset').errors?.required && isSubmitted ">
                           Please enter Asset Name</span>
                     </td>
                     <td style="display: none;">
                       <input type="text" class="form-control" [id]="'description' + i"
-                        placeholder="description" formControlName="wometerId" readonly>
+                        placeholder="Description" formControlName="wometerId" readonly>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'description' + i"
-                        placeholder="description" formControlName="description" readonly>
+                        placeholder="Description" formControlName="description" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="partNo"
+                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="Part No"
                         formControlName="partNo" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="serial"
+                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="Serial#"
                         formControlName="serial" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="buildItem"
+                      <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="Build Item"
                         formControlName="buildItem" readonly>
                     </td>
                     <td class="table-position">
                       <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i,asset)"></i>
-                      <input type="text" class="form-control" [id]="'meter' + i" placeholder="meter*"
+                      <input type="text" class="form-control" [id]="'meter' + i" placeholder="Meter*"
                         formControlName="meter" readonly>
                         <span class="errors" *ngIf="meterdetail.get('meter').errors?.required && isSubmitted ">
                           Please enter Meter Name</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'meterDescription' + i" placeholder="meterDescription"
+                      <input type="text" class="form-control" [id]="'meterDescription' + i" placeholder="Meter Description"
                         formControlName="meterDescription" readonly>
                     </td>
                     <td class="table-position" *ngIf="charactersticflag">
@@ -174,7 +174,7 @@
                         formControlName="updatedBy"  readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'updatedDate' + i" placeholder="updatedDate"
+                      <input type="text" class="form-control" [id]="'updatedDate' + i" placeholder="Updated Date"
                         formControlName="updatedDate" readonly>
                     </td>
                     <td>
