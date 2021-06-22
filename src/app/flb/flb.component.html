@@ -118,7 +118,8 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
-                            <pagination-controls class="float-right" (pageChange)="pageSortie=$event"></pagination-controls>
+                            <pagination-controls class="float-right" (pageChange)="pageSortie=$event">
+                            </pagination-controls>
                         </div>
                         <div class="col-lg-12">
                             <button type="button" (click)="createNewSortie()" class="float-right">New</button>
@@ -142,15 +143,20 @@
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Flight Date</label>
-                                <input formControlName="fltDate" type="datetime-local" class="form-control"
-                                    placeholder="Flight Date" value="">
+                                <input max="{{currentDate|date: 'yyyy-MM-ddTHH:mm:ss'}}" formControlName="fltDate"
+                                    type="datetime-local" class="form-control" placeholder="Flight Date">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Flight Type</label>
-                                <input formControlName="fltType" type="text" class="form-control"
-                                    placeholder="Flight Type" value="">
+                                <br>
+                                <select formControlName="fltType" class="custom-select custom-select-sm"
+                                    style="width:fit-content">
+                                    <option *ngFor="let type of fltTypeDomain"
+                                        [attr.selected]="initialPostFltTypes[i] == type.name?true:null"
+                                        [ngValue]="type.name">{{type.name}}</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
@@ -166,7 +172,9 @@
                                 <br>
                                 <select formControlName="sortieNum" class="custom-select custom-select-sm"
                                     style="width:fit-content">
-                                    <option *ngFor="let type of sortieNums" [ngValue]="type.sortieNum">
+                                    <option *ngFor="let type of sortieNums"
+                                        [attr.selected]="postFlightSortieNums[i] == type.sortieNum?true:null"
+                                        [ngValue]="type.sortieNum">
                                         {{type.sortieNum}}
                                     </option>
                                 </select>
@@ -175,28 +183,31 @@
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Departure Time</label>
-                                <input formControlName="departureTime" type="text" class="form-control"
-                                    placeholder="Departure Time" value="">
+                                <input formControlName="departureTime" type="time" class="form-control"
+                                    placeholder="Departure Time" max="10:09:00.00">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Flight Hours</label>
-                                <input formControlName="fltHours" type="text" class="form-control"
+                                <input formControlName="fltHours" type="time" class="form-control"
                                     placeholder="Flight Hours" value="">
                             </div>
                         </div>
                         <div class="col-md-4 px-1">
                             <div class="form-group">
                                 <label>Arrival Time</label>
-                                <input formControlName="arrivalTime" type="text" class="form-control"
+                                <input formControlName="arrivalTime" type="time" class="form-control"
                                     placeholder="Arrival Time" value="">
                             </div>
                         </div>
+                        <br /><br />
+                        <hr style="color:black;">
                     </div>
-                    <button type="button" class="float-right">New</button>
+                    <button type="button" (click)="createNewPostFlight()" [attr.disabled]="lastPostFlightStatus"
+                        class="float-right">New</button>
                     <div class="save-wrapper">
-                        <button [disabled]="!flbForm.valid" type="submit">Save</button>
+                        <button (click)="savePostFlight()" type="submit">Save</button>
                     </div>
                 </div>
             </div>

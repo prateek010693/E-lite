@@ -60,9 +60,9 @@ export class FlbService {
   }
 
   // To save the given postFlight data
-  savePostFlight(recordId: any, postFlight: Array<any>): Observable<any> {
+  savePostFlight(recordId: any, postFlightData: Array<any>): Observable<any> {
     const url = this.baseURL + this.postFlight + "save/" + recordId;
-    return this.http.put(url, postFlight, {
+    return this.http.put(url, postFlightData, {
       observe: "response",
       responseType: "json",
     });

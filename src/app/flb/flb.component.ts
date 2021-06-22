@@ -38,7 +38,13 @@ export class FlbComponent implements OnInit {
   ];
   initialStatuses = [];
   initialFltTypes = [];
+  initialPostFltTypes = [];
+  // SortieNumbers assigned to the post flights
+  postFlightSortieNums = [];
+  // SortieNumbers that are accepted
   sortieNums = [];
+  // Status of the newest post flight data is Active or not
+  lastPostFlightStatus = false;
 
   constructor(
     private flbService: FlbService,
@@ -93,7 +99,6 @@ export class FlbComponent implements OnInit {
           res.body.forEach((sortie) => {
             this.initialStatuses.push(sortie.status);
             this.initialFltTypes.push(sortie.fltType);
-            console.log(this.initialFltTypes);
             if (sortie.duration != null)
               sortie.duration = this.toHHMM(sortie.duration);
             this.addSortieRow(sortie);
@@ -255,12 +260,64 @@ export class FlbComponent implements OnInit {
         console.log(res);
         res.body.forEach((postFlight) => {
           this.addPostFlightRow(postFlight);
+          this.postFlightSortieNums.push(postFlight.sortieNum);
+          this.initialPostFltTypes.push(postFlight.fltType);
         });
+        this.lastPostFlightStatus = res[res.length - 1].flbStatus == "ACTIVE";
       },
       (err) => {
         console.error(err);
       }
     );
+  }
+
+  // This function creates a new post flight row and pushes it to the form array
+  createNewPostFlight() {
+    console.log(this.currentUser);
+    this.flbService.createPostFlight(this.recordId, {}).subscribe(
+      (res) => {
+        console.log(res.body);
+        console.log(res.status);
+        this.postFlightSortieNums.push("0");
+        if (res.status == 200) {
+          this.addPostFlightRow(res.body);
+          this.lastPostFlightStatus = res.body.flbStatus == "ACTIVE";
+          this.toastr.success("New post flight row added");
+        }
+      },
+      (error) => {
+        console.log("Am i here or not");
+        console.log(error);
+      }
+    );
+  }
+
+  savePostFlight() {
+    const postFlightForm = <FormArray>this.flbForm.controls["postFlight"];
+    if (postFlightForm.valid) {
+      const postFlightData = postFlightForm.value.map((postFlight) => {
+        return {
+          ...postFlight,
+        };
+      });
+      console.log("This is post flight data in the form", postFlightData);
+      this.flbService.savePostFlight(this.recordId, postFlightData).subscribe(
+        (res) => {
+          console.log(res);
+          var i = 0;
+          postFlightData.forEach((postFlight) => {
+            this.postFlightSortieNums[i++] = postFlight.sortieNum;
+          });
+          this.toastr.success("Post flight saved");
+        },
+        (err) => {
+          this.toastr.warning(
+            "Post flight not saved due to " + err.error.message
+          );
+          console.error(err);
+        }
+      );
+    }
   }
 
   // This function initializes a form group for postFlight Rows
