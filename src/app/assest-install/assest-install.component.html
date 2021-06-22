@@ -1,77 +1,546 @@
 
-  
-  <div class="main-content">
-    <div class="row">
-      <div class="col-lg-12">
-        <form>
-          <div class="row">
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>WorkOrder No.</label>
-                <input type="text" class="form-control" placeholder="WorkOrder No" value="">
-              </div>
+<div class="main-content">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <form [formGroup]="assetInstallRemoveForm">
+        <!-- {{assetInstallRemoveForm.value | json}} -->
+        <div class="row">
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>WorkOrder No.</label>
+              <input type="text" class="form-control" placeholder="WorkOrder No" value="" formControlName="workorderNo"
+                readonly>
             </div>
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>Description</label>
-                <input type="text" class="form-control" placeholder="Description" value="">
-              </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description"
+                readonly>
             </div>
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>Worktype</label>
-                <input type="text" class="form-control" placeholder="Worktype" value="">
-              </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Worktype</label>
+              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype"
+                readonly>
             </div>
-            <div class="col-md-3 px-1">
-              <div class="form-group">
-                <label>WO Status</label>
-                <input type="text" class="form-control" placeholder="WO Status" value="">
-              </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>WO Status</label>
+              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus"
+                readonly>
             </div>
-            <div class="col-md-12 px-1" >
-              <div class="form-group btn-normal">
-                <!-- <label style="visibility:hidden">Create Snag</label> -->
-               <button type="submit" >Add Line</button>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
+            </div>
+          </div>
+          <div class="col-md-12 px-1">
+            <div class="form-group btn-normal">
+              <!-- <label style="visibility:hidden">Create Snag</label> -->
+              <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" (click)="addNewRow()"
+                [disabled]="isDisabled">Add
+                Line</button>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="col-lg-12">
+          <div class="table-responsive">
+            <p class="table-heading">Asset Install/Remove</p>
+            <div class="table-scroll">
+              <table class="table ">
+                <thead class=" text-primary">
+                  <th>Job Type</th>
+                  <th>Item</th>
+                  <th>LCN</th>
+                  <th>Build Item</th>
+                  <th>Position</th>
+
+                  <th>Part No.</th>
+                  <th>Action</th>
+
+
+                </thead>
+                <tbody>
+                  <ng-container formArrayName="assetdetails">
+                    <tr *ngFor="let assetdetail of assetDetailFunction.controls;let i = index" [formGroupName]="i">
+
+
+                      <td>
+                        <input type="text" class="form-control" [id]="'asset' + i" placeholder="JobType"
+                          formControlName="jobType" readonly>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'description' + i" placeholder="Item"
+                          formControlName="item" readonly>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'lcn' + i" placeholder="lcn"
+                          formControlName="lcn" readonly>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="BuildItem"
+                          formControlName="buildItem" readonly>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'serial' + i" placeholder="Position"
+                          formControlName="position" readonly>
+                      </td>
+                      <td>
+                        <input type="text" class="form-control" [id]="'PartNo' + i" placeholder="PartNo"
+                          formControlName="PartNo" readonly>
+                      </td>
+
+
+                      <td>
+                        <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''"[disabled]="closestatus && isDisabled">Install/Remove</button>
+                      </td>
+                      <td>
+                        <button type="button" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="closestatus && isDisabled">Delete</button>
+                      </td>
+
+                    </tr>
+                  </ng-container>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+        <div class="col-md-12 px-1">
+          <div class="form-group">
+            <label style="padding: 0 50%;">JobType</label>
+            <select class="form-control" placeholder="jobType" [(ngModel)]='jobTyper' (change)="addNewLine()">
+              <option value=""  selected hidden>Select JobType</option>
+              <option *ngFor="let jobtype of JobType" [value]="jobtype.value">{{jobtype.id}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div id="IRdiv">
+        <div  class="row">
+          <div [ngClass]="isShow2 == false ? 'fullwidth': 'halfr'" *ngIf="isShow ">
+            <div class="card" *ngIf="isShow1 ">
+              <div class="card-body">
+                <!-- <input type="checkbox" id="check" value="" (change)="onCheckedRemoved($event)">
+                <label class="control-label">Removed</label> -->
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form [formGroup]="removeForm">
+                      <!-- {{removeForm.value | json}} -->
+                      <div class="row">
+                        <!-- <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>JobType</label>
+                            <select class="form-control" placeholder="jobType" formControlName="jobType">
+                              <option value="" disabled selected hidden>Select JobType</option>
+                              <option *ngFor="let jobtype of JobType" [value]="jobtype.value">{{jobtype.id}}</option>
+                            </select>
+                            <span class="errors" *ngIf="removeForm.controls['jobType'].errors?.required && isSubmitted ">
+                              Please Select JobType</span>
+                          </div>
+                        </div> -->
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removed Part</label>
+                            <input type="text" class="form-control" formControlName="removePartNo"
+                              placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Reason</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="rReason(rreason)"></i>
+
+                            <input type="text" class="form-control" placeholder="RemovalReason" value=""
+                              formControlName="removalReason" readonly>
+                              <span class="errors" *ngIf="removeForm.controls['removalReason'].errors?.required && isSubmitted ">
+                                Please Select removalReason</span>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Build Item</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="open(buildItem)"></i>
+
+                            <input type="text" class="form-control" placeholder="Asset" value=""
+                              formControlName="buildItem" readonly>
+                              <span class="errors" *ngIf="removeForm.controls['buildItem'].errors?.required && isSubmitted ">
+                                Please Select buildItem</span>
+                              
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Serial Number</label>
+                            <input type="text" class="form-control" readonly="true" placeholder="Serial Number" value=""
+                              formControlName="serialNo">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Condition</label>
+
+                            <select class="form-control" placeholder="removalCondition" formControlName="removalCond">
+                              <option value="" disabled selected hidden>Select Build Item</option>
+                              <option *ngFor="let removalCondition of removalCondition"
+                                [value]="removalCondition.value">{{removalCondition.id}}</option>
+                            </select>
+                            <span class="errors" *ngIf="removeForm.controls['removalCond'].errors?.required && isSubmitted ">
+                              Please Select removalCond</span>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>LCN</label>
+                            <input type="text" class="form-control" placeholder="LCN" readonly="true" value=""
+                              formControlName="lcn">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Asset No.</label>
+                            <input type="text" class="form-control" placeholder="Asset No." formControlName="assetNo"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Type</label>
+
+                            <select class="form-control" placeholder="removalType" formControlName="removalType">
+                              <option value="" disabled selected hidden>Select removalType</option>
+                              <option *ngFor="let removalType of removalType" [value]="removalType.value">
+                                {{removalType.id}}</option>
+                            </select>
+                            <span class="errors" *ngIf="removeForm.controls['removalType'].errors?.required && isSubmitted ">
+                              Please Select removalType</span>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Position</label>
+                            <input type="text" class="form-control" placeholder="Position" formControlName="position"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removed By</label>
+                            <input type="text" class="form-control" placeholder="Removed By" formControlName="removedBy"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" placeholder="Remarks" formControlName="remarks"
+                              value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Part #</label>
+                            <input type="text" class="form-control" placeholder="Part No" formControlName="partNo"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Removal Date</label>
+                            <input type="text" class="form-control" placeholder="Removal Date"
+                              formControlName="removalDate" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Item</label>
+                            <input type="text" class="form-control" placeholder="Item" formControlName="item"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group btn-normal">
+                            <!-- <label style="visibility:hidden">Create Snag</label> -->
+                            <button type="button" *ngIf="removedsave" (click)="removedSave()">Save</button>
+                          </div>
+                        </div>
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </form>
-      
-    </div>
-    <div class="col-lg-12">
-      <div class="table-responsive">
-        <p class="table-heading">Asset Install/Remove</p>
-        <div class="table-scroll">
-          <table class="table ">
-            <thead class=" text-primary">
-              <th>Job Type</th>
-              <th>Item</th>
-              <th>Build Item</th>
-              <th>Position</th>
-              
-              <th>Part No.</th>
-              <th>Action</th>
-              
-              
-            </thead>
-            <tbody>
-              <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                
-                <td>
-                  <button type="submit" >Install/Remove</button>
-                  <button type="submit" >Delete</button>
-                </td>
-              </tr>
-              
-            </tbody>
-          </table>
+          <div [ngClass]="isShow1 == false ? 'fullwidth': 'halfi'" *ngIf="isShow ">
+
+            <div class="card" *ngIf="isShow2 ">
+              <div class="card-body">
+                <!-- <input type="checkbox" id="check" value="" (change)="onCheckedInstalled($event)">
+                <label class="control-label">Installed</label> -->
+                <div class="row">
+                  <div class="col-lg-12">
+                    <form [formGroup]="installForm">
+                      <!-- {{installForm.value | json}} -->
+                      <div class="row">
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Asset</label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" (click)="iAsset(asset)"></i>
+
+                            <input type="text" class="form-control" placeholder="Asset" value=""
+                              formControlName="insAssetNo" readonly>
+                              <span class="errors" *ngIf="installForm.controls['insAssetNo'].errors?.required && isSubmitted1 ">
+                                Please Select Asset</span>
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Date</label>
+                            <input type="text" class="form-control" formControlName="remInsDate" placeholder="Description"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Part Number</label>
+                            <input type="text" class="form-control" formControlName="insPartNo"
+                              placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>lcn</label>
+                            <input type="text" class="form-control" formControlName="lcn"
+                              placeholder="lcn" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Build Item</label>
+                            <input type="text" class="form-control" formControlName="buildItem"
+                              placeholder="buildItem" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Remarks</label>
+                            <input type="text" class="form-control" formControlName="remarks" placeholder="Description"
+                               value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Serial Number</label>
+                            <input type="text" class="form-control" formControlName="insSerialNo"
+                              placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed By</label>
+                            <input type="text" class="form-control" formControlName="installedBy"
+                              placeholder="Description" readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group">
+                            <label>Installed Asset Condition</label>
+                            <input type="text" class="form-control" formControlName="insCond" placeholder="Description"
+                              readonly="true" value="">
+                          </div>
+                        </div>
+                        <div class="col-md-4 px-1">
+                          <div class="form-group btn-normal">
+                            <!-- <label style="visibility:hidden">Create Snag</label> -->
+                            <button type="button" *ngIf="installedsave" (click)="installedSave()">Save</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="col-lg-12">
+        <ng-template #buildItem let-model class="assest">
+          <div class="model-header">
+            <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+            <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+              <i class="now-ui-icons ui-1_simple-remove"></i>
+            </button>
+          </div>
+          <div class="model-body">
+            <div class="form-group">
+              <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+            </div>
+            <div class="table-responsive">
+              <div class="table-scroll">
+                <table class="table">
+                  <thead class="text-primary">
+                    <th>Selection</th>
+                    <th>Assest</th>
+                    <th>Description</th>
+                    <th>LCN</th>
+                    <th>BuildItem</th>
+                    <th>Position</th>
+                    <th>Serial#</th>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let buildItemArray of buildItemArray | searchAI : searchvalue ;let i = index">
+                      <td>
+                        <input type="radio" (click)="assetSave(buildItemArray.indexCount)" name="radio"
+                          value="{{buildItemArray.indexCount}}">
+                      </td>
+                      <td>{{buildItemArray.assetnum}}</td>
+                      <td>{{buildItemArray.description}}</td>
+                      <td>{{buildItemArray.lcn}}</td>
+                      <td>{{buildItemArray.buildItem}}</td>
+                      <td>{{buildItemArray.position}}</td>
+                      <td>{{buildItemArray.serialnumber}}</td>
+                      <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="model-footer">
+            <button type="button" (click)="model.close('Save click')">Save</button>
+          </div>
+
+        </ng-template>
+        <div class="col-lg-12">
+          <ng-template #rreason let-model class="assest">
+            <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+            </div>
+            <div class="model-body">
+              <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                <div class="table-scroll">
+                  <table class="table">
+                    <thead class="text-primary">
+                      <th>Selection</th>
+                      <th>alndomainId</th>
+                      <th>domainId</th>
+                      <th>value</th>
+                      <th>Description</th>
+                      
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let buildItemArray of removalReason | searchAI : searchvalue ;let i = index">
+                        <td>
+                          <input type="radio" (click)="rassetSave(buildItemArray.indexCount)" name="radio"
+                            value="{{buildItemArray.indexCount}}">
+                        </td>
+                        <td>{{buildItemArray.alndomainId}}</td>
+                        <td>{{buildItemArray.domainId}}</td>
+                        <td>{{buildItemArray.value}}</td>
+                        <td>{{buildItemArray.desc}}</td>
+                        <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+            </div>
+
+          </ng-template>
+
+        </div>
+        <div class="col-lg-12">
+          <ng-template #asset let-model class="assest">
+            <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+            </div>
+            <div class="model-body">
+              <div class="form-group">
+                <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                <div class="table-scroll">
+                  <table class="table">
+                    <thead class="text-primary">
+                      <th>Selection</th>
+                      <th>Assest</th>
+                      <th>Description</th>
+                      <th>lcn</th>
+                      <th>Build Item</th>
+                      <th>Status</th>
+                      <th>Serial#</th>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let buildItemArray of buildItemArray | searchAI : searchvalue ;let i = index">
+                        <td>
+                          <input type="radio" (click)="iassetSave(buildItemArray.indexCount)" name="radio"
+                            value="{{buildItemArray.indexCount}}">
+                        </td>
+                        <td>{{buildItemArray.assetNum_meterLookup}}</td>
+                        <td>{{buildItemArray.meterdescription}}</td>
+                        <td>{{buildItemArray.lcn}}</td>
+                        <td>{{buildItemArray.buildItem}}</td>
+                        
+                        <td>{{buildItemArray.cmitem}}</td>
+                        <td>{{buildItemArray.serialnumber}}</td>
+                        <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+            </div>
+
+          </ng-template>
+
         </div>
       </div>
     </div>
   </div>
+
+</div>
+

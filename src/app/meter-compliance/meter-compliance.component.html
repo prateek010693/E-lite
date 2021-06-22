@@ -10,31 +10,45 @@
             <div class="form-group">
               <label>WorkOrder No.</label>
               <input type="text" class="form-control" placeholder="WorkOrder No." value=""
-                formControlName="workorderNo">
+                formControlName="workorderNo" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Description</label>
-              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description">
+              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Worktype</label>
-              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype">
+              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WO Status</label>
-              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus">
+              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
             </div>
           </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
-              <button type="button" (click)="addMeter()">Add Meter</button>
+              <button type="button" (click)="addMeter()" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Add Meter</button>
             </div>
           </div>
         </div>
@@ -46,15 +60,15 @@
           <div class="table-scroll">
             <table class="table ">
               <thead class=" text-primary">
-                <th>Asset</th>
+                <th>Asset<span class="mandate">*</span></th>
                 <th>Description</th>
                 <th>Part No.</th>
                 <th>Serial#</th>
                 <th>Build Item</th>
-                <th>Meter</th>
+                <th>Meter<span class="mandate">*</span></th>
                 <th>Meter Description</th>
-                <th>Initial Value</th>
-                <th>Final Value</th>
+                <th>Initial Value<span class="mandate">*</span></th>
+                <th>Final Value<span class="mandate">*</span></th>
                 <th>Reading Date</th>
                 <th>Updated By</th>
                 <th>Updated Date</th>
@@ -64,59 +78,109 @@
               <tbody>
                 <ng-container formArrayName="meterdetails">
                   <tr *ngFor="let meterdetail of meterDetailForm.controls;let i = index" [formGroupName]="i">
-
-
-                    <td>
-                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="asset"
-                        formControlName="asset">
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectAsset(asset,i)"></i>
+                      <input type="text" class="form-control" [id]="'asset' + i" placeholder="Asset*"
+                        formControlName="asset" readonly>
+                        <span class="errors" *ngIf="meterdetail.get('asset').errors?.required && isSubmitted ">
+                          Please enter Asset Name</span>
+                    </td>
+                    <td style="display: none;">
+                      <input type="text" class="form-control" [id]="'description' + i"
+                        placeholder="Description" formControlName="wometerId" readonly>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'description' + i"
-                        placeholder="description" formControlName="description">
+                        placeholder="Description" formControlName="description" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="partNo"
-                        formControlName="partNo">
+                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="Part No"
+                        formControlName="partNo" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="serial"
-                        formControlName="serial">
+                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="Serial#"
+                        formControlName="serial" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="buildItem"
-                        formControlName="buildItem">
+                      <input type="text" class="form-control" [id]="'buildItem' + i" placeholder="Build Item"
+                        formControlName="buildItem" readonly>
+                    </td>
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="selectMeter(meter,i,asset)"></i>
+                      <input type="text" class="form-control" [id]="'meter' + i" placeholder="Meter*"
+                        formControlName="meter" readonly>
+                        <span class="errors" *ngIf="meterdetail.get('meter').errors?.required && isSubmitted ">
+                          Please enter Meter Name</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'meter' + i" placeholder="meter"
-                        formControlName="meter">
+                      <input type="text" class="form-control" [id]="'meterDescription' + i" placeholder="Meter Description"
+                        formControlName="meterDescription" readonly>
+                    </td>
+                    <td class="table-position" *ngIf="charactersticflag">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="initialCharactersticMeter(initialCharacterstic,i)"></i>
+                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValuec*"
+                        formControlName="initialValue" readonly>
+                        <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
+                          Please enter  Initial Value</span>
+                    </td>
+                    <td class="table-position" *ngIf="charactersticflag">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isdisable[i]" (click)="finalCharactersticMeter(finalCharacterstic,i)"></i>
+                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValuec*"
+                        formControlName="finalValue" readonly>
+                        <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
+                          Please enter Final Value</span>
+                    </td>
+                    <td class="table-position" *ngIf="!continousflag">
+                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="HH:MM:SS"
+                        formControlName="initialValue" [readonly]="!isdisable[i]" (blur)="checkInitialConMeter(i)">
+                        <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
+                          Please enter  Initial Value</span>
+                        <span class="errors" *ngIf= " !reGexBoolInitialCon[i] && meterDetailForm.controls[i].get('initialValue').touched ">
+                         Correct Format HH:MM:SS</span>
+                    </td>
+                    <td class="table-position" *ngIf="!continousflag">
+                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="HH:MM:SS"
+                        formControlName="finalValue" [readonly]="!isdisable[i]" (blur)="checkFinalConMeter(i)">
+                        <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
+                          Please enter Final Value</span>
+                          <span class="errors" *ngIf= " !reGexBoolFinalCon[i] && meterDetailForm.controls[i].get('finalValue').touched ">
+                            Correct Format HH:MM:SS</span>
+                          
+                    </td>
+                    <td class="table-position" *ngIf="guageflag">
+                      <input type="number" class="form-control" [id]="'initialValue' + i" placeholder="01.00"
+                        formControlName="initialValue"  (blur)="checkInitialGuageMeter(i)">
+                        <span class="errors" *ngIf="meterdetail.get('initialValue').errors?.required && isSubmitted ">
+                          Please enter  Initial Value</span>
+                        <span class="errors" *ngIf= " !reGexBoolInitialGuage[i] && meterDetailForm.controls[i].get('initialValue').touched ">
+                          Decimal take only 2 position</span>
+                    </td>
+                    <td class="table-position" *ngIf="guageflag">
+                      <input type="number" class="form-control" [id]="'finalValue' + i" placeholder="01:00"
+                        formControlName="finalValue" (blur)="checkFinalGuageMeter(i)">
+                        <span class="errors" *ngIf="meterdetail.get('finalValue').errors?.required && isSubmitted ">
+                          Please enter Final Value</span>
+                          <span class="errors" *ngIf= " !reGexBoolFinalGuage[i] && meterDetailForm.controls[i].get('finalValue').touched ">
+                            Decimal take only 2 position</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'meterDescription' + i" placeholder="meterDescription"
-                        formControlName="meterDescription">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" [id]="'initialValue' + i" placeholder="initialValue"
-                        formControlName="initialValue">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" [id]="'finalValue' + i" placeholder="finalValue"
-                        formControlName="finalValue">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" [id]="'readingDate' + i" placeholder="readingDate"
-                        formControlName="readingDate">
+                      <input type="datetime-local" class="form-control" [id]="'readingDate' + i" placeholder="readingDate*"
+                        formControlName="readingDate" step="1">
+                        <span class="errors" *ngIf="meterdetail.get('readingDate').errors?.required && isSubmitted ">
+                          Please enter Reading Date</span>
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'updatedBy' + i" placeholder="updatedBy"
-                        formControlName="updatedBy">
+                        formControlName="updatedBy"  readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'updatedDate' + i" placeholder="updatedDate"
-                        formControlName="updatedDate">
+                      <input type="text" class="form-control" [id]="'updatedDate' + i" placeholder="Updated Date"
+                        formControlName="updatedDate" readonly>
                     </td>
                     <td>
-                      <button type="submit">save</button>
-                      <button type="submit">Delete</button>
+                      <button type="button" *ngIf="isdisable[i]"(click)="saveMeter(i)">save</button>
+                      <button type="button" *ngIf="isdisable[i]"(click)="rowDelete(i)">Delete</button>
+                      <button type="button" *ngIf="!isdisable[i]"(click)="deleteMeter(i)">Delete</button>
                     </td>
 
                   </tr>
@@ -126,6 +190,185 @@
           </div>
         </div>
       </div>
+      
     </div>
   </form>
+  <div class="row">
+    <div class="col-lg-12">
+      <ng-template #asset let-model class="assest">
+          <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                  <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+          </div>
+          <div class="model-body">
+            {{searchvalue1}}
+              <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                  <div class="table-scroll">
+                      <table class="table">
+                          <thead class="text-primary">
+                              <th>Selection</th>
+                              <th>Assest</th>
+                              <th>Description</th>
+                              <th>Part Number</th>
+                              <th>Serial#</th>
+                              <th>Build Item</th>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let assetArray of assetArray | search : searchvalue ;let i = index">
+                                  <td>
+                                      <input type="radio" (click)="assetSave(assetArray.indexCount)" name="radio" value="{{assetArray.indexCount}}" [disabled]="assetRadio">
+                                  </td>
+                                  <td>{{assetArray.assetnum}}</td>
+                                  <td>{{assetArray.description}}</td>
+                                  <td>{{assetArray.partnumber}}</td>
+                                  <td>{{assetArray.serialnumber}}</td>
+                                  <td>{{assetArray.builditem}}</td>
+                                  <td style="display: none;">{{assetArray.indexCount}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+             
+          </div>
+
+          <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')" >Save</button>
+          </div>
+
+      </ng-template>
+    </div>
+    <div class="col-lg-12">
+      <ng-template #meter let-model class="assest">
+          <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Meter Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                  <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+          </div>
+          <div class="model-body">
+              <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                  <div class="table-scroll">
+                      <table class="table">
+                          <thead class="text-primary">
+                              <th>Selection</th>
+                              <th>Meter</th>
+                              <th>Description</th>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let meterArray of meterArray  | search : searchvalue ;let i = index">
+                                <!-- | search : searchvalue -->
+                                  <td>
+                                      <input type="radio" (click)="meterSave(meterArray.indexCount)" name="radio" value="{{assetArray.indexCount}}" [disabled]="assetRadio">
+                                  </td>
+                                  <td>{{meterArray.meternum}}</td>
+                                  <td>{{meterArray.description}}</td>
+                                  <td style="display: none;">{{meterArray.indexCount}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              
+          </div>
+
+          <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+          </div>
+
+      </ng-template>
+    </div>
+    <div class="col-lg-12">
+      <ng-template #initialCharacterstic let-model class="assest">
+          <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Meter Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                  <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+          </div>
+          <div class="model-body">
+              <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                  <div class="table-scroll">
+                      <table class="table">
+                          <thead class="text-primary">
+                              <th>Selection</th>
+                              <th>Meter</th>
+                              <th>Description</th>
+                          </thead>
+                          <tbody>
+                              <!-- <tr *ngFor="let meterArray of meterArray  | search : searchvalue ;let i = index">
+                                  <td>
+                                      <input type="radio" (click)="meterSave(meterArray.indexCount)" name="radio" value="{{assetArray.indexCount}}" [disabled]="assetRadio">
+                                  </td>
+                                  <td>{{meterArray.meternum}}</td>
+                                  <td>{{meterArray.description}}</td>
+                                  <td style="display: none;">{{meterArray.indexCount}}</td>
+                              </tr> -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              
+          </div>
+
+          <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+          </div>
+
+      </ng-template>
+    </div>
+    <div class="col-lg-12">
+      <ng-template #finalCharacterstic let-model class="assest">
+          <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Meter Name</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                  <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+          </div>
+          <div class="model-body">
+              <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                  <div class="table-scroll">
+                      <table class="table">
+                          <thead class="text-primary">
+                              <th>Selection</th>
+                              <th>Meter</th>
+                              <th>Description</th>
+                          </thead>
+                          <tbody>
+                              <!-- <tr *ngFor="let meterArray of meterArray  | search : searchvalue ;let i = index">
+                                  <td>
+                                      <input type="radio" (click)="meterSave(meterArray.indexCount)" name="radio" value="{{assetArray.indexCount}}" [disabled]="assetRadio">
+                                  </td>
+                                  <td>{{meterArray.meternum}}</td>
+                                  <td>{{meterArray.description}}</td>
+                                  <td style="display: none;">{{meterArray.indexCount}}</td>
+                              </tr> -->
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+              
+          </div>
+
+          <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')">Save</button>
+          </div>
+
+      </ng-template>
+    </div>
+  </div>
 </div>

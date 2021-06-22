@@ -1,9 +1,25 @@
-.table-responsive .table-scroll{
-    overflow: auto;
-    margin-bottom: 10px;
+.table-responsive .table-scroll {
+  overflow: auto;
+  margin-bottom: 10px;
 }
-.table-responsive .table{
-    margin-bottom: 0 !important;
-    display: block;
-    white-space: nowrap;
+.table-responsive .table {
+  margin-bottom: 0 !important;
+  display: block;
+  white-space: nowrap;
+}
+
+.fit-content {
+  width: fit-content;
+}
+
+.table-responsive .table td .form-control {
+  width: fit-content;
+  margin-bottom: 5px;
+}
+
+#save-wrapper {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
 }

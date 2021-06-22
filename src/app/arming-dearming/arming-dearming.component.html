@@ -1,39 +1,54 @@
 <div class="main-content">
   <form [formGroup]="armingDearmingForm">
-    {{armingDearmingForm.value | json}}
+    <!-- {{armingDearmingForm.value | json}} -->
     <div class="row">
       <div class="col-lg-12">
 
         <div class="row">
+          
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WorkOrder No.</label>
               <input type="text" class="form-control" placeholder="WorkOrder No." value=""
-                formControlName="workorderNo">
+                formControlName="workorderNo" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Description</label>
-              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description">
+              <input type="text" class="form-control" placeholder="Description" value="" formControlName="description" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Worktype</label>
-              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype">
+              <input type="text" class="form-control" placeholder="Worktype" value="" formControlName="worktype" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WO Status</label>
-              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus">
+              <input type="text" class="form-control" placeholder="WO Status" value="" formControlName="woStatus" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
             </div>
           </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal">
               <!-- <label style="visibility:hidden">Create Snag</label> -->
-              <button type="button" (click)="addArmament()">Add Armament</button>
+              <button type="button" (click)="addArmament()" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Add Armament</button>
             </div>
           </div>
         </div>
@@ -47,7 +62,7 @@
               <thead class=" text-primary">
                 <th>Hard Point Build Item</th>
                 <th>Station No.</th>
-                <th>Armamenr Position</th>
+                <th>Armament Position</th>
                 <th>Armament Item/GIG nO.</th>
                 <th>Description</th>
                 <th>Part No.</th>
@@ -59,56 +74,63 @@
                 <th>Evaluated Quantity</th>
                 <th>Remarks</th>
                 <th>Status</th>
+                <th>Action</th>
 
               </thead>
               <tbody>
                 <ng-container formArrayName="armamentdetails">
                   <tr *ngFor="let armamentdetail of ArmingDearminForm.controls;let i = index" [formGroupName]="i">
 
-
-                    <td>
-                      <input type="text" class="form-control" [id]="'hardPointBuildItem' + i"
-                        placeholder="hardPointBuildItem" formControlName="hardPointBuildItem">
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  (click)="selectBuildItem(builditem,i)"></i>
+                      <input type="text" class="form-control" [id]="'hardPointBuildItem' + i" placeholder="BuildItem*"
+                        formControlName="hardPointBuildItem" readonly>
+                        <span class="errors" *ngIf="armamentdetail.get('hardPointBuildItem').errors?.required && isSubmitted ">
+                          Please Select Build Item</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'stationNo' + i" placeholder="description"
+                      <input type="text" class="form-control" [id]="'stationNo' + i" readonly="true" placeholder="description"
                         formControlName="stationNo">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'armamentPosition' + i" placeholder="partNo"
+                      <input type="text" class="form-control" [id]="'armamentPosition' + i" readonly="true" placeholder="partNo"
                         formControlName="armamentPosition">
                     </td>
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  (click)="selectGig(gig,i)"></i>
+                      <input type="text" class="form-control" [id]="'armamentItem' + i" placeholder="GigNo*"
+                        formControlName="armamentItem" readonly>
+                        <span class="errors" *ngIf="armamentdetail.get('armamentItem').errors?.required && isSubmitted ">
+                          Please Select Armament Item</span>
+                    </td>
+                    
                     <td>
-                      <input type="text" class="form-control" [id]="'armamentItem' + i" placeholder="serial"
-                        formControlName="armamentItem">
+                      <input type="text" class="form-control" [id]="'description' + i" placeholder="description"
+                        formControlName="description" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'description' + i" placeholder="buildItem"
-                        formControlName="description">
-                    </td>
-                    <td>
-                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="meter"
+                      <input type="text" class="form-control" [id]="'partNo' + i" placeholder="partNo"
                         formControlName="partNo">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="meterDescription"
+                      <input type="text" class="form-control" [id]="'serial' + i" placeholder="serial"
                         formControlName="serial">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'lotNo' + i" placeholder="initialValue"
+                      <input type="text" class="form-control" [id]="'lotNo' + i" placeholder="lotNo"
                         formControlName="lotNo">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'currentQuantity' + i" placeholder="finalValue"
-                        formControlName="currentQuantity">
+                      <input type="text" class="form-control" [id]="'currentQuantity' + i" placeholder="currentQuantity"
+                        formControlName="currentQuantity" readonly>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'loadQuantity' + i" placeholder="readingDate"
-                        formControlName="loadQuantity">
+                      <input type="text" class="form-control" [id]="'loadQuantity' + i" placeholder="loadQuantity" 
+                      (focus)="alternator1(i)" formControlName="loadQuantity" [readonly] = "!alternate1[i]">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'unloadQuantity' + i" placeholder="updatedBy"
-                        formControlName="unloadQuantity">
+                      <input type="text" class="form-control" [id]="'unloadQuantity' + i" placeholder="unloadQuantity" 
+                      (focus)="alternator2(i)"  formControlName="unloadQuantity" [readonly] = "!alternate2[i]">
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'evaluatedQuantity' + i" placeholder="updatedDate"
@@ -119,8 +141,14 @@
                         formControlName="remarks">
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'status' + i" placeholder="updatedDate"
-                        formControlName="status">
+                      <input type="text" class="form-control" [id]="'status' + i" placeholder="status"
+                        formControlName="status" readonly>
+                    </td>
+                    <td>
+                      <button type="button" (click)=getCurrentQuan(i)>Save</button>
+                      <button type="button" (click)="saveRowArmDearm(i)">load</button>
+                      <button type="button" (click)="deleteExistingData(i)">Delete</button>
+                      
                     </td>
 
 
@@ -133,4 +161,93 @@
       </div>
     </div>
   </form>
+  <div class="col-lg-12">
+    <ng-template #builditem let-model class="assest">
+      <div class="model-header">
+        <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+        <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+          <i class="now-ui-icons ui-1_simple-remove"></i>
+        </button>
+      </div>
+      <div class="model-body">
+        <div class="form-group">
+          <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+        </div>
+        <div class="table-responsive">
+          <div class="table-scroll">
+            <table class="table">
+              <thead class="text-primary">
+                <th>Selection</th>
+                <th>builditemid</th>
+                <th>buildType</th>
+                <th>position</th>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hpBuildItem of hpBuildItem | searchAD : searchvalue ;let i = index">
+                  <td>
+                    <input type="radio" (click)="indexsetter(hpBuildItem.indexcount)" name="radio"
+                      value="{{hpBuildItem.indexcount}}">
+                  </td>
+                  <td>{{hpBuildItem.builditemid}}</td>
+                  <td>{{hpBuildItem.buildType}}</td>
+                  <td>{{hpBuildItem.position}}</td>
+                  <td style="display: none;">{{hpBuildItem.indexcount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="model-footer">
+        <button type="button" (click)="model.close('Save click')">Save</button>
+      </div>
+
+    </ng-template>
+    <div class="col-lg-12">
+      <ng-template #gig let-model class="assest">
+        <div class="model-header">
+          <h6 class="model-title" id="model-basic-title">Asset Name</h6>
+          <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+            <i class="now-ui-icons ui-1_simple-remove"></i>
+          </button>
+        </div>
+        <div class="model-body">
+          <div class="form-group">
+            <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+          </div>
+          <div class="table-responsive">
+            <div class="table-scroll">
+              <table class="table">
+                <thead class="text-primary">
+                  <th>Selection</th>
+                  <th>armGigNo</th>
+                  <th>armDesc</th>
+                  
+                  
+                </thead>
+                <tbody>
+                  <tr *ngFor="let buildItemArray of gigNo | search : searchvalue ;let i = index">
+                    <td>
+                      <input type="radio" (click)="indexsetter(buildItemArray.indexCount)" name="radio"
+                        value="{{buildItemArray.indexCount}}">
+                    </td>
+                    <td>{{buildItemArray.armGigNo}}</td>
+                    <td>{{buildItemArray.armDesc}}</td>
+                    <td style="display: none;">{{buildItemArray.indexCount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="model-footer">
+          <button type="button" (click)="model.close('Save click')">Save</button>
+        </div>
+
+      </ng-template>
+      
 </div>

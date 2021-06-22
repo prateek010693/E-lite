@@ -1,11 +1,12 @@
 import { Component, OnInit, PipeTransform, Pipe } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray,Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatePipe } from '@angular/common'
 import { WorkorderService } from '../services/workorder.service';
 import { LoaderService } from '../services/loader.service';
-import { PlanedAssestService } from '../services/planed-assest.service';
+import { MeterComplianceService } from '../services/meter-compliance.service';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-workorderdetails',
@@ -23,18 +24,21 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   searchvalue: any;
   editdata: any;
   isEditable : boolean = true;
+  beforeAsset : boolean = false;
+  afterPM : boolean = true
   date : any;
   statusArray :any = [];
   statusChangeIndex : boolean = true;
   workTypeArray : any = [];
-  pmArray : any = []
+  pmArray : any = [];
+  isSubmitted: boolean = false;
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
     private fb: FormBuilder,
     private bootstrapModel: NgbModal,
     private workorderService:WorkorderService,
     public _loderservice:LoaderService,
-    private planedAssestService:PlanedAssestService,
+    private meterComplianceService:MeterComplianceService,
     private dataPipe:DatePipe,
     private toastr:ToastrService) { }
 
@@ -43,18 +47,23 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
       return value;
     }
     return value.filter(item => {
-      if(item.assetnum == undefined && item.workType == undefined){
+      console.log('item',item)
+      if(item.assetnum == undefined && item.workType == undefined && item.meternum == undefined){
         var filter =item.pm.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
       }
-      if(item.assetnum == undefined && item.pm == undefined){
+      if(item.assetnum == undefined && item.pm == undefined  && item.meternum == undefined){
         var filter =item.workType.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase()) 
         return filter
       }
-      if(item.workType == undefined && item.pm == undefined){
-        var filter =item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase()) 
+      if(item.workType == undefined && item.pm == undefined  && item.meternum == undefined){
+        var filter =item.assetnum.toLowerCase().includes(searchvalue.toLowerCase()) || item.serialnumber.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase())
         return filter
       }   
+      if(item.workType == undefined && item.pm == undefined && item.assetnum == undefined ){
+        var filter =item.meternum.toLowerCase().includes(searchvalue.toLowerCase()) || item.description.toLowerCase().includes(searchvalue.toLowerCase()) 
+        return filter
+      }
     })
   }
   ngOnInit(): void {
@@ -63,16 +72,17 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     })
     this.workOrderDetailForm = this.fb.group({
       woNumber: [""],
-      description: [""],
-      worktype: [""],
+      description: ["",Validators.required],
+      worktype: ["",Validators.required],
       woStatus: ["APPR"],
-      asset: [""],
+      asset: ["",Validators.required],
       serial: [""],
       pmNumber: [""],
       statusDate: [""],
       cmItem: [""],
       pmDescription: [""],
       closedBy: [""],
+      assetDescription : [""]
       //LookUp Controller
       
     })
@@ -87,15 +97,15 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   getAsset() {
     let count = 0
     var assetData = []
-    this.planedAssestService.getPlannedAsset().subscribe(data =>{
+    this.meterComplianceService.getAssetAndMeter().subscribe(data =>{
       console.log('data',data)
       data.map(el =>{
         assetData.push({
-          "assetnum":el.assetnum ? el.assetnum : "N/A",
-          "description":el.description ? el.description : "N/A",
-          "status":el.status ? el.status : "N/A",
-          "serialnumber":el.serialnum ? el.serialnum : "N/A",
-          "cmitem":el.cmitem ? el.cmitem : "N/A",
+          "assetnum":el.assetId_assetLookup ? el.assetId_assetLookup : "N/A",
+          "description":el.assetDescription_assetLookup ? el.assetDescription_assetLookup : "N/A",
+          "status":el.statusString ? el.statusString : "N/A",
+          "serialnumber":el.serialNum ? el.serialNum : "N/A",
+          "cmitem":el.partNumber_meterLookup ? el.partNumber_meterLookup : "N/A",
           "indexCount":count++
         })
       })
@@ -106,7 +116,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     var count = 0
     var workTypeData = []
     this.workorderService.getWorkType().subscribe(data =>{
-      console.log('data',data)
+      console.log('workTypeData',data)
       data.map(el =>{
         workTypeData.push({
           "workType":el.wrkTyp ? el.wrkTyp : "N/A",
@@ -121,13 +131,18 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     var count = 0
     var pmData = []
     this.workorderService.getPM().subscribe(data =>{
-      console.log('data',data)
-      data.map(el =>{
-        pmData.push({
-          "pm":el.pmNum ? el.pmNum : "N/A",
-          "description":el.pmDesc ? el.pmDesc : "N/A",
-          "indexCount":count++
-        })
+      console.log('pmData',data)
+      data.filter(el =>{
+        if(this.workOrderDetailForm.value['asset'] == el.assetNum){
+          console.log('el',el)
+          pmData.push({
+            "pm":el.pmNum ? el.pmNum : "N/A",
+            "description":el.pmDesc ? el.pmDesc : "N/A",
+            "workType" : el.workType ? el.workType : "N/A",
+            "indexCount":count++
+          })
+          return el
+        }  
       })
     })
     return pmData
@@ -146,6 +161,10 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   }
   open(asset) {
     this.searchvalue = ''
+    this.workOrderDetailForm.controls['pmNumber'].setValue("")
+    this.workOrderDetailForm.controls['pmDescription'].setValue("")
+    this.workOrderDetailForm.controls['worktype'].setValue("")
+    this.afterPM = true;
     this.bootstrapModel.open(asset, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
       console.log('result', result)
       if (result == 'Save click') {
@@ -178,6 +197,7 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
   }
   pmItem(pmitem) {
     this.searchvalue = ''
+    
     this.bootstrapModel.open(pmitem, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
       console.log('result', result)
       if (result == 'Save click') {
@@ -187,19 +207,25 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
     this.pmArray = this.getPM()
   }
   assetSave(index) {
+    this.beforeAsset = true
+    
     this.index = index
     this.workOrderDetailForm.controls['asset'].setValue(this.assetArray[this.index].assetnum)
     this.workOrderDetailForm.controls['serial'].setValue(this.assetArray[this.index].serialnumber)
     this.workOrderDetailForm.controls['cmItem'].setValue(this.assetArray[this.index].cmitem)
+    this.workOrderDetailForm.controls['assetDescription'].setValue(this.assetArray[this.index].description)
   }
   worktypeSave(index){
     this.index = index
     this.workOrderDetailForm.controls['worktype'].setValue(this.workTypeArray[this.index].workType)
   }
   pmSave(index){
+    this.afterPM = false;
     this.index = index
+    console.log('asasa',this.pmArray[this.index])
     this.workOrderDetailForm.controls['pmNumber'].setValue(this.pmArray[this.index].pm)
     this.workOrderDetailForm.controls['pmDescription'].setValue(this.pmArray[this.index].description)
+    this.workOrderDetailForm.controls['worktype'].setValue(this.pmArray[this.index].workType)
 
   }
   statusSave(index){
@@ -223,60 +249,65 @@ export class WorkorderdetailsComponent implements OnInit, PipeTransform {
         this.toastr.success("Status Chnage Successfully.")
       }
     })
-    console.log('this.index ',this.index )
   }
   cancelworkorder() {
     this.router.navigate(['workorder'])
   }
   saveworkorder(id) {
-    var date = this.workOrderDetailForm.controls['statusDate'].value
-    console.log('date',typeof date,date)
-    console.log('id+++++',typeof id,id)   
-    if(id == "null"){
-      console.log("new Workorder")
-      var workorderData = { 
-         "wo_num":this.workOrderDetailForm.controls['woNumber'].value,
-        "wo_desc":this.workOrderDetailForm.controls['description'].value,
-        "work_type":this.workOrderDetailForm.controls['worktype'].value,
-        // status:this.workOrderDetailForm.controls['woStatus'].value,
-        "asset_num":this.workOrderDetailForm.controls['asset'].value,
-        "serial_num":this.workOrderDetailForm.controls['serial'].value,
-        "cm_item":this.workOrderDetailForm.controls['cmItem'].value,
-        "pm":this.workOrderDetailForm.controls['pmNumber'].value,
-        "pm_desc":this.workOrderDetailForm.controls['pmDescription'].value,
-        
-      }
-      this.workorderService.createWO(workorderData).subscribe(element =>{
-        console.log('element',element)
-      })
-
+    if (this.workOrderDetailForm.valid){
+      if(id == "null"){
+        console.log("new Workorder")
+        var workorderData = { 
+           "wo_num":this.workOrderDetailForm.controls['woNumber'].value,
+          "wo_desc":this.workOrderDetailForm.controls['description'].value,
+          "work_type":this.workOrderDetailForm.controls['worktype'].value,
+          // status:this.workOrderDetailForm.controls['woStatus'].value,
+          "asset_num":this.workOrderDetailForm.controls['asset'].value,
+          "serial_num":this.workOrderDetailForm.controls['serial'].value,
+          "cm_item":this.workOrderDetailForm.controls['cmItem'].value,
+          "pm":this.workOrderDetailForm.controls['pmNumber'].value,
+          "pm_desc":this.workOrderDetailForm.controls['pmDescription'].value,
+          "asset_desc" : this.workOrderDetailForm.controls['assetDescription'].value,
+        }
+        this.workorderService.createWO(workorderData).subscribe(element =>{
+          console.log('element',element)
+          this.router.navigate(['workorder'])
+        })
+  
+      } 
     }
-    console.log('this.workOrderDetailForm', this.workOrderDetailForm)
-    this.router.navigate(['workorder'])
+    else {
+      this.isSubmitted = true
+      console.log('this.meterComplianceForm------', this.workOrderDetailForm)
+      console.log("Not valid");
+    }  
   }
   getExistingWO(){ 
-    console.log('this.id++++',this.id)
       this.workorderService.getExistingWO(this.id).subscribe(data =>{
         console.log('data',data)
         if(data.wo_status =="CAN" || data.wo_status =="CLOSE"){
           this.statusChangeIndex = false
+          this.workOrderDetailForm.controls['statusDate'].setValue(data.closure_date ? data.closure_date  : "N/A") 
         }
-        this.date = (this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') != null) ?  this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') : "N/A"
+        else{
+          this.workOrderDetailForm.controls['statusDate'].setValue(data.creation_date ? data.creation_date  : "N/A") 
+
+        }
+        //this.date = (this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') != null) ?  this.dataPipe.transform(data.closure_date,'yyyy-MM-dd') : "N/A"
         this.workOrderDetailForm.controls['woNumber'].setValue(data.wo_num ? data.wo_num : "N/A") 
         this.workOrderDetailForm.controls['woStatus'].setValue(data.wo_status ? data.wo_status : "N/A")
         this.workOrderDetailForm.controls['description'].setValue(data.wo_desc ? data.wo_desc : "N/A")  
         this.workOrderDetailForm.controls['asset'].setValue(data.asset_num ? data.asset_num : "N/A") 
         this.workOrderDetailForm.controls['serial'].setValue(data.serial_num ? data.serial_num : "N/A") 
         this.workOrderDetailForm.controls['pmNumber'].setValue(data.pm ? data.pm : "N/A") 
-        this.workOrderDetailForm.controls['statusDate'].setValue(data.closure_date ? data.closure_date  : "N/A") 
         this.workOrderDetailForm.controls['cmItem'].setValue(data.cm_item ? data.cm_item : "N/A") 
         this.workOrderDetailForm.controls['pmDescription'].setValue(data.pm_desc ? data.pm_desc : "N/A") 
         this.workOrderDetailForm.controls['closedBy'].setValue(data.closed_by ? data.closed_by : "N/A") 
         this.workOrderDetailForm.controls['worktype'].setValue(data.work_type ? data.work_type : "N/A") 
+        this.workOrderDetailForm.controls['assetDescription'].setValue(data.asset_desc ? data.asset_desc : "N/A") 
       })
   }
   getWorkorderNo(){
-    console.log('fdfdfdfd')
     this.workorderService.getWorkorderNo().subscribe(data =>{
       console.log('data',data)
       this.workOrderDetailForm.controls['woNumber'].setValue(data.wonum)

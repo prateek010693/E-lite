@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col-md-3 px-1">
                         <div class="form-group">
-                            <label>WO No.</label>
+                            <label>WO</label>
                             <input type="text" class="form-control" placeholder="WO No." value=""
                                 formControlName="woNumber" readonly>
                         </div>
@@ -16,14 +16,18 @@
                             <label>Description</label>
                             <input type="text" class="form-control" placeholder="Description" value=""
                                 formControlName="description" [readonly]="!isEditable">
+                            <p class="errors" *ngIf="workOrderDetailForm.controls['description'].errors?.required && isSubmitted ">Please
+                                enter Description</p>
                         </div>
                     </div>
                     <div class="col-md-3 px-1">
                         <div class="form-group">
                             <label>Worktype</label>
-                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="workType(worktype)"></i>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable && afterPM" (click)="workType(worktype)"></i>
                             <input type="text" class="form-control" placeholder="Worktype" value=""
                                 formControlName="worktype" readonly>
+                            <p class="errors" *ngIf="workOrderDetailForm.controls['worktype'].errors?.required && isSubmitted ">Please
+                                select Worktype</p>    
                         </div>
                     </div>
                     <div class="col-md-3 px-1">
@@ -40,6 +44,14 @@
                             <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="open(asset)"></i>
                             <input type="text" class="form-control" placeholder="Asset" value=""
                                 formControlName="asset" readonly>
+                            <p class="errors" *ngIf="workOrderDetailForm.controls['asset'].errors?.required && isSubmitted ">Please
+                                select Asset</p>      
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>Asset Description</label>
+                            <input type="text" class="form-control" placeholder="Assest Description" value="" formControlName="assetDescription" readonly>
                         </div>
                     </div>
                     <div class="col-md-3 px-1">
@@ -47,6 +59,29 @@
                             <label>Serial#</label>
                             <input type="text" class="form-control" placeholder="Serial#" value=""
                                 formControlName="serial" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>CM Item</label>
+                            <input type="text" class="form-control" placeholder="CM Item" value=""
+                                formControlName="cmItem" readonly>
+                        </div>
+                    </div>
+                   
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>PM </label>
+                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable && beforeAsset" (click)="pmItem(pmitem)"></i>
+                            <input type="text" class="form-control" placeholder="PM Item" value=""
+                                formControlName="pmNumber" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-3 px-1">
+                        <div class="form-group">
+                            <label>PM Description</label>
+                            <input type="text" class="form-control" placeholder="PM Description" value=""
+                                formControlName="pmDescription" readonly>
                         </div>
                     </div>
                     <div class="col-md-3 px-1">
@@ -63,40 +98,12 @@
                                 formControlName="closedBy" readonly>
                         </div>
                     </div>
-                    <div class="col-md-3 px-1">
-                        <div class="form-group">
-                            <label>CM Item</label>
-                            <input type="text" class="form-control" placeholder="CM Item" value=""
-                                formControlName="cmItem" readonly>
-                        </div>
-                    </div>
-                    <!-- <div class="col-md-3 px-1">
-                        <div class="form-group">
-                            <label>Description</label>
-                            <input type="text" class="form-control" placeholder="Description" value="">
-                        </div>
-                    </div> -->
-                    <div class="col-md-3 px-1">
-                        <div class="form-group">
-                            <label>PM Item</label>
-                            <i class="now-ui-icons ui-1_zoom-bold lookup" *ngIf="isEditable" (click)="pmItem(pmitem)"></i>
-                            <input type="text" class="form-control" placeholder="PM Item" value=""
-                                formControlName="pmNumber" readonly>
-                        </div>
-                    </div>
-                    <div class="col-md-3 px-1">
-                        <div class="form-group">
-                            <label>PM Description</label>
-                            <input type="text" class="form-control" placeholder="PM Description" value=""
-                                formControlName="pmDescription" readonly>
-                        </div>
-                    </div>
                     <div class="col-md-12 px-1" *ngIf="isEditable">
                         <div class="form-group btn-normal btn-savecancel">
                             <button type="button" class="cancel" (click)="cancelworkorder()">Cancel</button>
                             <button type="button" class="save" (click)="saveworkorder(id)">Save</button>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </form>
             <div class="col-lg-12">

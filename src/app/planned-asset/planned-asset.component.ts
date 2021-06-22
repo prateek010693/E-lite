@@ -33,7 +33,8 @@ export class PlannedAssetComponent implements OnInit {
       model: [""],
       variation: [""],
       locationOfAircraft: [""],
-      dateOfTransfer: [""],
+      exportedDate: [""],
+      importedDate: [""],
       dettLocation: [""],
       dettLocationBase: [""],
       status: [""],
@@ -102,13 +103,13 @@ export class PlannedAssetComponent implements OnInit {
       console.log('element',element)
       element.map(el =>{
         sampleData.push({
-          "asset":el.assetnum ? el.assetnum : 'N/A',
+          "asset":el.assetNum ? el.assetNum : 'N/A',
           "description":el.description ? el.description : 'N/A',
-          "serial":el.serialnum ? el.serialnum : 'N/A',
-          "cmItem":el.cmitem ? el.cmitem : 'N/A',
-          "model":el.model ? el.model : 'N/A',
-          "currentValue":el.currentvalue ? el.currentvalue : 'N/A',
-          "remainingValue":el.remainingvalue ? el.remainingvalue : 'N/A',
+          "serial":el.serialNo ? el.serialNo : 'N/A',
+          "cmItem":el.cmItem ? el.cmItem : 'N/A',
+          "item":el.item ? el.item : 'N/A',
+          "currentValue":el.currValue ? el.currValue : 'N/A',
+          "remainingValue":el.remValue ? el.remValue : 'N/A',
         })
       })
       this.viewPlannedAsset = sampleData

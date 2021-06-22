@@ -7,12 +7,12 @@ import { Observable,throwError } from 'rxjs';
 export class WorkorderService {
 
   //------------- global URL for Access Backend API----------------------//
-  baseURL ="http://192.168.10.224:8080/emmsLite/"
+  baseURL ="http://localhost:8080/emmsLite/"
   constructor(private http:HttpClient) { }
 
   //-------------API for Get Assest Details----------------------//
   getAssetDetail():Observable<any>{
-    const url ="http://192.168.10.67:8080/lookup"
+    const url ="http://localhost:8080/lookup"
     return this.http.get(url)
   }
   //-------------End----------------------//

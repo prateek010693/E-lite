@@ -1,31 +1,45 @@
 <div class="main-content">
   <form [formGroup]="taskComplianceFrom">
-    <!-- {{taskComplianceFrom.value | json}} -->
+     <!-- {{taskComplianceFrom.value | json}}  -->
     <div class="row">
       <div class="col-lg-12">
         <div class="row">
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WorkOrder No.</label>
-              <input type="text" class="form-control" placeholder="WorkOrder No." value="">
+              <input type="text" class="form-control" formControlName="workorderNo" placeholder="WorkOrder No." value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Description</label>
-              <input type="text" class="form-control" placeholder="Description" value="">
+              <input type="text" class="form-control" formControlName="description" placeholder="Description" value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>Worktype</label>
-              <input type="text" class="form-control" placeholder="Worktype" value="">
+              <input type="text" class="form-control" formControlName="worktype" placeholder="Worktype" value="" readonly>
             </div>
           </div>
           <div class="col-md-3 px-1">
             <div class="form-group">
               <label>WO Status</label>
-              <input type="text" class="form-control" placeholder="WO Status" value="">
+              <input type="text" class="form-control" formControlName="woStatus" placeholder="WO Status" value="" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset No.</label>
+              <input type="text" class="form-control" placeholder="Asset No." value=""
+                formControlName="assetno" readonly>
+            </div>
+          </div>
+          <div class="col-md-3 px-1">
+            <div class="form-group">
+              <label>Asset Description</label>
+              <input type="text" class="form-control" placeholder="Asset Description " value=""
+                formControlName="assetdec" readonly>
             </div>
           </div>
           <div class="col-md-12 px-1">
@@ -36,7 +50,7 @@
           </div>
           <div class="col-md-12 px-1">
             <div class="form-group btn-normal btn-savecancel">
-              <button type="button" (click)="addProductButtonClick()">Assign Technician</button>
+              <button type="button" (click)="addProductButtonClick()" [ngClass]="isDisabled == true ? 'isDisabled' : ''" [disabled]="isDisabled">Assign Technician</button>
             </div>
           </div>
         </div>
@@ -56,26 +70,39 @@
               <tbody>
                 
                   <ng-container formArrayName="AddTechnician">
-                <tr  *ngFor="let product of taskComplianceFrom.get('AddTechnician').controls;let i = index" [formGroupName]="i">
-                    <td>
+                <tr  *ngFor="let product of technicians.controls;let i = index" [formGroupName]="i">
+                    <!-- <td>
                       <select class="form-control" [id]="'technicianId' + i" placeholder="Technician Id"  (change)="abc(i)" formControlName="technicianId">
                         <option value="" disabled selected hidden>Select Technician Id</option>
-                        <option *ngFor="let technicianId of technicianIds" [value]="technicianId.id">{{technicianId.servicenum}}</option>
+                        <option *ngFor="let technicianId of technicianIds" [value]="technicianId.servicenum">{{technicianId.servicenum}}</option>
                       </select>
+                      <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
+                        Please select TechnicianID</span>
+                    </td> -->
+                    <td class="table-position">
+                      <i class="now-ui-icons ui-1_zoom-bold lookup"  *ngIf="disableSaveButton[i]" (click)="open(TID,i)"></i>
+                      <input type="text" class="form-control"  [id]="'Technician Id' + i" placeholder="Technician Id*"
+                        formControlName="technicianId" readonly>
+                        <span class="errors" *ngIf="product.get('technicianId').errors?.required && isSubmitted ">
+                          Please select Technician ID</span>
                     </td>
                     <td>
-                      <input type="text" class="form-control" [id]="'technicianName' + i" placeholder="Technician Name" formControlName="technicianName">
+                      <input type="text" class="form-control" [id]="'technicianName' + i" placeholder="Technician Name" [readonly]="true" formControlName="technicianName">
                     </td>
                     <td>
                       <input type="text" class="form-control" [id]="'teskDiscription' + i" placeholder="Technician Discription" formControlName="teskDiscription">
+                      <span class="errors" *ngIf="product.get('teskDiscription').errors?.required && isSubmitted ">
+                        Please enter Description</span>
                     </td>
                     <td>
-                      <input type="date" class="form-control" [id]="'complianceDate' + i" placeholder="Compliance Date " formControlName="complianceDate">
+                      <input type="text" class="form-control" [id]="'complianceDate' + i" [readonly]="true" placeholder="Compliance Date " formControlName="complianceDate">
                     </td>
                     <td>
-                      <button type="submit" (click)="onCompliance(i)">Compliance</button>
-                      <button type="submit"  (click)="onDelete(i)">Delete</button>
+                      <button type="button" *ngIf="!disableSaveButton[i]" [disabled]="disableComp[i]" [ngClass]="(closestatus == true|| disableComp[i] == true) ? 'isDisabled' : ''"  (click)="onCompliance(i)">Compliance</button>
+                      <button type="button" *ngIf="!disableSaveButton[i]" [disabled]="disableComp[i]" [ngClass]="(closestatus == true|| disableComp[i] == true) ? 'isDisabled' : ''"  (click)="onDelete(i)">Delete</button>
+                      <button type="button"  *ngIf="disableSaveButton[i]" (click)="saveTLC(i)">Save</button> 
                     </td>
+
                   
                 </tr>
               </ng-container>
@@ -86,4 +113,50 @@
       </div>
     </div>
   </form>
+  <div class="row">
+    <div class="col-lg-12">
+      <ng-template #TID let-model class="assest">
+          <div class="model-header">
+              <h6 class="model-title" id="model-basic-title">Technicians</h6>
+              <button type="button" class="close" aria-label="Close" (click)="model.close('Cross click')">
+                  <i class="now-ui-icons ui-1_simple-remove"></i>
+              </button>
+          </div>
+          <div class="model-body">
+            
+              <div class="form-group">
+                  <input type="text" class="form-control" [(ngModel)]='searchvalue' placeholder="search">
+              </div>
+              <div class="table-responsive">
+                  <div class="table-scroll">
+                      <table class="table">
+                          <thead class="text-primary">
+                            <th>Selection</th>
+                              <th>Technician Id</th>
+                              <th>Technician Name</th>
+                          </thead>
+                          <tbody>
+                              <tr *ngFor="let technicianId of technicianIds | searchTLC : searchvalue ;let i = index">
+                                  <td>
+                                      <input type="radio" (click)="assetSave(technicianId.indexCount)" name="radio" value="{{technicianId.indexCount}}" >
+                                  </td>
+                                  <td>{{technicianId.servicenum}}</td>
+                                  <td>{{technicianId.name}}</td>
+                                  
+                                  <td style="display: none;">{{technicianId.indexCount}}</td>
+                              </tr>
+                          </tbody>
+                      </table>
+                  </div>
+                </div>
+             
+          </div>
+
+          <div class="model-footer">
+              <button type="button" (click)="model.close('Save click')" >Save</button>
+          </div>
+
+      </ng-template>
+    </div>
+  </div>
 </div>

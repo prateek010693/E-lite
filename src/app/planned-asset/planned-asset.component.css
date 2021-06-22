@@ -17,3 +17,9 @@
 .model-title{
 	text-transform: capitalize;
 }
+.errors{
+    color: red;
+    margin: 0;
+    font-size: 12px;
+    padding: 0 10px;
+}

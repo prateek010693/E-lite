@@ -4,6 +4,26 @@
 }
 .table-responsive .table{
     margin-bottom: 0 !important;
-    display: block;
     white-space: nowrap;
+}
+.table .table-position{
+    position: relative;
+}
+.table .table-position .lookup{
+    position: absolute;
+    margin-top: 0;
+    margin-right: 0;
+    right: 6%;
+    top: 35%;
+}
+.errors{
+    color: red;
+    margin: 0;
+    font-size: 12px;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+}
+.mandate{
+    color: red;
 }

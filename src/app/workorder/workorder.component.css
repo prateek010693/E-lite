@@ -1,0 +1,12 @@
+.container {
+    display: block;
+
+    
+}
+.form-control-search {
+    width: 15%;
+    margin:10px 0 0 10px;
+  }
+  .pagination-container {
+    float:right;
+  }

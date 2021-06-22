@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
   confirmPass: boolean = true
   adminCheck: boolean = false
   reGexBool : boolean = false
-  reGex = new RegExp(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/)
+  reGex = new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/)
   constructor(private fb: FormBuilder,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -118,6 +118,7 @@ export class LoginComponent implements OnInit {
   forgotPassword(forgotPass) {
     this.newPass = true
     this.confirmPass = true
+    this.forgotPasswordCheck = false
     this.bootstrapModel.open(forgotPass, { ariaDescribedBy: 'model-basic title' }).result.then((result) => {
       console.log('result', result)
       if (result == 'Save click') {
@@ -353,7 +354,7 @@ export class LoginComponent implements OnInit {
           console.log('this.isShow ',this.forgotPasswordCheck )
         }
         else if(element.code == 500) {
-          this.toastr.success(element.status)
+          this.toastr.success(element.status+". Atleast 2  correct answer required.")
           this.forgotPasswordCheck = false
         }
         else{

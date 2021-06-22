@@ -25,14 +25,16 @@
                 </div>
                 <div class="row check-grp" *ngIf="!adminCheck">
                     <div class="form-group col-sm-8 check">
-                        <input type="checkbox" id="check" value="" formControlName="check" (change)="onChecked($event)">
+                        <input type="checkbox" id="check" value="" (change)="onChecked($event)">
                         <label class="control-label" *ngIf="!isShow && !isShow1">Check Service Number
                             availability</label>
                         <label class="control-label" *ngIf="isShow || isShow1">Service Number is available </label>
                     </div>
                     <div class="form-group col-sm-4 button" *ngIf="isShow">
-                        <button *ngIf="(isShow && !isShow1) || adminCheck" class="buttons" (click)="changePassword(changePass)">Change Password</button>
-                        <button *ngIf="(isShow && !isShow1) || adminCheck" class="buttons" (click)="forgotPassword(forgotPass)">Forgot Password</button>
+                        <button *ngIf="(isShow && !isShow1) || adminCheck" class="buttons"
+                            (click)="changePassword(changePass)">Change Password</button>
+                        <button *ngIf="(isShow && !isShow1) || adminCheck" class="buttons"
+                            (click)="forgotPassword(forgotPass)">Forgot Password</button>
                     </div>
                 </div>
                 <!-- //class="form-group btn-savecancel" -->
@@ -114,21 +116,22 @@
                                                 *ngIf="!reGexBool && forgotPasswordForm.controls['newPassword'].touched ">
                                                 Password must contain a digit,capital letter,small letter with length 8.
                                             </p>
+
                                         </div>
                                     </div>
                                     <div class=col-lg-12>
                                         <div class="form-group required" *ngIf="forgotPasswordCheck">
                                             <label class="control-label">Confirm New Password</label>
                                             <input [type]="confirmPass ? 'password' : 'text'" class="form-control"
-                                            placeholder="Password" value="" formControlName="confirmNewPassword"
-                                            (blur)="forgotcheck('confirmNewPassword')" required>
-                                        <button (click)="confirmPass = !confirmPass" class="visibility">
-                                            <i class="now-ui-icons business_bulb-63"
-                                                [ngClass]="confirmPass ? '' : 'active'"></i>
-                                        </button>
-                                        <p class="errors"
-                                            *ngIf="forgotPasswordForm.controls['confirmNewPassword'].errors?.required && isSubmitted ">
-                                            Please enter confirm Password</p>
+                                                placeholder="Password" value="" formControlName="confirmNewPassword"
+                                                (blur)="forgotcheck('confirmNewPassword')" required>
+                                            <button (click)="confirmPass = !confirmPass" class="visibility">
+                                                <i class="now-ui-icons business_bulb-63"
+                                                    [ngClass]="confirmPass ? '' : 'active'"></i>
+                                            </button>
+                                            <p class="errors"
+                                                *ngIf="forgotPasswordForm.controls['confirmNewPassword'].errors?.required && isSubmitted ">
+                                                Please enter confirm Password</p>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +140,8 @@
                     </div>
                 </div>
                 <div class="model-footer" *ngIf="forgotPasswordCheck">
-                    <button type="button"  [disabled]="!isGeneratePass" (click)="model.close('Save click')">Submit</button>
+                    <button type="button" [disabled]="!isGeneratePass"
+                        (click)="model.close('Save click')">Submit</button>
                 </div>
             </ng-template>
             <ng-template #changePass let-model>
@@ -155,8 +159,10 @@
                                     <div class=col-lg-12>
                                         <div class="form-group required">
                                             <label class="control-label">Current Password</label>
-                                            <input type="text" class="form-control" placeholder="Password" value="" formControlName="currentPassword" required>
-                                            <p class="errors" *ngIf="changePasswordForm.controls['newPassword'].errors?.required && isSubmitted ">
+                                            <input type="password" class="form-control" placeholder="Password" value=""
+                                                formControlName="currentPassword" required>
+                                            <p class="errors"
+                                                *ngIf="changePasswordForm.controls['newPassword'].errors?.required && isSubmitted ">
                                                 Please enter current Password</p>
                                         </div>
                                     </div>
@@ -256,37 +262,31 @@
                                                 <i class="now-ui-icons business_bulb-63"
                                                     [ngClass]="newPass ? '' : 'active'"></i>
                                             </button>
-                                        </div>
-                                        </div>
-
-                                        <div>
                                             <p class="errors"
-                                                *ngIf="generatePasswordForm.controls['newPassword'].errors?.required && isSubmitted ">
-                                                Please enter new Password</p>
+                                            *ngIf="generatePasswordForm.controls['newPassword'].errors?.required && isSubmitted ">
+                                            Please enter new Password</p>
                                             <p class="errors"
                                                 *ngIf="!reGexBool && generatePasswordForm.controls['newPassword'].touched ">
                                                 Password must contain a digit,capital letter,small letter with length 8.
                                             </p>
                                         </div>
-
-
-
-                                        <div class=col-lg-12>
-                                            <div class="form-group required">
-                                                <label class="control-label">Confirm New Password</label>
-                                                <input [type]="confirmPass ? 'password' : 'text'" class="form-control"
-                                                    placeholder="Password" value="" formControlName="confirmNewPassword"
-                                                    (blur)="check('confirmNewPassword')" required>
-                                                <button (click)="confirmPass = !confirmPass" class="visibility">
-                                                    <i class="now-ui-icons business_bulb-63"
-                                                        [ngClass]="confirmPass ? '' : 'active'"></i>
-                                                </button>
-                                                <p class="errors"
-                                                    *ngIf="generatePasswordForm.controls['confirmNewPassword'].errors?.required && isSubmitted ">
-                                                    Please enter confirm Password</p>
-                                            </div>
+                                    </div>
+                                    <div class=col-lg-12>
+                                        <div class="form-group required">
+                                            <label class="control-label">Confirm New Password</label>
+                                            <input [type]="confirmPass ? 'password' : 'text'" class="form-control"
+                                                placeholder="Password" value="" formControlName="confirmNewPassword"
+                                                (blur)="check('confirmNewPassword')" required>
+                                            <button (click)="confirmPass = !confirmPass" class="visibility">
+                                                <i class="now-ui-icons business_bulb-63"
+                                                    [ngClass]="confirmPass ? '' : 'active'"></i>
+                                            </button>
+                                            <p class="errors"
+                                                *ngIf="generatePasswordForm.controls['confirmNewPassword'].errors?.required && isSubmitted ">
+                                                Please enter confirm Password</p>
                                         </div>
                                     </div>
+                                </div>
 
 
                             </form>

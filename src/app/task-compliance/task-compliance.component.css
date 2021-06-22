@@ -1,0 +1,34 @@
+.table-responsive .table-scroll{
+    overflow: auto;
+    margin-bottom: 10px;
+}
+.table-responsive .table{
+    margin-bottom: 0 !important;
+    white-space: nowrap;
+}
+.table .table-position{
+    position: relative;
+}
+.table .table-position .lookup{
+    position: absolute;
+    margin-top: 0;
+    margin-right: 0;
+    right: 6%;
+    top: 35%;
+}
+.table-responsive .table  button.isDisabled {
+    background-color: #E3E3E3;
+    color: #57A3D8;
+    cursor: not-allowed;
+}
+.errors{
+    color: red;
+    margin: 0;
+    font-size: 12px;
+    display: inline-block;
+    position: absolute;
+    bottom: 0;
+}
+.table-responsive .table td .form-control {
+    width: 100% !important;
+}
